@@ -1,0 +1,19 @@
+lib/
+bin/
+.cache
+.local
+.private
+.serena
+.shared
+
+src/version.h
+src/version.rc
+
+# cmake
+CMakeFiles/
+build/
+
+# VSCode files
+.vscode/
+*.code-workspace
+*.code-search

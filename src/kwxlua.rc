@@ -1,0 +1,41 @@
+// wxluajit.rc - Windows resource file for wxLuaJit
+
+#include "winres.h"
+
+#pragma code_page(65001) // UTF-8
+
+// Embed application manifest (Common Controls v6, DPI awareness)
+#ifndef RT_MANIFEST
+#define RT_MANIFEST 24
+#endif
+1 RT_MANIFEST "kwxlua.manifest"
+
+// Version information
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 0,1,0,0
+PRODUCTVERSION 0,1,0,0
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+FILEFLAGS 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "KeyWorks Software"
+            VALUE "FileDescription", "kwxLuaJit - LuaJIT-based wxWidgets scripting"
+            VALUE "FileVersion", "0.1.0.0"
+            VALUE "InternalName", "wkxluajit"
+            VALUE "LegalCopyright", "Copyright (C) 2026"
+            VALUE "OriginalFilename", "kwxlua.exe"
+            VALUE "ProductName", "kwxLuaJit"
+            VALUE "ProductVersion", "0.1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
