@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -32,6 +40,20 @@ function M.CreateFromIcon(icon)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxIconBundle_CreateFromData
+function M.CreateFromData(data, size, bitmap_type)
+    local ptr = C.wxIconBundle_CreateFromData(data, size, bitmap_type)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxIconBundle_CreateFromBase64
+function M.CreateFromBase64(base64, len, bitmap_type)
+    local ptr = C.wxIconBundle_CreateFromBase64(base64, len, bitmap_type)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:AddIcon(icon)
     C.wxIconBundle_AddIcon(self._ptr, _H.ptr(icon))
 end
@@ -50,9 +72,17 @@ function M:GetIcon(width, height, flags, ref)
     C.wxIconBundle_GetIcon(self._ptr, width, height, flags, _H.ptr(ref))
 end
 
+function M:AddIconFromData(data, size, bitmap_type)
+    C.wxIconBundle_AddIconFromData(self._ptr, data, size, bitmap_type)
+end
+
+function M:AddIconFromBase64(base64, len, bitmap_type)
+    C.wxIconBundle_AddIconFromBase64(self._ptr, base64, len, bitmap_type)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxIconBundle_Delete(self._ptr)
         self._ptr = nil
     end

@@ -7,15 +7,53 @@ local _parent = require("wxnotifyevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:SetValidationFailureBehavior(flags)
+    C.wxPropertyGridEvent_SetValidationFailureBehavior(self._ptr, flags)
+end
+
+function M:SetValidationFailureMessage(message)
+    local _ws_message = _H.wxs(message)
+    C.wxPropertyGridEvent_SetValidationFailureMessage(self._ptr, _ws_message)
+    _H.wxs_free(_ws_message)
+end
+
+function M:GetValidationFailureBehavior()
+    return C.wxPropertyGridEvent_GetValidationFailureBehavior(self._ptr)
+end
 
 function M:HasProperty()
     return _H.to_bool(C.wxPropertyGridEvent_HasProperty(self._ptr))
 end
 
+function M:CanVeto()
+    return _H.to_bool(C.wxPropertyGridEvent_CanVeto(self._ptr))
+end
+
+function M:GetColumn()
+    return C.wxPropertyGridEvent_GetColumn(self._ptr)
+end
+
+function M:GetValue()
+    return _H.wrap("wxvariant_gen", C.wxPropertyGridEvent_GetValue(self._ptr))
+end
+
+function M:Veto(veto)
+    C.wxPropertyGridEvent_Veto(self._ptr, _H.from_bool(veto))
+end
+
 function M:GetProperty()
-    return C.wxPropertyGridEvent_GetProperty(self._ptr)
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGridEvent_GetProperty(self._ptr))
 end
 
 return M

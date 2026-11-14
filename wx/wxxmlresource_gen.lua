@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -25,12 +34,35 @@ function M.CreateFromFile(filemask, flags)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M.GetStyledTextCtrl(win, strId)
+    local _ws_strId = _H.wxs(strId)
+    local _result = C.wxXmlResource_GetStyledTextCtrl(_H.ptr(win), _ws_strId)
+    _H.wxs_free(_ws_strId)
+    return _result
+end
+
 function M:AddHandler(handler)
     C.wxXmlResource_AddHandler(self._ptr, _H.ptr(handler))
 end
 
+function M:LoadAllFiles(dirname)
+    local _ws_dirname = _H.wxs(dirname)
+    local _result = _H.to_bool(C.wxXmlResource_LoadAllFiles(self._ptr, _ws_dirname))
+    _H.wxs_free(_ws_dirname)
+    return _result
+end
+
+function M:LoadObjectRecursively(parent, name, classname)
+    local _ws_name = _H.wxs(name)
+    local _ws_classname = _H.wxs(classname)
+    local _result = _H.wrap("wxobject_gen", C.wxXmlResource_LoadObjectRecursively(self._ptr, _H.ptr(parent), _ws_name, _ws_classname))
+    _H.wxs_free(_ws_name)
+    _H.wxs_free(_ws_classname)
+    return _result
+end
+
 function M:AddSubclassFactory(factory)
-    C.wxXmlResource_AddSubclassFactory(self._ptr, factory)
+    C.wxXmlResource_AddSubclassFactory(self._ptr, _H.ptr(factory))
 end
 
 function M:AttachUnknownControl(control, parent)
@@ -45,8 +77,8 @@ function M:CompareVersion(major, minor, release, revision)
     return C.wxXmlResource_CompareVersion(self._ptr, major, minor, release, revision)
 end
 
-function M:Get()
-    return C.wxXmlResource_Get(self._ptr)
+function M.Get()
+    return _H.wrap("wxxmlresource_gen", C.wxXmlResource_Get())
 end
 
 function M:GetDomain()
@@ -91,14 +123,14 @@ end
 
 function M:LoadDialog(parent, name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxXmlResource_LoadDialog(self._ptr, _H.ptr(parent), _ws_name)
+    local _result = _H.wrap("wxdialog_gen", C.wxXmlResource_LoadDialog(self._ptr, _H.ptr(parent), _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
 function M:LoadFrame(parent, name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxXmlResource_LoadFrame(self._ptr, _H.ptr(parent), _ws_name)
+    local _result = _H.wrap("wxframe_gen", C.wxXmlResource_LoadFrame(self._ptr, _H.ptr(parent), _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
@@ -111,294 +143,294 @@ end
 
 function M:LoadMenu(name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxXmlResource_LoadMenu(self._ptr, _ws_name)
+    local _result = _H.wrap("wxmenu_gen", C.wxXmlResource_LoadMenu(self._ptr, _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
 function M:LoadMenuBar(parent, name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxXmlResource_LoadMenuBar(self._ptr, _H.ptr(parent), _ws_name)
+    local _result = _H.wrap("wxmenubar_gen", C.wxXmlResource_LoadMenuBar(self._ptr, _H.ptr(parent), _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
 function M:LoadPanel(parent, name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxXmlResource_LoadPanel(self._ptr, _H.ptr(parent), _ws_name)
+    local _result = _H.wrap("wxpanel_gen", C.wxXmlResource_LoadPanel(self._ptr, _H.ptr(parent), _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
 function M:LoadToolBar(parent, name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxXmlResource_LoadToolBar(self._ptr, _H.ptr(parent), _ws_name)
+    local _result = _H.wrap("wxtoolbar_gen", C.wxXmlResource_LoadToolBar(self._ptr, _H.ptr(parent), _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
 function M:GetSizer(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetSizer(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxsizer_gen", C.wxXmlResource_GetSizer(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetBoxSizer(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetBoxSizer(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxboxsizer_gen", C.wxXmlResource_GetBoxSizer(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetStaticBoxSizer(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetStaticBoxSizer(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxstaticboxsizer_gen", C.wxXmlResource_GetStaticBoxSizer(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetGridSizer(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetGridSizer(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxgridsizer_gen", C.wxXmlResource_GetGridSizer(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetFlexGridSizer(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetFlexGridSizer(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxflexgridsizer_gen", C.wxXmlResource_GetFlexGridSizer(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetBitmapButton(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetBitmapButton(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxbitmapbutton_gen", C.wxXmlResource_GetBitmapButton(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetButton(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetButton(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxbutton_gen", C.wxXmlResource_GetButton(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetCalendarCtrl(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetCalendarCtrl(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxcalendarctrl_gen", C.wxXmlResource_GetCalendarCtrl(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetCheckBox(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetCheckBox(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxcheckbox_gen", C.wxXmlResource_GetCheckBox(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetCheckListBox(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetCheckListBox(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxchecklistbox_gen", C.wxXmlResource_GetCheckListBox(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetChoice(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetChoice(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxchoice_gen", C.wxXmlResource_GetChoice(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetComboBox(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetComboBox(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxcombobox_gen", C.wxXmlResource_GetComboBox(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetGauge(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetGauge(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxgauge_gen", C.wxXmlResource_GetGauge(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetGrid(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetGrid(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxgrid_gen", C.wxXmlResource_GetGrid(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetHtmlWindow(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetHtmlWindow(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxhtmlwindow_gen", C.wxXmlResource_GetHtmlWindow(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetListBox(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetListBox(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxlistbox_gen", C.wxXmlResource_GetListBox(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetListCtrl(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetListCtrl(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxlistctrl_gen", C.wxXmlResource_GetListCtrl(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetMDIChildFrame(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetMDIChildFrame(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxmdichildframe_gen", C.wxXmlResource_GetMDIChildFrame(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetMDIParentFrame(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetMDIParentFrame(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxmdiparentframe_gen", C.wxXmlResource_GetMDIParentFrame(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetMenu(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetMenu(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxmenu_gen", C.wxXmlResource_GetMenu(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetMenuBar(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetMenuBar(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxmenubar_gen", C.wxXmlResource_GetMenuBar(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetMenuItem(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetMenuItem(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxmenuitem_gen", C.wxXmlResource_GetMenuItem(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetNotebook(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetNotebook(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxnotebook_gen", C.wxXmlResource_GetNotebook(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetPanel(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetPanel(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxpanel_gen", C.wxXmlResource_GetPanel(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetRadioButton(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetRadioButton(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxradiobutton_gen", C.wxXmlResource_GetRadioButton(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetRadioBox(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetRadioBox(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxradiobox_gen", C.wxXmlResource_GetRadioBox(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetScrollBar(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetScrollBar(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxscrollbar_gen", C.wxXmlResource_GetScrollBar(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetScrolledWindow(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetScrolledWindow(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxscrolledwindow_gen", C.wxXmlResource_GetScrolledWindow(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetSlider(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetSlider(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxslider_gen", C.wxXmlResource_GetSlider(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetSpinButton(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetSpinButton(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxspinbutton_gen", C.wxXmlResource_GetSpinButton(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetSpinCtrl(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetSpinCtrl(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxspinctrl_gen", C.wxXmlResource_GetSpinCtrl(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetSplitterWindow(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetSplitterWindow(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxsplitterwindow_gen", C.wxXmlResource_GetSplitterWindow(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetStaticBitmap(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetStaticBitmap(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxstaticbitmap_gen", C.wxXmlResource_GetStaticBitmap(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetStaticBox(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetStaticBox(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxstaticbox_gen", C.wxXmlResource_GetStaticBox(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetStaticLine(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetStaticLine(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxstaticline_gen", C.wxXmlResource_GetStaticLine(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetStaticText(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetStaticText(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxstatictext_gen", C.wxXmlResource_GetStaticText(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetTextCtrl(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetTextCtrl(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxtextctrl_gen", C.wxXmlResource_GetTextCtrl(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
 
 function M:GetTreeCtrl(str_id)
     local _ws_str_id = _H.wxs(str_id)
-    local _result = C.wxXmlResource_GetTreeCtrl(self._ptr, _ws_str_id)
+    local _result = _H.wrap("wxtreectrl_gen", C.wxXmlResource_GetTreeCtrl(self._ptr, _ws_str_id))
     _H.wxs_free(_ws_str_id)
     return _result
 end
@@ -410,8 +442,8 @@ function M:Unload(filemask)
     return _result
 end
 
-function M:Set()
-    return C.wxXmlResource_Set(self._ptr)
+function M:Set(res)
+    return _H.wrap("wxxmlresource_gen", C.wxXmlResource_Set(self._ptr, _H.ptr(res)))
 end
 
 function M:SetDomain(domain)
@@ -426,7 +458,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxXmlResource_Delete(self._ptr)
         self._ptr = nil
     end

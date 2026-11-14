@@ -3,9 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local _parent = require("wxpanel_gen")
+local _parent = require("wxwizardpage_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -17,16 +25,23 @@ function M.Create(parent, prev, next, bitmap)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:GetBitmap(ref)
-    C.wxWizardPageSimple_GetBitmap(self._ptr, _H.ptr(ref))
+--- Constructor: wxWizardPageSimple_CreateWithBundle
+function M.CreateWithBundle(parent, prev, next, bitmap)
+    local ptr = C.wxWizardPageSimple_CreateWithBundle(_H.ptr(parent), _H.ptr(prev), _H.ptr(next), _H.ptr(bitmap))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetBitmap()
+    return _H.wrap("wxbitmap_gen", C.wxWizardPageSimple_GetBitmap(self._ptr))
 end
 
 function M:GetNext()
-    return C.wxWizardPageSimple_GetNext(self._ptr)
+    return _H.wrap("wxwizardpagesimple_gen", C.wxWizardPageSimple_GetNext(self._ptr))
 end
 
 function M:GetPrev()
-    return C.wxWizardPageSimple_GetPrev(self._ptr)
+    return _H.wrap("wxwizardpagesimple_gen", C.wxWizardPageSimple_GetPrev(self._ptr))
 end
 
 function M:SetNext(next)

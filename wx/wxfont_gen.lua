@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -30,6 +39,177 @@ function M.CreateDefault()
     local ptr = C.wxFont_CreateDefault()
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxFont_CreateFromInfo
+function M.CreateFromInfo(info)
+    local ptr = C.wxFont_CreateFromInfo(_H.ptr(info))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxFont_CreateFromFont
+function M.CreateFromFont(other)
+    local ptr = C.wxFont_CreateFromFont(_H.ptr(other))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetFractionalPointSize()
+    return C.wxFont_GetFractionalPointSize(self._ptr)
+end
+
+function M:GetPixelSize()
+    return _H.wrap("wxsize_gen", C.wxFont_GetPixelSize(self._ptr))
+end
+
+function M:IsUsingSizeInPixels()
+    return _H.to_bool(C.wxFont_IsUsingSizeInPixels(self._ptr))
+end
+
+function M:GetNumericWeight()
+    return C.wxFont_GetNumericWeight(self._ptr)
+end
+
+function M:GetStrikethrough()
+    return _H.to_bool(C.wxFont_GetStrikethrough(self._ptr))
+end
+
+function M:GetNativeFontInfoDesc()
+    return _H.wxs_to_str(C.wxFont_GetNativeFontInfoDesc(self._ptr))
+end
+
+function M:GetNativeFontInfoUserDesc()
+    return _H.wxs_to_str(C.wxFont_GetNativeFontInfoUserDesc(self._ptr))
+end
+
+function M:IsFixedWidth()
+    return _H.to_bool(C.wxFont_IsFixedWidth(self._ptr))
+end
+
+function M:SetFractionalPointSize(pointSize)
+    C.wxFont_SetFractionalPointSize(self._ptr, pointSize)
+end
+
+function M:SetPixelSize(width, height)
+    C.wxFont_SetPixelSize(self._ptr, width, height)
+end
+
+function M:SetNumericWeight(weight)
+    C.wxFont_SetNumericWeight(self._ptr, weight)
+end
+
+function M:SetStrikethrough(strikethrough)
+    C.wxFont_SetStrikethrough(self._ptr, _H.from_bool(strikethrough))
+end
+
+function M:SetNativeFontInfo(info)
+    local _ws_info = _H.wxs(info)
+    local _result = _H.to_bool(C.wxFont_SetNativeFontInfo(self._ptr, _ws_info))
+    _H.wxs_free(_ws_info)
+    return _result
+end
+
+function M:SetNativeFontInfoUserDesc(info)
+    local _ws_info = _H.wxs(info)
+    local _result = _H.to_bool(C.wxFont_SetNativeFontInfoUserDesc(self._ptr, _ws_info))
+    _H.wxs_free(_ws_info)
+    return _result
+end
+
+function M:SetSymbolicSize(size)
+    C.wxFont_SetSymbolicSize(self._ptr, size)
+end
+
+function M:SetSymbolicSizeRelativeTo(size, base)
+    C.wxFont_SetSymbolicSizeRelativeTo(self._ptr, size, base)
+end
+
+function M.AdjustToSymbolicSize(size, base)
+    return C.wxFont_AdjustToSymbolicSize(size, base)
+end
+
+function M.ConvertFromLegacyWeightIfNecessary(weight)
+    return C.wxFont_ConvertFromLegacyWeightIfNecessary(weight)
+end
+
+function M.GetNumericWeightOf(weight)
+    return C.wxFont_GetNumericWeightOf(weight)
+end
+
+function M:MakeBold()
+    C.wxFont_MakeBold(self._ptr)
+end
+
+function M:MakeItalic()
+    C.wxFont_MakeItalic(self._ptr)
+end
+
+function M:MakeUnderlined()
+    C.wxFont_MakeUnderlined(self._ptr)
+end
+
+function M:MakeStrikethrough()
+    C.wxFont_MakeStrikethrough(self._ptr)
+end
+
+function M:MakeLarger()
+    C.wxFont_MakeLarger(self._ptr)
+end
+
+function M:MakeSmaller()
+    C.wxFont_MakeSmaller(self._ptr)
+end
+
+function M:Scale(factor)
+    C.wxFont_Scale(self._ptr, factor)
+end
+
+function M:Bold()
+    return _H.wrap("wxfont_gen", C.wxFont_Bold(self._ptr))
+end
+
+function M:Italic()
+    return _H.wrap("wxfont_gen", C.wxFont_Italic(self._ptr))
+end
+
+function M:Underlined()
+    return _H.wrap("wxfont_gen", C.wxFont_Underlined(self._ptr))
+end
+
+function M:Strikethrough()
+    return _H.wrap("wxfont_gen", C.wxFont_Strikethrough(self._ptr))
+end
+
+function M:Larger()
+    return _H.wrap("wxfont_gen", C.wxFont_Larger(self._ptr))
+end
+
+function M:Smaller()
+    return _H.wrap("wxfont_gen", C.wxFont_Smaller(self._ptr))
+end
+
+function M:Scaled(factor)
+    return _H.wrap("wxfont_gen", C.wxFont_Scaled(self._ptr, factor))
+end
+
+function M:GetBaseFont()
+    return _H.wrap("wxfont_gen", C.wxFont_GetBaseFont(self._ptr))
+end
+
+function M.AddPrivateFont(filename)
+    local _ws_filename = _H.wxs(filename)
+    local _result = _H.to_bool(C.wxFont_AddPrivateFont(_ws_filename))
+    _H.wxs_free(_ws_filename)
+    return _result
+end
+
+function M:IsEqual(font)
+    return _H.to_bool(C.wxFont_IsEqual(self._ptr, _H.ptr(font)))
+end
+
+function M:Assign(other)
+    C.wxFont_Assign(self._ptr, _H.ptr(other))
 end
 
 function M:GetDefaultEncoding()
@@ -65,7 +245,7 @@ function M:GetStyleString()
 end
 
 function M:GetUnderlined()
-    return C.wxFont_GetUnderlined(self._ptr)
+    return _H.to_bool(C.wxFont_GetUnderlined(self._ptr))
 end
 
 function M:GetWeight()
@@ -116,7 +296,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxFont_Delete(self._ptr)
         self._ptr = nil
     end

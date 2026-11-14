@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -33,9 +41,17 @@ function M:SetIcon(icon)
     C.wxStaticBitmap_SetIcon(self._ptr, _H.ptr(icon))
 end
 
+function M:SetScaleMode(scale_mode)
+    C.wxStaticBitmap_SetScaleMode(self._ptr, scale_mode)
+end
+
+function M:GetScaleMode()
+    return C.wxStaticBitmap_GetScaleMode(self._ptr)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxStaticBitmap_Delete(self._ptr)
         self._ptr = nil
     end

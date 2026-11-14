@@ -103,8 +103,8 @@ All objects are created through `wx.*` convenience constructors or the generated
 | Convenience constructors | `wx.ClassName(...)` | `wx.Frame(...)`, `wx.Button(...)` |
 | Methods | `PascalCase` | `:Show()`, `:Connect()`, `:SetSizer()` |
 | Constants | `wx.CONSTANT_NAME` | `wx.EXPAND`, `wx.DEFAULT_FRAME_STYLE` |
-| Event types | `wx.EVT_*` | `wx.EVT_BUTTON`, `wx.EVT_CLOSE` |
-| Raw FFI exports | `expwx<NAME>` | `expwxID_ANY`, `expEVT_BUTTON` |
+| Event types | `wx.EVT_*` | `wx.EVT_BUTTON`, `wx.EVT_CLOSE_WINDOW` |
+| Raw FFI exports | `expwx<NAME>`, `exp_wxEVT_*`, `expK_*` | `expwxID_ANY`, `exp_wxEVT_BUTTON`, `expK_BACK` |
 
 ## Event Handling
 
@@ -125,6 +125,23 @@ window:DisconnectAll()
 ```
 
 Event types are resolved lazily — `wx.EVT_BUTTON` triggers a single FFI call on first access and is then cached as a plain integer.
+
+Handlers receive the native `wxEvent*`. When a handler needs methods from a
+concrete event class, wrap it with the generated non-owning constructor:
+
+```lua
+local wxcommandevent_gen = require("wxcommandevent_gen")
+local checked = wxcommandevent_gen.FromPtr(evt):IsChecked()
+```
+
+`FromPtr()` produces a borrowed wrapper: wxWidgets owns the event, so `Delete()`
+is a no-op and garbage collection never frees it. `FromPtr(ptr, true)` adopts an
+owned pointer instead, which is how a factory result (for example
+`wxbitmapbundle_gen.FromSVGFile(...)`) is released with `:Delete()`.
+
+String-valued constants such as `wx.ART_MISSING_IMAGE` resolve to Lua strings,
+so they pass straight to the generated statics:
+`wxartprovider_gen.GetBitmap(wx.ART_MISSING_IMAGE, wx.ART_OTHER)`.
 
 ## Why Lua + wxWidgets?
 

@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -32,7 +41,7 @@ function M:DrawBlankPage(canvas, dc)
 end
 
 function M:GetCanvas()
-    return C.wxPrintPreview_GetCanvas(self._ptr)
+    return _H.wrap("wxpreviewcanvas_gen", C.wxPrintPreview_GetCanvas(self._ptr))
 end
 
 function M:GetCurrentPage()
@@ -40,7 +49,7 @@ function M:GetCurrentPage()
 end
 
 function M:GetFrame()
-    return C.wxPrintPreview_GetFrame(self._ptr)
+    return _H.wrap("wxframe_gen", C.wxPrintPreview_GetFrame(self._ptr))
 end
 
 function M:GetMaxPage()
@@ -56,11 +65,11 @@ function M:GetPrintDialogData(ref)
 end
 
 function M:GetPrintout()
-    return C.wxPrintPreview_GetPrintout(self._ptr)
+    return _H.wrap("wxprintout_gen", C.wxPrintPreview_GetPrintout(self._ptr))
 end
 
 function M:GetPrintoutForPrinting()
-    return C.wxPrintPreview_GetPrintoutForPrinting(self._ptr)
+    return _H.wrap("wxprintout_gen", C.wxPrintPreview_GetPrintoutForPrinting(self._ptr))
 end
 
 function M:GetZoom()
@@ -109,7 +118,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxPrintPreview_Delete(self._ptr)
         self._ptr = nil
     end

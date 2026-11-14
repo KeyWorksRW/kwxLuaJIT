@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxribboncontrol_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -14,6 +23,26 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxRibbonButtonBar_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SetButtonTextMinWidth(button_id, min_width_medium, min_width_large)
+    C.wxRibbonButtonBar_SetButtonTextMinWidth(self._ptr, button_id, min_width_medium, min_width_large)
+end
+
+function M:SetDropdownKeyTip(button_id, keytip)
+    local _ws_keytip = _H.wxs(keytip)
+    C.wxRibbonButtonBar_SetDropdownKeyTip(self._ptr, button_id, _ws_keytip)
+    _H.wxs_free(_ws_keytip)
+end
+
+function M:SetKeyTip(button_id, keytip)
+    local _ws_keytip = _H.wxs(keytip)
+    C.wxRibbonButtonBar_SetKeyTip(self._ptr, button_id, _ws_keytip)
+    _H.wxs_free(_ws_keytip)
+end
+
+function M:ToggleButton(button_id, checked)
+    C.wxRibbonButtonBar_ToggleButton(self._ptr, button_id, _H.from_bool(checked))
 end
 
 function M:AddButton(button_id, label, bitmap, help_string, kind, bitmap_small, bitmap_disabled, bitmap_small_disabled)
@@ -157,7 +186,7 @@ function M:GetHoveredItem()
 end
 
 function M:SetItemClientData(item, data)
-    C.wxRibbonButtonBar_SetItemClientData(self._ptr, _H.ptr(item), data)
+    C.wxRibbonButtonBar_SetItemClientData(self._ptr, _H.ptr(item), _H.ptr(data))
 end
 
 function M:GetItemClientData(item)
@@ -173,7 +202,7 @@ function M:GetShowToolTipsForDisabled()
 end
 
 function M:Realize()
-    C.wxRibbonButtonBar_Realize(self._ptr)
+    return _H.to_bool(C.wxRibbonButtonBar_Realize(self._ptr))
 end
 
 function M:SetArtProvider(art)
@@ -181,7 +210,7 @@ function M:SetArtProvider(art)
 end
 
 function M:GetArtProvider()
-    return C.wxRibbonButtonBar_GetArtProvider(self._ptr)
+    return _H.wrap("wxribbonartprovider_gen", C.wxRibbonButtonBar_GetArtProvider(self._ptr))
 end
 
 return M

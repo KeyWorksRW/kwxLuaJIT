@@ -7,6 +7,14 @@ local _parent = require("wxwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,14 @@ function M.Create(parent, id, left, top, width, height, style)
     local ptr = C.wxSplitterWindow_Create(_H.ptr(parent), id, left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SashHitTest(x, y)
+    return _H.to_bool(C.wxSplitterWindow_SashHitTest(self._ptr, x, y))
+end
+
+function M:SizeWindows()
+    C.wxSplitterWindow_SizeWindows(self._ptr)
 end
 
 function M:GetBorderSize()
@@ -38,11 +54,11 @@ function M:GetSplitMode()
 end
 
 function M:GetWindow1()
-    return C.wxSplitterWindow_GetWindow1(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxSplitterWindow_GetWindow1(self._ptr))
 end
 
 function M:GetWindow2()
-    return C.wxSplitterWindow_GetWindow2(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxSplitterWindow_GetWindow2(self._ptr))
 end
 
 function M:Initialize(window)

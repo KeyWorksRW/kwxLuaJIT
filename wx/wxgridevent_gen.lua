@@ -7,11 +7,27 @@ local _parent = require("wxnotifyevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:AltDown()
     return _H.to_bool(C.wxGridEvent_AltDown(self._ptr))
+end
+
+function M:GetNewCol()
+    return C.wxGridEvent_GetNewCol(self._ptr)
+end
+
+function M:GetNewRow()
+    return C.wxGridEvent_GetNewRow(self._ptr)
 end
 
 function M:ControlDown()
@@ -23,7 +39,7 @@ function M:GetCol()
 end
 
 function M:GetPosition()
-    return C.wxGridEvent_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxGridEvent_GetPosition(self._ptr))
 end
 
 function M:GetRow()

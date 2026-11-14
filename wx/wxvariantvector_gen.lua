@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -16,34 +24,34 @@ function M.Create()
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:Add(vec, value)
-    C.wxVariantVector_Add(self._ptr, vec, _H.ptr(value))
+function M.Add(vec, value)
+    C.wxVariantVector_Add(_H.ptr(vec), _H.ptr(value))
 end
 
-function M:AddString(vec, value)
+function M.AddString(vec, value)
     local _ws_value = _H.wxs(value)
-    C.wxVariantVector_AddString(self._ptr, vec, _ws_value)
+    C.wxVariantVector_AddString(_H.ptr(vec), _ws_value)
     _H.wxs_free(_ws_value)
 end
 
-function M:AddLong(vec, value)
-    C.wxVariantVector_AddLong(self._ptr, vec, value)
+function M.AddLong(vec, value)
+    C.wxVariantVector_AddLong(_H.ptr(vec), value)
 end
 
-function M:AddBool(vec, value)
-    C.wxVariantVector_AddBool(self._ptr, vec, _H.from_bool(value))
+function M.AddBool(vec, value)
+    C.wxVariantVector_AddBool(_H.ptr(vec), _H.from_bool(value))
 end
 
-function M:GetCount(vec)
-    return C.wxVariantVector_GetCount(self._ptr, vec)
+function M.GetCount(vec)
+    return C.wxVariantVector_GetCount(_H.ptr(vec))
 end
 
-function M:Clear(vec)
-    C.wxVariantVector_Clear(self._ptr, vec)
+function M.Clear(vec)
+    C.wxVariantVector_Clear(_H.ptr(vec))
 end
 
-function M:Delete(vec)
-    C.wxVariantVector_Delete(self._ptr, vec)
+function M.Delete(vec)
+    C.wxVariantVector_Delete(_H.ptr(vec))
 end
 
 return M

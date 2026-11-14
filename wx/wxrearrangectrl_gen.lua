@@ -7,6 +7,14 @@ local _parent = require("wxpanel_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -18,11 +26,11 @@ function M.Create(parent, id, x, y, width, height, order, items, style)
 end
 
 function M:GetCurrentOrder()
-    return C.wxRearrangeCtrl_GetCurrentOrder(self._ptr)
+    return _H.wrap("wxarrayint_gen", C.wxRearrangeCtrl_GetCurrentOrder(self._ptr))
 end
 
 function M:GetList()
-    return C.wxRearrangeCtrl_GetList(self._ptr)
+    return _H.wrap("wxrearrangelist_gen", C.wxRearrangeCtrl_GetList(self._ptr))
 end
 
 function M:CanMoveCurrentUp()

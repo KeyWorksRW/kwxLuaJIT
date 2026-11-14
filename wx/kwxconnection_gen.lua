@@ -3,22 +3,31 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxconnectionbase_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: kwxConnection_Create
 function M.Create(pObject, buffer, size)
-    local ptr = C.kwxConnection_Create(pObject, buffer, size)
+    local ptr = C.kwxConnection_Create(_H.ptr(pObject), _H.ptr(buffer), size)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 function M:Advise(item, data, size, format)
     local _ws_item = _H.wxs(item)
-    local _result = C.kwxConnection_Advise(self._ptr, _ws_item, data, size, format)
+    local _result = C.kwxConnection_Advise(self._ptr, _ws_item, _H.ptr(data), size, format)
     _H.wxs_free(_ws_item)
     return _result
 end
@@ -28,7 +37,7 @@ function M:Compress(enable)
 end
 
 function M:CreateDefault()
-    return C.kwxConnection_CreateDefault(self._ptr)
+    return _H.wrap("kwxconnection_gen", C.kwxConnection_CreateDefault(self._ptr))
 end
 
 function M:Disconnect()
@@ -44,7 +53,7 @@ end
 
 function M:Poke(item, data, size, format)
     local _ws_item = _H.wxs(item)
-    local _result = _H.to_bool(C.kwxConnection_Poke(self._ptr, _ws_item, data, size, format))
+    local _result = _H.to_bool(C.kwxConnection_Poke(self._ptr, _ws_item, _H.ptr(data), size, format))
     _H.wxs_free(_ws_item)
     return _result
 end
@@ -57,31 +66,31 @@ function M:Request(item, size, format)
 end
 
 function M:SetOnAdvise(pFunction)
-    C.kwxConnection_SetOnAdvise(self._ptr, pFunction)
+    C.kwxConnection_SetOnAdvise(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnDisconnect(pFunction)
-    C.kwxConnection_SetOnDisconnect(self._ptr, pFunction)
+    C.kwxConnection_SetOnDisconnect(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnExecute(pFunction)
-    C.kwxConnection_SetOnExecute(self._ptr, pFunction)
+    C.kwxConnection_SetOnExecute(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnPoke(pFunction)
-    C.kwxConnection_SetOnPoke(self._ptr, pFunction)
+    C.kwxConnection_SetOnPoke(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnRequest(pFunction)
-    C.kwxConnection_SetOnRequest(self._ptr, pFunction)
+    C.kwxConnection_SetOnRequest(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnStartAdvise(pFunction)
-    C.kwxConnection_SetOnStartAdvise(self._ptr, pFunction)
+    C.kwxConnection_SetOnStartAdvise(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnStopAdvise(pFunction)
-    C.kwxConnection_SetOnStopAdvise(self._ptr, pFunction)
+    C.kwxConnection_SetOnStopAdvise(self._ptr, _H.ptr(pFunction))
 end
 
 function M:StartAdvise(item)
@@ -100,7 +109,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.kwxConnection_Delete(self._ptr)
         self._ptr = nil
     end

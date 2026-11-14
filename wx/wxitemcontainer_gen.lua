@@ -6,8 +6,46 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:AppendString(item)
+    local _ws_item = _H.wxs(item)
+    C.wxItemContainer_AppendString(self._ptr, _ws_item)
+    _H.wxs_free(_ws_item)
+end
+
+function M:SetClientObject(n, clientData)
+    C.wxItemContainer_SetClientObject(self._ptr, n, _H.ptr(clientData))
+end
+
+function M:GetClientObject(n)
+    return _H.wrap("wxclientdata_gen", C.wxItemContainer_GetClientObject(self._ptr, n))
+end
+
+function M:DetachClientObject(n)
+    return _H.wrap("wxclientdata_gen", C.wxItemContainer_DetachClientObject(self._ptr, n))
+end
+
+function M:GetClientDataType()
+    return C.wxItemContainer_GetClientDataType(self._ptr)
+end
+
+function M:HasClientObjectData()
+    return _H.to_bool(C.wxItemContainer_HasClientObjectData(self._ptr))
+end
+
+function M:HasClientUntypedData()
+    return _H.to_bool(C.wxItemContainer_HasClientUntypedData(self._ptr))
+end
 
 function M:GetCount()
     return C.wxItemContainer_GetCount(self._ptr)
@@ -65,7 +103,7 @@ function M:Append(item)
 end
 
 function M:AppendItems(count, items)
-    return C.wxItemContainer_AppendItems(self._ptr, count, items)
+    return C.wxItemContainer_AppendItems(self._ptr, count, _H.ptr(items))
 end
 
 function M:Insert(item, pos)
@@ -76,11 +114,11 @@ function M:Insert(item, pos)
 end
 
 function M:InsertItems(count, items, pos)
-    return C.wxItemContainer_InsertItems(self._ptr, count, items, pos)
+    return C.wxItemContainer_InsertItems(self._ptr, count, _H.ptr(items), pos)
 end
 
 function M:Set(count, items)
-    C.wxItemContainer_Set(self._ptr, count, items)
+    C.wxItemContainer_Set(self._ptr, count, _H.ptr(items))
 end
 
 function M:Clear()
@@ -92,7 +130,7 @@ function M:IsSorted()
 end
 
 function M:SetClientData(n, clientData)
-    C.wxItemContainer_SetClientData(self._ptr, n, clientData)
+    C.wxItemContainer_SetClientData(self._ptr, n, _H.ptr(clientData))
 end
 
 function M:GetClientData(n)
@@ -103,8 +141,8 @@ function M:HasClientData()
     return _H.to_bool(C.wxItemContainer_HasClientData(self._ptr))
 end
 
-function M:Delete(self, pos)
-    C.wxItemContainer_Delete(self._ptr, _H.ptr(self), pos)
+function M:Delete(pos)
+    C.wxItemContainer_Delete(self._ptr, pos)
 end
 
 return M

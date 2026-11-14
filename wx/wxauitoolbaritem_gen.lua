@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -24,7 +32,7 @@ function M.Create(source)
 end
 
 function M:Copy(source)
-    return C.wxAuiToolBarItem_Copy(self._ptr, _H.ptr(source))
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBarItem_Copy(self._ptr, _H.ptr(source)))
 end
 
 function M:Assign(source)
@@ -36,7 +44,7 @@ function M:SetWindow(window)
 end
 
 function M:GetWindow()
-    return C.wxAuiToolBarItem_GetWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxAuiToolBarItem_GetWindow(self._ptr))
 end
 
 function M:SetId(new_id)
@@ -68,7 +76,7 @@ function M:SetSizerItem(sizerItem)
 end
 
 function M:GetSizerItem()
-    return C.wxAuiToolBarItem_GetSizerItem(self._ptr)
+    return _H.wrap("wxsizeritem_gen", C.wxAuiToolBarItem_GetSizerItem(self._ptr))
 end
 
 function M:SetLabel(label)
@@ -130,7 +138,7 @@ function M:SetMinSize(width, height)
 end
 
 function M:GetMinSize()
-    return C.wxAuiToolBarItem_GetMinSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxAuiToolBarItem_GetMinSize(self._ptr))
 end
 
 function M:SetSpacerPixels(spacerPixels)

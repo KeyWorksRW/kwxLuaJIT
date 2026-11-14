@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -16,9 +24,36 @@ function M.Create()
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:CharsetToEncoding(charset, interactive)
+    local _ws_charset = _H.wxs(charset)
+    local _result = C.wxFontMapper_CharsetToEncoding(self._ptr, _ws_charset, _H.from_bool(interactive))
+    _H.wxs_free(_ws_charset)
+    return _result
+end
+
+function M.Get()
+    return _H.wrap("wxfontmapper_gen", C.wxFontMapper_Get())
+end
+
+function M.GetEncoding(n)
+    return C.wxFontMapper_GetEncoding(n)
+end
+
+function M.GetEncodingDescription(encoding)
+    return _H.wxs_to_str(C.wxFontMapper_GetEncodingDescription(encoding))
+end
+
+function M.GetEncodingName(encoding)
+    return _H.wxs_to_str(C.wxFontMapper_GetEncodingName(encoding))
+end
+
+function M.GetSupportedEncodingsCount()
+    return C.wxFontMapper_GetSupportedEncodingsCount()
+end
+
 function M:GetAltForEncoding(encoding, alt_encoding, buffer)
     local _ws_buffer = _H.wxs(buffer)
-    local _result = _H.to_bool(C.wxFontMapper_GetAltForEncoding(self._ptr, encoding, alt_encoding, _ws_buffer))
+    local _result = _H.to_bool(C.wxFontMapper_GetAltForEncoding(self._ptr, encoding, _H.ptr(alt_encoding), _ws_buffer))
     _H.wxs_free(_ws_buffer)
     return _result
 end

@@ -3,15 +3,31 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+--- Constructor: wxBitmap_CreateFromImage
+function M.CreateFromImage(image, depth)
+    local ptr = C.wxBitmap_CreateFromImage(_H.ptr(image), depth)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Constructor: wxBitmap_Create
 function M.Create(data, type, width, height, depth)
-    local ptr = C.wxBitmap_Create(data, type, width, height, depth)
+    local ptr = C.wxBitmap_Create(_H.ptr(data), type, width, height, depth)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -30,6 +46,13 @@ function M.CreateEmpty(width, height, depth)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxBitmap_CreateFromXPM
+function M.CreateFromXPM(data)
+    local ptr = C.wxBitmap_CreateFromXPM(_H.ptr(data))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Constructor: wxBitmap_CreateLoad
 function M.CreateLoad(name, type)
     local _ws_name = _H.wxs(name)
@@ -39,31 +62,117 @@ function M.CreateLoad(name, type)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:AddHandler(handler)
-    C.wxBitmap_AddHandler(self._ptr, _H.ptr(handler))
+--- Constructor: wxBitmap_CreateFromData
+function M.CreateFromData(data, size, bitmap_type)
+    local ptr = C.wxBitmap_CreateFromData(data, size, bitmap_type)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:CleanUpHandlers()
-    C.wxBitmap_CleanUpHandlers(self._ptr)
+--- Constructor: wxBitmap_CreateFromBase64
+function M.CreateFromBase64(base64, len, bitmap_type)
+    local ptr = C.wxBitmap_CreateFromBase64(base64, len, bitmap_type)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:CreateFromXPM()
-    return C.wxBitmap_CreateFromXPM(self._ptr)
+function M:Init(width, height, depth)
+    return _H.to_bool(C.wxBitmap_Init(self._ptr, width, height, depth))
+end
+
+function M:GetSize()
+    return _H.wrap("wxsize_gen", C.wxBitmap_GetSize(self._ptr))
+end
+
+function M:SetScaleFactor(scale)
+    C.wxBitmap_SetScaleFactor(self._ptr, scale)
+end
+
+function M:GetScaleFactor()
+    return C.wxBitmap_GetScaleFactor(self._ptr)
+end
+
+function M:GetDIPSize()
+    return _H.wrap("wxsize_gen", C.wxBitmap_GetDIPSize(self._ptr))
+end
+
+function M:GetLogicalSize()
+    return _H.wrap("wxsize_gen", C.wxBitmap_GetLogicalSize(self._ptr))
+end
+
+function M:GetLogicalWidth()
+    return C.wxBitmap_GetLogicalWidth(self._ptr)
+end
+
+function M:GetLogicalHeight()
+    return C.wxBitmap_GetLogicalHeight(self._ptr)
+end
+
+function M:CreateScaled(width, height, depth, scale)
+    return _H.to_bool(C.wxBitmap_CreateScaled(self._ptr, width, height, depth, scale))
+end
+
+function M:ConvertToImage()
+    return _H.wrap("wximage_gen", C.wxBitmap_ConvertToImage(self._ptr))
+end
+
+function M:ConvertToDisabled(brightness)
+    return _H.wrap("wxbitmap_gen", C.wxBitmap_ConvertToDisabled(self._ptr, brightness))
+end
+
+function M:GetPalette()
+    return _H.wrap("wxpalette_gen", C.wxBitmap_GetPalette(self._ptr))
+end
+
+function M:SetPalette(palette)
+    C.wxBitmap_SetPalette(self._ptr, _H.ptr(palette))
+end
+
+function M:HasAlpha()
+    return _H.to_bool(C.wxBitmap_HasAlpha(self._ptr))
+end
+
+function M:UseAlpha(use)
+    return _H.to_bool(C.wxBitmap_UseAlpha(self._ptr, _H.from_bool(use)))
+end
+
+function M:ResetAlpha()
+    C.wxBitmap_ResetAlpha(self._ptr)
+end
+
+function M:CopyFromIcon(icon)
+    return _H.to_bool(C.wxBitmap_CopyFromIcon(self._ptr, _H.ptr(icon)))
+end
+
+function M.NewFromPNGData(data, size)
+    return _H.wrap("wxbitmap_gen", C.wxBitmap_NewFromPNGData(_H.ptr(data), size))
+end
+
+function M.AddHandler(handler)
+    C.wxBitmap_AddHandler(_H.ptr(handler))
+end
+
+function M:CreateWithDIPSize(sz, scale, depth)
+    return _H.to_bool(C.wxBitmap_CreateWithDIPSize(self._ptr, _H.ptr(sz), scale, depth))
+end
+
+function M.CleanUpHandlers()
+    C.wxBitmap_CleanUpHandlers()
 end
 
 function M:FindHandlerByExtension(type)
     return C.wxBitmap_FindHandlerByExtension(self._ptr, type)
 end
 
-function M:FindHandlerByName(name)
+function M.FindHandlerByName(name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxBitmap_FindHandlerByName(self._ptr, _ws_name)
+    local _result = C.wxBitmap_FindHandlerByName(_ws_name)
     _H.wxs_free(_ws_name)
     return _result
 end
 
-function M:FindHandlerByType(type)
-    return C.wxBitmap_FindHandlerByType(self._ptr, type)
+function M.FindHandlerByType(type)
+    return C.wxBitmap_FindHandlerByType(type)
 end
 
 function M:GetDepth()
@@ -75,7 +184,7 @@ function M:GetHeight()
 end
 
 function M:GetMask()
-    return C.wxBitmap_GetMask(self._ptr)
+    return _H.wrap("wxmask_gen", C.wxBitmap_GetMask(self._ptr))
 end
 
 function M:GetSubBitmap(x, y, width, height, ref)
@@ -86,12 +195,12 @@ function M:GetWidth()
     return C.wxBitmap_GetWidth(self._ptr)
 end
 
-function M:InitStandardHandlers()
-    C.wxBitmap_InitStandardHandlers(self._ptr)
+function M.InitStandardHandlers()
+    C.wxBitmap_InitStandardHandlers()
 end
 
-function M:InsertHandler(handler)
-    C.wxBitmap_InsertHandler(self._ptr, _H.ptr(handler))
+function M.InsertHandler(handler)
+    C.wxBitmap_InsertHandler(_H.ptr(handler))
 end
 
 function M:LoadFile(name, type)
@@ -105,9 +214,9 @@ function M:IsOk()
     return _H.to_bool(C.wxBitmap_IsOk(self._ptr))
 end
 
-function M:RemoveHandler(name)
+function M.RemoveHandler(name)
     local _ws_name = _H.wxs(name)
-    local _result = _H.to_bool(C.wxBitmap_RemoveHandler(self._ptr, _ws_name))
+    local _result = _H.to_bool(C.wxBitmap_RemoveHandler(_ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
@@ -125,7 +234,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxBitmap_Delete(self._ptr)
         self._ptr = nil
     end

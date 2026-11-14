@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxribboncontrol_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -16,6 +25,18 @@ function M.Create(parent, id, label, icon, style)
     _H.wxs_free(_ws_label)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetPanel(n)
+    return C.wxRibbonPage_GetPanel(self._ptr, n)
+end
+
+function M:GetPanelCount()
+    return C.wxRibbonPage_GetPanelCount(self._ptr)
+end
+
+function M:SetSizeWithScrollButtonAdjustment(x, y, width, height)
+    C.wxRibbonPage_SetSizeWithScrollButtonAdjustment(self._ptr, x, y, width, height)
 end
 
 function M:DismissExpandedPanel()
@@ -35,11 +56,11 @@ function M:GetLabel()
 end
 
 function M:Realize()
-    C.wxRibbonPage_Realize(self._ptr)
+    return _H.to_bool(C.wxRibbonPage_Realize(self._ptr))
 end
 
 function M:GetMinSize()
-    return C.wxRibbonPage_GetMinSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxRibbonPage_GetMinSize(self._ptr))
 end
 
 function M:SetArtProvider(art)
@@ -47,7 +68,7 @@ function M:SetArtProvider(art)
 end
 
 function M:GetArtProvider()
-    return C.wxRibbonPage_GetArtProvider(self._ptr)
+    return _H.wrap("wxribbonartprovider_gen", C.wxRibbonPage_GetArtProvider(self._ptr))
 end
 
 return M

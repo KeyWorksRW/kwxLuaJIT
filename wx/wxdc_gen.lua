@@ -3,14 +3,188 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+function M:GetPixel2(x, y, col)
+    C.wxDC_GetPixel2(self._ptr, x, y, _H.ptr(col))
+end
+
+function M:GetUserScaleX()
+    return C.wxDC_GetUserScaleX(self._ptr)
+end
+
+function M:GetUserScaleY()
+    return C.wxDC_GetUserScaleY(self._ptr)
+end
+
+function M:GetWindow()
+    return _H.wrap("wxwindow_gen", C.wxDC_GetWindow(self._ptr))
+end
+
+function M:GetResolution()
+    return C.wxDC_GetResolution(self._ptr)
+end
+
+function M:GetContentScaleFactor()
+    return C.wxDC_GetContentScaleFactor(self._ptr)
+end
+
+function M:FromDIP(value)
+    return C.wxDC_FromDIP(self._ptr, value)
+end
+
+function M:ToDIP(value)
+    return C.wxDC_ToDIP(self._ptr, value)
+end
+
+function M:FromDIPSize(width, height)
+    return _H.wrap("wxsize_gen", C.wxDC_FromDIPSize(self._ptr, width, height))
+end
+
+function M:ToDIPSize(width, height)
+    return _H.wrap("wxsize_gen", C.wxDC_ToDIPSize(self._ptr, width, height))
+end
+
+function M:SetLayoutDirection(direction)
+    C.wxDC_SetLayoutDirection(self._ptr, direction)
+end
+
+function M:GetLayoutDirection()
+    return C.wxDC_GetLayoutDirection(self._ptr)
+end
+
+function M:GetTextExtentSize(string)
+    local _ws_string = _H.wxs(string)
+    local _result = _H.wrap("wxsize_gen", C.wxDC_GetTextExtentSize(self._ptr, _ws_string))
+    _H.wxs_free(_ws_string)
+    return _result
+end
+
+function M:GetMultiLineTextExtentSize(string)
+    local _ws_string = _H.wxs(string)
+    local _result = _H.wrap("wxsize_gen", C.wxDC_GetMultiLineTextExtentSize(self._ptr, _ws_string))
+    _H.wxs_free(_ws_string)
+    return _result
+end
+
+function M:GetPartialTextExtents(text, count, widths)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.to_bool(C.wxDC_GetPartialTextExtents(self._ptr, _ws_text, count, widths))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M:DeviceToLogical(x, y)
+    return _H.wrap("wxpoint_gen", C.wxDC_DeviceToLogical(self._ptr, x, y))
+end
+
+function M:LogicalToDevice(x, y)
+    return _H.wrap("wxpoint_gen", C.wxDC_LogicalToDevice(self._ptr, x, y))
+end
+
+function M:DeviceToLogicalRel(width, height)
+    return _H.wrap("wxsize_gen", C.wxDC_DeviceToLogicalRel(self._ptr, width, height))
+end
+
+function M:LogicalToDeviceRel(width, height)
+    return _H.wrap("wxsize_gen", C.wxDC_LogicalToDeviceRel(self._ptr, width, height))
+end
+
+function M:GetLogicalOriginPoint()
+    return _H.wrap("wxpoint_gen", C.wxDC_GetLogicalOriginPoint(self._ptr))
+end
+
+function M:GetDeviceOriginPoint()
+    return _H.wrap("wxpoint_gen", C.wxDC_GetDeviceOriginPoint(self._ptr))
+end
+
+function M:CopyAttributes(dc)
+    C.wxDC_CopyAttributes(self._ptr, _H.ptr(dc))
+end
+
+function M:GetHandle()
+    return C.wxDC_GetHandle(self._ptr)
+end
+
+function M:DisableAutomaticBoundingBoxUpdates()
+    C.wxDC_DisableAutomaticBoundingBoxUpdates(self._ptr)
+end
+
+function M:AreAutomaticBoundingBoxUpdatesEnabled()
+    return _H.to_bool(C.wxDC_AreAutomaticBoundingBoxUpdatesEnabled(self._ptr))
+end
+
+function M:SetClippingRegionPoint(x, y, width, height)
+    C.wxDC_SetClippingRegionPoint(self._ptr, x, y, width, height)
+end
+
+function M:GetClippingRect(x, y, width, height)
+    return _H.to_bool(C.wxDC_GetClippingRect(self._ptr, x, y, width, height))
+end
+
+function M:FloodFillEx(x, y, col, style)
+    return _H.to_bool(C.wxDC_FloodFillEx(self._ptr, x, y, _H.ptr(col), style))
+end
+
+function M:GradientFillConcentric(x, y, width, height, initialColour, destColour)
+    C.wxDC_GradientFillConcentric(self._ptr, x, y, width, height, _H.ptr(initialColour), _H.ptr(destColour))
+end
+
+function M:GradientFillConcentricCenter(x, y, width, height, initialColour, destColour, cx, cy)
+    C.wxDC_GradientFillConcentricCenter(self._ptr, x, y, width, height, _H.ptr(initialColour), _H.ptr(destColour), cx, cy)
+end
+
+function M:GradientFillLinear(x, y, width, height, initialColour, destColour, direction)
+    C.wxDC_GradientFillLinear(self._ptr, x, y, width, height, _H.ptr(initialColour), _H.ptr(destColour), direction)
+end
+
+function M:StretchBlit(dstX, dstY, dstWidth, dstHeight, source, srcX, srcY, srcWidth, srcHeight, rop, useMask, maskX, maskY)
+    return _H.to_bool(C.wxDC_StretchBlit(self._ptr, dstX, dstY, dstWidth, dstHeight, _H.ptr(source), srcX, srcY, srcWidth, srcHeight, rop, _H.from_bool(useMask), maskX, maskY))
+end
+
+function M:GetAsBitmap(x, y, width, height, useRect)
+    return _H.wrap("wxbitmap_gen", C.wxDC_GetAsBitmap(self._ptr, x, y, width, height, _H.from_bool(useRect)))
+end
+
+function M:DrawSpline(x1, y1, x2, y2, x3, y3)
+    C.wxDC_DrawSpline(self._ptr, x1, y1, x2, y2, x3, y3)
+end
+
+function M:DrawSplinePoints(count, x, y)
+    C.wxDC_DrawSplinePoints(self._ptr, count, _H.ptr(x), _H.ptr(y))
+end
+
+function M:GetGraphicsContext()
+    return _H.wrap("wxgraphicscontext_gen", C.wxDC_GetGraphicsContext(self._ptr))
+end
+
+function M:SetGraphicsContext(ctx)
+    C.wxDC_SetGraphicsContext(self._ptr, _H.ptr(ctx))
+end
+
 function M:Blit(xdest, ydest, width, height, source, xsrc, ysrc, rop, useMask, xsrcMask, ysrcMask)
     return _H.to_bool(C.wxDC_Blit(self._ptr, xdest, ydest, width, height, _H.ptr(source), xsrc, ysrc, rop, _H.from_bool(useMask), xsrcMask, ysrcMask))
+end
+
+function M:CanUseTransformMatrix()
+    return _H.to_bool(C.wxDC_CanUseTransformMatrix(self._ptr))
+end
+
+function M:SetTransformMatrix(matrix)
+    return _H.to_bool(C.wxDC_SetTransformMatrix(self._ptr, _H.ptr(matrix)))
 end
 
 function M:CalcBoundingBox(x, y)
@@ -89,7 +263,7 @@ end
 
 function M:DrawLabelBitmap(str, bmp, x, y, width, height, align, indexAccel)
     local _ws_str = _H.wxs(str)
-    local _result = C.wxDC_DrawLabelBitmap(self._ptr, _ws_str, _H.ptr(bmp), x, y, width, height, align, indexAccel)
+    local _result = _H.wrap("wxrect_gen", C.wxDC_DrawLabelBitmap(self._ptr, _ws_str, _H.ptr(bmp), x, y, width, height, align, indexAccel))
     _H.wxs_free(_ws_str)
     return _result
 end
@@ -99,7 +273,7 @@ function M:DrawLine(x1, y1, x2, y2)
 end
 
 function M:DrawLines(count, x, y, xoffset, yoffset)
-    C.wxDC_DrawLines(self._ptr, count, x, y, xoffset, yoffset)
+    C.wxDC_DrawLines(self._ptr, count, _H.ptr(x), _H.ptr(y), xoffset, yoffset)
 end
 
 function M:DrawPoint(x, y)
@@ -107,11 +281,11 @@ function M:DrawPoint(x, y)
 end
 
 function M:DrawPolygon(count, x, y, xoffset, yoffset, fillStyle)
-    C.wxDC_DrawPolygon(self._ptr, count, x, y, xoffset, yoffset, fillStyle)
+    C.wxDC_DrawPolygon(self._ptr, count, _H.ptr(x), _H.ptr(y), xoffset, yoffset, fillStyle)
 end
 
 function M:DrawPolyPolygon(numPolygons, count, x, y, xoffset, yoffset, fillStyle)
-    C.wxDC_DrawPolyPolygon(self._ptr, numPolygons, count, x, y, xoffset, yoffset, fillStyle)
+    C.wxDC_DrawPolyPolygon(self._ptr, numPolygons, _H.ptr(count), _H.ptr(x), _H.ptr(y), xoffset, yoffset, fillStyle)
 end
 
 function M:DrawRectangle(x, y, width, height)
@@ -199,7 +373,7 @@ function M:GetMapMode()
 end
 
 function M:GetPPI()
-    return C.wxDC_GetPPI(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxDC_GetPPI(self._ptr))
 end
 
 function M:GetPen(ref)
@@ -211,11 +385,11 @@ function M:GetPixel(x, y, col)
 end
 
 function M:GetSize()
-    return C.wxDC_GetSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxDC_GetSize(self._ptr))
 end
 
 function M:GetSizeMM()
-    return C.wxDC_GetSizeMM(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxDC_GetSizeMM(self._ptr))
 end
 
 function M:GetTextBackground(ref)
@@ -224,13 +398,13 @@ end
 
 function M:GetTextExtent(string, width, height, descent, externalLeading, theFont)
     local _ws_string = _H.wxs(string)
-    C.wxDC_GetTextExtent(self._ptr, _ws_string, width, height, descent, externalLeading, _H.ptr(theFont))
+    C.wxDC_GetTextExtent(self._ptr, _ws_string, _H.ptr(width), _H.ptr(height), _H.ptr(descent), _H.ptr(externalLeading), _H.ptr(theFont))
     _H.wxs_free(_ws_string)
 end
 
 function M:GetMultiLineTextExtent(string, width, height, heightLine, theFont)
     local _ws_string = _H.wxs(string)
-    C.wxDC_GetMultiLineTextExtent(self._ptr, _ws_string, width, height, heightLine, _H.ptr(theFont))
+    C.wxDC_GetMultiLineTextExtent(self._ptr, _ws_string, _H.ptr(width), _H.ptr(height), _H.ptr(heightLine), _H.ptr(theFont))
     _H.wxs_free(_ws_string)
 end
 
@@ -367,7 +541,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxDC_Delete(self._ptr)
         self._ptr = nil
     end

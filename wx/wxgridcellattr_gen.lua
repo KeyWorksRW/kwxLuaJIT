@@ -6,11 +6,23 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
-function M:Ctor()
-    return C.wxGridCellAttr_Ctor(self._ptr)
+function M.Ctor()
+    return _H.wrap("wxgridcellattr_gen", C.wxGridCellAttr_Ctor())
+end
+
+function M:Clone()
+    return _H.wrap("wxgridcellattr_gen", C.wxGridCellAttr_Clone(self._ptr))
 end
 
 function M:DecRef()
@@ -26,7 +38,7 @@ function M:GetBackgroundColour(ref)
 end
 
 function M:GetEditor(grid, row, col)
-    return C.wxGridCellAttr_GetEditor(self._ptr, _H.ptr(grid), row, col)
+    return _H.wrap("wxgridcelleditor_gen", C.wxGridCellAttr_GetEditor(self._ptr, _H.ptr(grid), row, col))
 end
 
 function M:GetFont(ref)
@@ -34,7 +46,7 @@ function M:GetFont(ref)
 end
 
 function M:GetRenderer(grid, row, col)
-    return C.wxGridCellAttr_GetRenderer(self._ptr, _H.ptr(grid), row, col)
+    return _H.wrap("wxgridcellrenderer_gen", C.wxGridCellAttr_GetRenderer(self._ptr, _H.ptr(grid), row, col))
 end
 
 function M:GetTextColour(ref)

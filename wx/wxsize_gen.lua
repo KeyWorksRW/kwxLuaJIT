@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -14,6 +22,22 @@ function M.Create(width, height)
     local ptr = C.wxSize_Create(width, height)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:IncBy(dx, dy)
+    C.wxSize_IncBy(self._ptr, dx, dy)
+end
+
+function M:IncTo(sz)
+    C.wxSize_IncTo(self._ptr, _H.ptr(sz))
+end
+
+function M:IsFullySpecified()
+    return _H.to_bool(C.wxSize_IsFullySpecified(self._ptr))
+end
+
+function M:Scale(xscale, yscale)
+    return _H.wrap("wxsize_gen", C.wxSize_Scale(self._ptr, xscale, yscale))
 end
 
 function M:GetHeight()
@@ -34,7 +58,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxSize_Delete(self._ptr)
         self._ptr = nil
     end

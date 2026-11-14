@@ -7,6 +7,14 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,22 @@ function M.Create(style)
     local ptr = C.wxMenuBar_Create(style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetFrame()
+    return _H.wrap("wxframe_gen", C.wxMenuBar_GetFrame(self._ptr))
+end
+
+function M:IsAttached()
+    return _H.to_bool(C.wxMenuBar_IsAttached(self._ptr))
+end
+
+function M:Attach(frame)
+    C.wxMenuBar_Attach(self._ptr, _H.ptr(frame))
+end
+
+function M:Detach()
+    C.wxMenuBar_Detach(self._ptr)
 end
 
 function M:Append(menu, title)
@@ -45,7 +69,7 @@ function M:EnableTop(pos, enable)
 end
 
 function M:FindItem(id)
-    return C.wxMenuBar_FindItem(self._ptr, id)
+    return _H.wrap("wxmenuitem_gen", C.wxMenuBar_FindItem(self._ptr, id))
 end
 
 function M:FindMenu(title)
@@ -77,7 +101,7 @@ function M:GetMenuLabel(pos)
 end
 
 function M:GetMenu(pos)
-    return C.wxMenuBar_GetMenu(self._ptr, pos)
+    return _H.wrap("wxmenu_gen", C.wxMenuBar_GetMenu(self._ptr, pos))
 end
 
 function M:GetMenuCount()
@@ -100,12 +124,12 @@ function M:IsEnabled(id)
 end
 
 function M:Remove(pos)
-    return C.wxMenuBar_Remove(self._ptr, pos)
+    return _H.wrap("wxmenu_gen", C.wxMenuBar_Remove(self._ptr, pos))
 end
 
 function M:Replace(pos, menu, title)
     local _ws_title = _H.wxs(title)
-    local _result = C.wxMenuBar_Replace(self._ptr, pos, _H.ptr(menu), _ws_title)
+    local _result = _H.wrap("wxmenu_gen", C.wxMenuBar_Replace(self._ptr, pos, _H.ptr(menu), _ws_title))
     _H.wxs_free(_ws_title)
     return _result
 end

@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -16,20 +24,20 @@ function M.Create(window, width, height)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:GetBlinkTime()
-    return C.wxCaret_GetBlinkTime(self._ptr)
+function M.GetBlinkTime()
+    return C.wxCaret_GetBlinkTime()
 end
 
 function M:GetPosition()
-    return C.wxCaret_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxCaret_GetPosition(self._ptr))
 end
 
 function M:GetSize()
-    return C.wxCaret_GetSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxCaret_GetSize(self._ptr))
 end
 
 function M:GetWindow()
-    return C.wxCaret_GetWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxCaret_GetWindow(self._ptr))
 end
 
 function M:Hide()
@@ -48,8 +56,8 @@ function M:Move(x, y)
     C.wxCaret_Move(self._ptr, x, y)
 end
 
-function M:SetBlinkTime(milliseconds)
-    C.wxCaret_SetBlinkTime(self._ptr, milliseconds)
+function M.SetBlinkTime(milliseconds)
+    C.wxCaret_SetBlinkTime(milliseconds)
 end
 
 function M:SetSize(width, height)

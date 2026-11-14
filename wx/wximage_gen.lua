@@ -3,11 +3,27 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxImage_CreateFromDataEx
+function M.CreateFromDataEx(width, height, data, isStaticData)
+    local ptr = C.wxImage_CreateFromDataEx(width, height, _H.ptr(data), _H.from_bool(isStaticData))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxImage_CreateDefault
 function M.CreateDefault()
@@ -24,22 +40,22 @@ function M.CreateFromBitmap(bitmap)
 end
 
 --- Constructor: wxImage_CreateFromByteString
-function M.CreateFromByteString(width, height, data, length)
-    local ptr = C.wxImage_CreateFromByteString(width, height, data, length)
+function M.CreateFromByteString(width, height, data)
+    local ptr = C.wxImage_CreateFromByteString(width, height, data)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 --- Constructor: wxImage_CreateFromLazyByteString
-function M.CreateFromLazyByteString(width, height, data, length)
-    local ptr = C.wxImage_CreateFromLazyByteString(width, height, data, length)
+function M.CreateFromLazyByteString(width, height, data)
+    local ptr = C.wxImage_CreateFromLazyByteString(width, height, data)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 --- Constructor: wxImage_CreateFromData
 function M.CreateFromData(width, height, data)
-    local ptr = C.wxImage_CreateFromData(width, height, data)
+    local ptr = C.wxImage_CreateFromData(width, height, _H.ptr(data))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -53,6 +69,20 @@ function M.CreateFromFile(name)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxImage_CreateFromDataEncoded
+function M.CreateFromDataEncoded(data, size, bitmap_type)
+    local ptr = C.wxImage_CreateFromDataEncoded(data, size, bitmap_type)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxImage_CreateFromBase64
+function M.CreateFromBase64(base64, len, bitmap_type)
+    local ptr = C.wxImage_CreateFromBase64(base64, len, bitmap_type)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Constructor: wxImage_CreateSized
 function M.CreateSized(width, height)
     local ptr = C.wxImage_CreateSized(width, height)
@@ -60,9 +90,288 @@ function M.CreateSized(width, height)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:CanRead(name)
+function M:CreateFromXPMData(data)
+    return _H.to_bool(C.wxImage_CreateFromXPMData(self._ptr, _H.ptr(data)))
+end
+
+function M:GetAlpha(x, y)
+    return C.wxImage_GetAlpha(self._ptr, x, y)
+end
+
+function M:Clear(value)
+    C.wxImage_Clear(self._ptr, value)
+end
+
+function M:Size(width, height, x, y, r, g, b)
+    return _H.wrap("wximage_gen", C.wxImage_Size(self._ptr, width, height, x, y, r, g, b))
+end
+
+function M:ResampleNearest(width, height)
+    return _H.wrap("wximage_gen", C.wxImage_ResampleNearest(self._ptr, width, height))
+end
+
+function M:ResampleBox(width, height)
+    return _H.wrap("wximage_gen", C.wxImage_ResampleBox(self._ptr, width, height))
+end
+
+function M:ResampleBilinear(width, height)
+    return _H.wrap("wximage_gen", C.wxImage_ResampleBilinear(self._ptr, width, height))
+end
+
+function M:ResampleBicubic(width, height)
+    return _H.wrap("wximage_gen", C.wxImage_ResampleBicubic(self._ptr, width, height))
+end
+
+function M:Blur(radius)
+    return _H.wrap("wximage_gen", C.wxImage_Blur(self._ptr, radius))
+end
+
+function M:BlurHorizontal(radius)
+    return _H.wrap("wximage_gen", C.wxImage_BlurHorizontal(self._ptr, radius))
+end
+
+function M:BlurVertical(radius)
+    return _H.wrap("wximage_gen", C.wxImage_BlurVertical(self._ptr, radius))
+end
+
+function M:ShrinkBy(xFactor, yFactor)
+    return _H.wrap("wximage_gen", C.wxImage_ShrinkBy(self._ptr, xFactor, yFactor))
+end
+
+function M:Resize(width, height, x, y, r, g, b)
+    C.wxImage_Resize(self._ptr, width, height, x, y, r, g, b)
+end
+
+function M:Rotate180()
+    return _H.wrap("wximage_gen", C.wxImage_Rotate180(self._ptr))
+end
+
+function M:ConvertToGreyscale()
+    return _H.wrap("wximage_gen", C.wxImage_ConvertToGreyscale(self._ptr))
+end
+
+function M:ConvertToGreyscaleEx(weightR, weightG, weightB)
+    return _H.wrap("wximage_gen", C.wxImage_ConvertToGreyscaleEx(self._ptr, weightR, weightG, weightB))
+end
+
+function M:ConvertToMono(r, g, b)
+    return _H.wrap("wximage_gen", C.wxImage_ConvertToMono(self._ptr, r, g, b))
+end
+
+function M:ConvertToDisabled(brightness)
+    return _H.wrap("wximage_gen", C.wxImage_ConvertToDisabled(self._ptr, brightness))
+end
+
+function M:ChangeLightness(alpha)
+    return _H.wrap("wximage_gen", C.wxImage_ChangeLightness(self._ptr, alpha))
+end
+
+function M:SetRGBRect(x, y, width, height, r, g, b)
+    C.wxImage_SetRGBRect(self._ptr, x, y, width, height, r, g, b)
+end
+
+function M:SetAlpha(x, y, alpha)
+    C.wxImage_SetAlpha(self._ptr, x, y, alpha)
+end
+
+function M:GetAlphaPixel(x, y)
+    return C.wxImage_GetAlphaPixel(self._ptr, x, y)
+end
+
+function M:FindFirstUnusedColour(r, g, b, startR, startG, startB)
+    return _H.to_bool(C.wxImage_FindFirstUnusedColour(self._ptr, r, g, b, startR, startG, startB))
+end
+
+function M:SetMaskFromImage(mask, mr, mg, mb)
+    return _H.to_bool(C.wxImage_SetMaskFromImage(self._ptr, _H.ptr(mask), mr, mg, mb))
+end
+
+function M:ConvertAlphaToMask(threshold)
+    return _H.to_bool(C.wxImage_ConvertAlphaToMask(self._ptr, threshold))
+end
+
+function M:ConvertAlphaToMaskColour(mr, mg, mb, threshold)
+    return _H.to_bool(C.wxImage_ConvertAlphaToMaskColour(self._ptr, mr, mg, mb, threshold))
+end
+
+function M:ConvertColourToAlpha(r, g, b)
+    return _H.to_bool(C.wxImage_ConvertColourToAlpha(self._ptr, r, g, b))
+end
+
+function M.SetDefaultLoadFlags(flags)
+    C.wxImage_SetDefaultLoadFlags(flags)
+end
+
+function M.GetDefaultLoadFlags()
+    return C.wxImage_GetDefaultLoadFlags()
+end
+
+function M:SetLoadFlags(flags)
+    C.wxImage_SetLoadFlags(self._ptr, flags)
+end
+
+function M:GetLoadFlags()
+    return C.wxImage_GetLoadFlags(self._ptr)
+end
+
+function M.GetImageCount(name, type)
     local _ws_name = _H.wxs(name)
-    local _result = _H.to_bool(C.wxImage_CanRead(self._ptr, _ws_name))
+    local _result = C.wxImage_GetImageCount(_ws_name, type)
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M:SaveFileMime(name, mimetype)
+    local _ws_name = _H.wxs(name)
+    local _ws_mimetype = _H.wxs(mimetype)
+    local _result = _H.to_bool(C.wxImage_SaveFileMime(self._ptr, _ws_name, _ws_mimetype))
+    _H.wxs_free(_ws_name)
+    _H.wxs_free(_ws_mimetype)
+    return _result
+end
+
+function M:LoadFileMime(name, mimetype, index)
+    local _ws_name = _H.wxs(name)
+    local _ws_mimetype = _H.wxs(mimetype)
+    local _result = _H.to_bool(C.wxImage_LoadFileMime(self._ptr, _ws_name, _ws_mimetype, index))
+    _H.wxs_free(_ws_name)
+    _H.wxs_free(_ws_mimetype)
+    return _result
+end
+
+function M:LoadStreamMime(stream, mimetype, index)
+    local _ws_mimetype = _H.wxs(mimetype)
+    local _result = _H.to_bool(C.wxImage_LoadStreamMime(self._ptr, _H.ptr(stream), _ws_mimetype, index))
+    _H.wxs_free(_ws_mimetype)
+    return _result
+end
+
+function M:SaveStreamMime(stream, mimetype)
+    local _ws_mimetype = _H.wxs(mimetype)
+    local _result = _H.to_bool(C.wxImage_SaveStreamMime(self._ptr, _H.ptr(stream), _ws_mimetype))
+    _H.wxs_free(_ws_mimetype)
+    return _result
+end
+
+function M:GetSize()
+    return _H.wrap("wxsize_gen", C.wxImage_GetSize(self._ptr))
+end
+
+function M:SetDataRGBA(data)
+    C.wxImage_SetDataRGBA(self._ptr, _H.ptr(data))
+end
+
+function M:GetAlphaData()
+    return C.wxImage_GetAlphaData(self._ptr)
+end
+
+function M:HasAlpha()
+    return _H.to_bool(C.wxImage_HasAlpha(self._ptr))
+end
+
+function M:SetAlphaData(alpha, staticData)
+    C.wxImage_SetAlphaData(self._ptr, _H.ptr(alpha), _H.from_bool(staticData))
+end
+
+function M:InitAlpha()
+    C.wxImage_InitAlpha(self._ptr)
+end
+
+function M:ClearAlpha()
+    C.wxImage_ClearAlpha(self._ptr)
+end
+
+function M:IsTransparent(x, y, threshold)
+    return _H.to_bool(C.wxImage_IsTransparent(self._ptr, x, y, threshold))
+end
+
+function M:GetOrFindMaskColour(r, g, b)
+    return _H.to_bool(C.wxImage_GetOrFindMaskColour(self._ptr, r, g, b))
+end
+
+function M:HasPalette()
+    return _H.to_bool(C.wxImage_HasPalette(self._ptr))
+end
+
+function M:GetPalette()
+    return _H.wrap("wxpalette_gen", C.wxImage_GetPalette(self._ptr))
+end
+
+function M:SetPalette(palette)
+    C.wxImage_SetPalette(self._ptr, _H.ptr(palette))
+end
+
+function M:RotateHue(angle)
+    C.wxImage_RotateHue(self._ptr, angle)
+end
+
+function M:ChangeSaturation(factor)
+    C.wxImage_ChangeSaturation(self._ptr, factor)
+end
+
+function M:ChangeBrightness(factor)
+    C.wxImage_ChangeBrightness(self._ptr, factor)
+end
+
+function M:ChangeHSV(angleH, factorS, factorV)
+    C.wxImage_ChangeHSV(self._ptr, angleH, factorS, factorV)
+end
+
+function M.AddHandler(handler)
+    C.wxImage_AddHandler(_H.ptr(handler))
+end
+
+function M.InsertHandler(handler)
+    C.wxImage_InsertHandler(_H.ptr(handler))
+end
+
+function M.RemoveHandler(name)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.to_bool(C.wxImage_RemoveHandler(_ws_name))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M.FindHandlerByName(name)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.wrap("wximagehandler_gen", C.wxImage_FindHandlerByName(_ws_name))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M.FindHandlerByExtension(extension, imageType)
+    local _ws_extension = _H.wxs(extension)
+    local _result = _H.wrap("wximagehandler_gen", C.wxImage_FindHandlerByExtension(_ws_extension, imageType))
+    _H.wxs_free(_ws_extension)
+    return _result
+end
+
+function M.FindHandlerByType(imageType)
+    return _H.wrap("wximagehandler_gen", C.wxImage_FindHandlerByType(imageType))
+end
+
+function M.FindHandlerMime(mimetype)
+    local _ws_mimetype = _H.wxs(mimetype)
+    local _result = _H.wrap("wximagehandler_gen", C.wxImage_FindHandlerMime(_ws_mimetype))
+    _H.wxs_free(_ws_mimetype)
+    return _result
+end
+
+function M.GetImageExtWildcard()
+    return _H.wxs_to_str(C.wxImage_GetImageExtWildcard())
+end
+
+function M.CleanUpHandlers()
+    C.wxImage_CleanUpHandlers()
+end
+
+function M.InitStandardHandlers()
+    C.wxImage_InitStandardHandlers()
+end
+
+function M.CanRead(name)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.to_bool(C.wxImage_CanRead(_ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
@@ -169,7 +478,7 @@ function M:Initialize(width, height, clear)
 end
 
 function M:InitializeFromData(width, height, data)
-    C.wxImage_InitializeFromData(self._ptr, width, height, data)
+    C.wxImage_InitializeFromData(self._ptr, width, height, _H.ptr(data))
 end
 
 function M:LoadFile(name, type, index)
@@ -208,7 +517,7 @@ function M:RescaleEx(width, height, quality)
 end
 
 function M:Rotate(angle, c_x, c_y, interpolating, offset_after_rotation, image)
-    C.wxImage_Rotate(self._ptr, angle, c_x, c_y, interpolating, offset_after_rotation, _H.ptr(image))
+    C.wxImage_Rotate(self._ptr, angle, c_x, c_y, interpolating, _H.ptr(offset_after_rotation), _H.ptr(image))
 end
 
 function M:Rotate90(clockwise, image)
@@ -235,11 +544,11 @@ function M:Scale(width, height, image)
 end
 
 function M:SetData(data, static_data)
-    C.wxImage_SetData(self._ptr, data, _H.from_bool(static_data))
+    C.wxImage_SetData(self._ptr, _H.ptr(data), _H.from_bool(static_data))
 end
 
 function M:SetDataAndSize(data, new_width, new_height, static_data)
-    C.wxImage_SetDataAndSize(self._ptr, data, new_width, new_height, _H.from_bool(static_data))
+    C.wxImage_SetDataAndSize(self._ptr, _H.ptr(data), new_width, new_height, _H.from_bool(static_data))
 end
 
 function M:SetMask(mask)
@@ -266,6 +575,14 @@ end
 
 function M:SetRGB(x, y, r, g, b)
     C.wxImage_SetRGB(self._ptr, x, y, r, g, b)
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxImage_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

@@ -7,6 +7,14 @@ local _parent = require("wxdialog_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -19,16 +27,31 @@ function M.Create(parent, id, text, bitmap, left, top, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:Chain(first, second)
-    C.wxWizard_Chain(self._ptr, _H.ptr(first), _H.ptr(second))
+--- Constructor: wxWizard_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxWizard_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M.Chain(first, second)
+    C.wxWizard_Chain(_H.ptr(first), _H.ptr(second))
+end
+
+function M:SetBitmapPlacement(placement)
+    C.wxWizard_SetBitmapPlacement(self._ptr, placement)
+end
+
+function M:ShowPage(page, goingForward)
+    return _H.to_bool(C.wxWizard_ShowPage(self._ptr, _H.ptr(page), _H.from_bool(goingForward)))
 end
 
 function M:GetCurrentPage()
-    return C.wxWizard_GetCurrentPage(self._ptr)
+    return _H.wrap("wxwizardpage_gen", C.wxWizard_GetCurrentPage(self._ptr))
 end
 
 function M:GetPageSize()
-    return C.wxWizard_GetPageSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxWizard_GetPageSize(self._ptr))
 end
 
 function M:RunWizard(firstPage)
@@ -40,7 +63,7 @@ function M:SetPageSize(width, height)
 end
 
 function M:GetPageAreaSizer()
-    return C.wxWizard_GetPageAreaSizer(self._ptr)
+    return _H.wrap("wxsizer_gen", C.wxWizard_GetPageAreaSizer(self._ptr))
 end
 
 function M:SetBorder(border)
@@ -61,6 +84,21 @@ end
 
 function M:GetBitmap(ref)
     C.wxWizard_GetBitmap(self._ptr, _H.ptr(ref))
+end
+
+function M:Create2(parent, id, text, bitmap, x, y, style)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.to_bool(C.wxWizard_Create2(self._ptr, _H.ptr(parent), id, _ws_text, _H.ptr(bitmap), x, y, style))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M:SetBitmap(bitmap)
+    C.wxWizard_SetBitmap(self._ptr, _H.ptr(bitmap))
+end
+
+function M:GetBitmapPlacement()
+    return C.wxWizard_GetBitmapPlacement(self._ptr)
 end
 
 return M

@@ -7,11 +7,35 @@ local _parent = require("wxnotifyevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+function M:GetCacheFrom()
+    return C.wxListEvent_GetCacheFrom(self._ptr)
+end
+
+function M:GetCacheTo()
+    return C.wxListEvent_GetCacheTo(self._ptr)
+end
+
 function M:Cancelled()
     return _H.to_bool(C.wxListEvent_Cancelled(self._ptr))
+end
+
+function M:GetKeyCode()
+    return C.wxListEvent_GetKeyCode(self._ptr)
+end
+
+function M:IsEditCancelled()
+    return _H.to_bool(C.wxListEvent_IsEditCancelled(self._ptr))
 end
 
 function M:GetCode()
@@ -47,7 +71,7 @@ function M:GetMask()
 end
 
 function M:GetPoint()
-    return C.wxListEvent_GetPoint(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxListEvent_GetPoint(self._ptr))
 end
 
 function M:GetText()

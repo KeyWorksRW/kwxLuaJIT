@@ -7,6 +7,14 @@ local _parent = require("wxchoice_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 local _mixin_wxTextEntry = require("wxtextentry_gen")
 for _k, _v in pairs(_mixin_wxTextEntry) do if M[_k] == nil then M[_k] = _v end end
 local _mixin_wxItemContainer = require("wxitemcontainer_gen")
@@ -30,9 +38,21 @@ function M:Append(item)
     _H.wxs_free(_ws_item)
 end
 
+function M:Dismiss()
+    C.wxComboBox_Dismiss(self._ptr)
+end
+
+function M:IsListEmpty()
+    return _H.to_bool(C.wxComboBox_IsListEmpty(self._ptr))
+end
+
+function M:Popup()
+    C.wxComboBox_Popup(self._ptr)
+end
+
 function M:AppendData(item, clientData)
     local _ws_item = _H.wxs(item)
-    C.wxComboBox_AppendData(self._ptr, _ws_item, clientData)
+    C.wxComboBox_AppendData(self._ptr, _ws_item, _H.ptr(clientData))
     _H.wxs_free(_ws_item)
 end
 
@@ -56,7 +76,7 @@ function M:FindString(str)
 end
 
 function M:GetClientData(index)
-    return C.wxComboBox_GetClientData(self._ptr, index)
+    return _H.wrap("wxclientdata_gen", C.wxComboBox_GetClientData(self._ptr, index))
 end
 
 function M:GetCount()

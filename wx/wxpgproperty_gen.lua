@@ -3,11 +3,180 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:SetChoices(choices)
+    return _H.to_bool(C.wxPGProperty_SetChoices(self._ptr, _H.ptr(choices)))
+end
+
+function M:GetChoices()
+    return _H.wrap("wxpgchoices_gen", C.wxPGProperty_GetChoices(self._ptr))
+end
+
+function M:GetBaseName()
+    return _H.wxs_to_str(C.wxPGProperty_GetBaseName(self._ptr))
+end
+
+function M:AddChoice(label, value)
+    local _ws_label = _H.wxs(label)
+    local _result = C.wxPGProperty_AddChoice(self._ptr, _ws_label, value)
+    _H.wxs_free(_ws_label)
+    return _result
+end
+
+function M:AddPrivateChild(prop)
+    C.wxPGProperty_AddPrivateChild(self._ptr, _H.ptr(prop))
+end
+
+function M:AppendChild(prop)
+    return C.wxPGProperty_AppendChild(self._ptr, _H.ptr(prop))
+end
+
+function M:DeleteChoice(index)
+    C.wxPGProperty_DeleteChoice(self._ptr, index)
+end
+
+function M:EnableCommonValue(enable)
+    C.wxPGProperty_EnableCommonValue(self._ptr, _H.from_bool(enable))
+end
+
+function M:GetCell(column)
+    return _H.wrap("wxpgcell_gen", C.wxPGProperty_GetCell(self._ptr, column))
+end
+
+function M:GetDisplayedString()
+    return _H.wxs_to_str(C.wxPGProperty_GetDisplayedString(self._ptr))
+end
+
+function M:GetIndexInParent()
+    return C.wxPGProperty_GetIndexInParent(self._ptr)
+end
+
+function M:HasAnyChild()
+    return _H.to_bool(C.wxPGProperty_HasAnyChild(self._ptr))
+end
+
+function M:InsertChoice(label, index, value)
+    local _ws_label = _H.wxs(label)
+    local _result = C.wxPGProperty_InsertChoice(self._ptr, _ws_label, index, value)
+    _H.wxs_free(_ws_label)
+    return _result
+end
+
+function M:IsCategory()
+    return _H.to_bool(C.wxPGProperty_IsCategory(self._ptr))
+end
+
+function M:IsEnabled()
+    return _H.to_bool(C.wxPGProperty_IsEnabled(self._ptr))
+end
+
+function M:IsExpanded()
+    return _H.to_bool(C.wxPGProperty_IsExpanded(self._ptr))
+end
+
+function M:IsValueUnspecified()
+    return _H.to_bool(C.wxPGProperty_IsValueUnspecified(self._ptr))
+end
+
+function M:RefreshEditor()
+    C.wxPGProperty_RefreshEditor(self._ptr)
+end
+
+function M:SetAttribute(name, value)
+    local _ws_name = _H.wxs(name)
+    C.wxPGProperty_SetAttribute(self._ptr, _ws_name, _H.ptr(value))
+    _H.wxs_free(_ws_name)
+end
+
+function M:SetAutoUnspecified(enable)
+    C.wxPGProperty_SetAutoUnspecified(self._ptr, _H.from_bool(enable))
+end
+
+function M:SetExpanded(expanded)
+    C.wxPGProperty_SetExpanded(self._ptr, _H.from_bool(expanded))
+end
+
+function M:GetY()
+    return C.wxPGProperty_GetY(self._ptr)
+end
+
+function M:GetValue()
+    return _H.wrap("wxvariant_gen", C.wxPGProperty_GetValue(self._ptr))
+end
+
+function M:GetHintText()
+    return _H.wxs_to_str(C.wxPGProperty_GetHintText(self._ptr))
+end
+
+function M:GetGrid()
+    return _H.wrap("wxpropertygrid_gen", C.wxPGProperty_GetGrid(self._ptr))
+end
+
+function M:GetGridIfDisplayed()
+    return _H.wrap("wxpropertygrid_gen", C.wxPGProperty_GetGridIfDisplayed(self._ptr))
+end
+
+function M:GetMainParent()
+    return _H.wrap("wxpgproperty_gen", C.wxPGProperty_GetMainParent(self._ptr))
+end
+
+function M:GetParent()
+    return _H.wrap("wxpgproperty_gen", C.wxPGProperty_GetParent(self._ptr))
+end
+
+function M:Item(index)
+    return _H.wrap("wxpgproperty_gen", C.wxPGProperty_Item(self._ptr, index))
+end
+
+function M:GetChildCount()
+    return C.wxPGProperty_GetChildCount(self._ptr)
+end
+
+function M:GetChoiceSelection()
+    return C.wxPGProperty_GetChoiceSelection(self._ptr)
+end
+
+function M:SetChoiceSelection(selection)
+    C.wxPGProperty_SetChoiceSelection(self._ptr, selection)
+end
+
+function M:Enable(enable)
+    C.wxPGProperty_Enable(self._ptr, _H.from_bool(enable))
+end
+
+function M:AreChildrenComponents()
+    return _H.to_bool(C.wxPGProperty_AreChildrenComponents(self._ptr))
+end
+
+function M:GetDisplayedCommonValueCount()
+    return C.wxPGProperty_GetDisplayedCommonValueCount(self._ptr)
+end
+
+function M:SetLabel(label)
+    local _ws_label = _H.wxs(label)
+    C.wxPGProperty_SetLabel(self._ptr, _ws_label)
+    _H.wxs_free(_ws_label)
+end
+
+function M:SetName(name)
+    local _ws_name = _H.wxs(name)
+    C.wxPGProperty_SetName(self._ptr, _ws_name)
+    _H.wxs_free(_ws_name)
+end
 
 function M:GetLabel()
     return _H.wxs_to_str(C.wxPGProperty_GetLabel(self._ptr))

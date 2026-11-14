@@ -7,6 +7,14 @@ local _parent = require("wxdc_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -37,9 +45,17 @@ function M.CreateWithSizeAndResolution(fileName, width, height, a_dpi)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:EndAccessibleGroup()
+    C.wxSVGFileDC_EndAccessibleGroup(self._ptr)
+end
+
+function M:SetBitmapHandler(handler)
+    C.wxSVGFileDC_SetBitmapHandler(self._ptr, _H.ptr(handler))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxSVGFileDC_Delete(self._ptr)
         self._ptr = nil
     end

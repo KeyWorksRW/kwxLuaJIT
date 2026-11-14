@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -14,6 +22,85 @@ function M.Create(name, flags)
     local ptr = C.wxLocale_Create(name, flags)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:Init(language, flags)
+    return _H.to_bool(C.wxLocale_Init(self._ptr, language, flags))
+end
+
+function M:InitFromName(name, short_name, locale, load_default)
+    local _ws_name = _H.wxs(name)
+    local _ws_short_name = _H.wxs(short_name)
+    local _ws_locale = _H.wxs(locale)
+    local _result = _H.to_bool(C.wxLocale_InitFromName(self._ptr, _ws_name, _ws_short_name, _ws_locale, _H.from_bool(load_default)))
+    _H.wxs_free(_ws_name)
+    _H.wxs_free(_ws_short_name)
+    _H.wxs_free(_ws_locale)
+    return _result
+end
+
+function M:GetLanguage()
+    return C.wxLocale_GetLanguage(self._ptr)
+end
+
+function M:GetSysName()
+    return _H.wxs_to_str(C.wxLocale_GetSysName(self._ptr))
+end
+
+function M:GetCanonicalName()
+    return _H.wxs_to_str(C.wxLocale_GetCanonicalName(self._ptr))
+end
+
+function M:GetHeaderValue(header, domain)
+    local _ws_header = _H.wxs(header)
+    local _ws_domain = _H.wxs(domain)
+    local _result = _H.wxs_to_str(C.wxLocale_GetHeaderValue(self._ptr, _ws_header, _ws_domain))
+    _H.wxs_free(_ws_header)
+    _H.wxs_free(_ws_domain)
+    return _result
+end
+
+function M:GetPluralString(orig_string, plural_string, count, domain)
+    local _ws_orig_string = _H.wxs(orig_string)
+    local _ws_plural_string = _H.wxs(plural_string)
+    local _ws_domain = _H.wxs(domain)
+    local _result = _H.wxs_to_str(C.wxLocale_GetPluralString(self._ptr, _ws_orig_string, _ws_plural_string, count, _ws_domain))
+    _H.wxs_free(_ws_orig_string)
+    _H.wxs_free(_ws_plural_string)
+    _H.wxs_free(_ws_domain)
+    return _result
+end
+
+function M.GetSystemLanguage()
+    return C.wxLocale_GetSystemLanguage()
+end
+
+function M.GetSystemEncoding()
+    return C.wxLocale_GetSystemEncoding()
+end
+
+function M.GetSystemEncodingName()
+    return _H.wxs_to_str(C.wxLocale_GetSystemEncodingName())
+end
+
+function M.GetInfo(index, category)
+    return _H.wxs_to_str(C.wxLocale_GetInfo(index, category))
+end
+
+function M.GetOSInfo(index, category)
+    return _H.wxs_to_str(C.wxLocale_GetOSInfo(index, category))
+end
+
+function M.IsAvailable(language)
+    return _H.to_bool(C.wxLocale_IsAvailable(language))
+end
+
+function M.GetLanguageName(language)
+    return _H.wxs_to_str(C.wxLocale_GetLanguageName(language))
+end
+
+function M.GetLanguageCanonicalName(language)
+    return _H.wxs_to_str(C.wxLocale_GetLanguageCanonicalName(language))
 end
 
 function M:AddCatalog(szDomain, msgIdLanguage)
@@ -30,7 +117,7 @@ function M:AddCatalogLookupPathPrefix(prefix)
 end
 
 function M:GetLocale()
-    return C.wxLocale_GetLocale(self._ptr)
+    return _H.wrap("wxlocale_gen", C.wxLocale_GetLocale(self._ptr))
 end
 
 function M:GetName()
@@ -59,7 +146,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxLocale_Delete(self._ptr)
         self._ptr = nil
     end

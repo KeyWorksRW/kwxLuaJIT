@@ -7,6 +7,14 @@ local _parent = require("wxboxsizer_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -38,23 +46,23 @@ function M:Realize()
 end
 
 function M:GetAffirmativeButton()
-    return C.wxStdDialogButtonSizer_GetAffirmativeButton(self._ptr)
+    return _H.wrap("wxbutton_gen", C.wxStdDialogButtonSizer_GetAffirmativeButton(self._ptr))
 end
 
 function M:GetApplyButton()
-    return C.wxStdDialogButtonSizer_GetApplyButton(self._ptr)
+    return _H.wrap("wxbutton_gen", C.wxStdDialogButtonSizer_GetApplyButton(self._ptr))
 end
 
 function M:GetNegativeButton()
-    return C.wxStdDialogButtonSizer_GetNegativeButton(self._ptr)
+    return _H.wrap("wxbutton_gen", C.wxStdDialogButtonSizer_GetNegativeButton(self._ptr))
 end
 
 function M:GetCancelButton()
-    return C.wxStdDialogButtonSizer_GetCancelButton(self._ptr)
+    return _H.wrap("wxbutton_gen", C.wxStdDialogButtonSizer_GetCancelButton(self._ptr))
 end
 
 function M:GetHelpButton()
-    return C.wxStdDialogButtonSizer_GetHelpButton(self._ptr)
+    return _H.wrap("wxbutton_gen", C.wxStdDialogButtonSizer_GetHelpButton(self._ptr))
 end
 
 return M

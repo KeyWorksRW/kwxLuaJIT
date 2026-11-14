@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -34,11 +42,11 @@ function M:GetType()
 end
 
 function M:IsEqual(other)
-    return _H.to_bool(C.wxDataFormat_IsEqual(self._ptr, other))
+    return _H.to_bool(C.wxDataFormat_IsEqual(self._ptr, _H.ptr(other)))
 end
 
 function M:SetId(id)
-    C.wxDataFormat_SetId(self._ptr, id)
+    C.wxDataFormat_SetId(self._ptr, _H.ptr(id))
 end
 
 function M:SetType(typ)
@@ -47,7 +55,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxDataFormat_Delete(self._ptr)
         self._ptr = nil
     end

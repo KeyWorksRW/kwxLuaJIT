@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 local _mixin_wxItemContainer = require("wxitemcontainer_gen")
 for _k, _v in pairs(_mixin_wxItemContainer) do if M[_k] == nil then M[_k] = _v end end
 
@@ -24,6 +32,20 @@ function M:Append(item)
     local _ws_item = _H.wxs(item)
     C.wxChoice_Append(self._ptr, _ws_item)
     _H.wxs_free(_ws_item)
+end
+
+function M:AppendWithClientData(item, clientData)
+    local _ws_item = _H.wxs(item)
+    local _result = C.wxChoice_AppendWithClientData(self._ptr, _ws_item, _H.ptr(clientData))
+    _H.wxs_free(_ws_item)
+    return _result
+end
+
+function M:AppendWithClientObject(item, clientData)
+    local _ws_item = _H.wxs(item)
+    local _result = C.wxChoice_AppendWithClientObject(self._ptr, _ws_item, _H.ptr(clientData))
+    _H.wxs_free(_ws_item)
+    return _result
 end
 
 function M:Clear()
@@ -57,6 +79,13 @@ function M:SetString(index, str)
     local _ws_str = _H.wxs(str)
     C.wxChoice_SetString(self._ptr, index, _ws_str)
     _H.wxs_free(_ws_str)
+end
+
+function M:SetStringSelection(str)
+    local _ws_str = _H.wxs(str)
+    local _result = _H.to_bool(C.wxChoice_SetStringSelection(self._ptr, _ws_str))
+    _H.wxs_free(_ws_str)
+    return _result
 end
 
 function M:SetColumns(n)

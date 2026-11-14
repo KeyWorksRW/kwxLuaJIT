@@ -6,8 +6,30 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxDateTime_CreateFromTimeT
+function M.CreateFromTimeT(ticks)
+    local ptr = C.wxDateTime_CreateFromTimeT(ticks)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxDateTime_CreateFromJDN
+function M.CreateFromJDN(julian_day)
+    local ptr = C.wxDateTime_CreateFromJDN(julian_day)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxDateTime_Create
 function M.Create()
@@ -16,8 +38,121 @@ function M.Create()
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:SetFromTimeT(ticks)
+    C.wxDateTime_SetFromTimeT(self._ptr, ticks)
+end
+
+function M:SetFromJDN(julian_day)
+    C.wxDateTime_SetFromJDN(self._ptr, julian_day)
+end
+
+function M.GetFirstWeekDay(first_week_day)
+    return _H.to_bool(C.wxDateTime_GetFirstWeekDay(first_week_day))
+end
+
+function M.GetEnglishMonthName(month, flags)
+    return _H.wxs_to_str(C.wxDateTime_GetEnglishMonthName(month, flags))
+end
+
+function M.GetEnglishWeekDayName(weekday, flags)
+    return _H.wxs_to_str(C.wxDateTime_GetEnglishWeekDayName(weekday, flags))
+end
+
+function M:GetDateOnly(ref)
+    C.wxDateTime_GetDateOnly(self._ptr, _H.ptr(ref))
+end
+
+function M:SetToYearDay(year_day)
+    C.wxDateTime_SetToYearDay(self._ptr, year_day)
+end
+
+function M:GetYearDay(year_day, ref)
+    C.wxDateTime_GetYearDay(self._ptr, year_day, _H.ptr(ref))
+end
+
+function M:GetJulianDayNumber()
+    return C.wxDateTime_GetJulianDayNumber(self._ptr)
+end
+
+function M:GetModifiedJulianDayNumber()
+    return C.wxDateTime_GetModifiedJulianDayNumber(self._ptr)
+end
+
+function M:GetRataDie()
+    return C.wxDateTime_GetRataDie(self._ptr)
+end
+
+function M:FromTimezone(time_zone, no_dst, ref)
+    C.wxDateTime_FromTimezone(self._ptr, time_zone, no_dst, _H.ptr(ref))
+end
+
+function M:MakeFromTimezone(time_zone, no_dst)
+    C.wxDateTime_MakeFromTimezone(self._ptr, time_zone, no_dst)
+end
+
+function M:ToUTC(no_dst, ref)
+    C.wxDateTime_ToUTC(self._ptr, no_dst, _H.ptr(ref))
+end
+
+function M:MakeUTC(no_dst)
+    C.wxDateTime_MakeUTC(self._ptr, no_dst)
+end
+
+function M:FromUTC(no_dst, ref)
+    C.wxDateTime_FromUTC(self._ptr, no_dst, _H.ptr(ref))
+end
+
+function M:MakeFromUTC(no_dst)
+    C.wxDateTime_MakeFromUTC(self._ptr, no_dst)
+end
+
+function M:GetCenturyTZ(time_zone)
+    return C.wxDateTime_GetCenturyTZ(self._ptr, time_zone)
+end
+
+function M:GetWeekBasedYear(time_zone)
+    return C.wxDateTime_GetWeekBasedYear(self._ptr, time_zone)
+end
+
+function M:FormatISOCombined(separator)
+    return _H.wxs_to_str(C.wxDateTime_FormatISOCombined(self._ptr, separator))
+end
+
+function M:ParseISODate(text)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.to_bool(C.wxDateTime_ParseISODate(self._ptr, _ws_text))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M:ParseISOTime(text)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.to_bool(C.wxDateTime_ParseISOTime(self._ptr, _ws_text))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M:ParseISOCombined(text, separator)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.to_bool(C.wxDateTime_ParseISOCombined(self._ptr, _ws_text, separator))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M:DiffAsDateSpan(datetime, ref)
+    C.wxDateTime_DiffAsDateSpan(self._ptr, _H.ptr(datetime), _H.ptr(ref))
+end
+
+function M:SetFromDOS(dos_date_time)
+    C.wxDateTime_SetFromDOS(self._ptr, dos_date_time)
+end
+
+function M:GetAsDOS()
+    return C.wxDateTime_GetAsDOS(self._ptr)
+end
+
 function M:AddDate(diff, ref)
-    C.wxDateTime_AddDate(self._ptr, diff, _H.ptr(ref))
+    C.wxDateTime_AddDate(self._ptr, _H.ptr(diff), _H.ptr(ref))
 end
 
 function M:AddDateValues(years, month, week, day)
@@ -25,19 +160,19 @@ function M:AddDateValues(years, month, week, day)
 end
 
 function M:AddTime(diff, ref)
-    C.wxDateTime_AddTime(self._ptr, diff, _H.ptr(ref))
+    C.wxDateTime_AddTime(self._ptr, _H.ptr(diff), _H.ptr(ref))
 end
 
 function M:AddTimeValues(hours, minVal, seconds, milliseconds)
     C.wxDateTime_AddTimeValues(self._ptr, hours, minVal, seconds, milliseconds)
 end
 
-function M:ConvertYearToBC(year)
-    return C.wxDateTime_ConvertYearToBC(self._ptr, year)
+function M.ConvertYearToBC(year)
+    return C.wxDateTime_ConvertYearToBC(year)
 end
 
 function M:Format(format, timeZone)
-    return _H.wxs_to_str(C.wxDateTime_Format(self._ptr, format, timeZone))
+    return _H.wxs_to_str(C.wxDateTime_Format(self._ptr, _H.ptr(format), timeZone))
 end
 
 function M:FormatDate()
@@ -56,28 +191,28 @@ function M:FormatTime()
     return _H.wxs_to_str(C.wxDateTime_FormatTime(self._ptr))
 end
 
-function M:GetAmString()
-    return _H.wxs_to_str(C.wxDateTime_GetAmString(self._ptr))
+function M.GetAmString()
+    return _H.wxs_to_str(C.wxDateTime_GetAmString())
 end
 
-function M:GetBeginDST(year, country, dateTime)
-    C.wxDateTime_GetBeginDST(self._ptr, year, country, _H.ptr(dateTime))
+function M.GetBeginDST(year, country, dateTime)
+    C.wxDateTime_GetBeginDST(year, country, _H.ptr(dateTime))
 end
 
-function M:GetCentury(year)
-    return C.wxDateTime_GetCentury(self._ptr, year)
+function M.GetCentury(year)
+    return C.wxDateTime_GetCentury(year)
 end
 
-function M:GetCountry()
-    return C.wxDateTime_GetCountry(self._ptr)
+function M.GetCountry()
+    return C.wxDateTime_GetCountry()
 end
 
-function M:GetCurrentMonth(cal)
-    return C.wxDateTime_GetCurrentMonth(self._ptr, cal)
+function M.GetCurrentMonth(cal)
+    return C.wxDateTime_GetCurrentMonth(cal)
 end
 
-function M:GetCurrentYear(cal)
-    return C.wxDateTime_GetCurrentYear(self._ptr, cal)
+function M.GetCurrentYear(cal)
+    return C.wxDateTime_GetCurrentYear(cal)
 end
 
 function M:GetDay(timeZone)
@@ -88,8 +223,8 @@ function M:GetDayOfYear(timeZone)
     return C.wxDateTime_GetDayOfYear(self._ptr, timeZone)
 end
 
-function M:GetEndDST(year, country, dateTime)
-    C.wxDateTime_GetEndDST(self._ptr, year, country, _H.ptr(dateTime))
+function M.GetEndDST(year, country, dateTime)
+    C.wxDateTime_GetEndDST(year, country, _H.ptr(dateTime))
 end
 
 function M:GetHour(timeZone)
@@ -116,24 +251,24 @@ function M:GetMonth(timeZone)
     return C.wxDateTime_GetMonth(self._ptr, timeZone)
 end
 
-function M:GetMonthName(month, flags)
-    return _H.wxs_to_str(C.wxDateTime_GetMonthName(self._ptr, month, flags))
+function M.GetMonthName(month, flags)
+    return _H.wxs_to_str(C.wxDateTime_GetMonthName(month, flags))
 end
 
 function M:GetNextWeekDay(weekday, ref)
     C.wxDateTime_GetNextWeekDay(self._ptr, weekday, _H.ptr(ref))
 end
 
-function M:GetNumberOfDays(year, cal)
-    return C.wxDateTime_GetNumberOfDays(self._ptr, year, cal)
+function M.GetNumberOfDays(year, cal)
+    return C.wxDateTime_GetNumberOfDays(year, cal)
 end
 
-function M:GetNumberOfDaysMonth(month, year, cal)
-    return C.wxDateTime_GetNumberOfDaysMonth(self._ptr, month, year, cal)
+function M.GetNumberOfDaysMonth(month, year, cal)
+    return C.wxDateTime_GetNumberOfDaysMonth(month, year, cal)
 end
 
-function M:GetPmString()
-    return _H.wxs_to_str(C.wxDateTime_GetPmString(self._ptr))
+function M.GetPmString()
+    return _H.wxs_to_str(C.wxDateTime_GetPmString())
 end
 
 function M:GetPrevWeekDay(weekday, ref)
@@ -148,12 +283,12 @@ function M:GetTicks()
     return C.wxDateTime_GetTicks(self._ptr)
 end
 
-function M:GetTimeNow()
-    return C.wxDateTime_GetTimeNow(self._ptr)
+function M.GetTimeNow()
+    return C.wxDateTime_GetTimeNow()
 end
 
 function M:GetValue(hi_long, lo_long)
-    C.wxDateTime_GetValue(self._ptr, hi_long, lo_long)
+    C.wxDateTime_GetValue(self._ptr, _H.ptr(hi_long), _H.ptr(lo_long))
 end
 
 function M:GetWeekDay(weekday, nthWeek, month, year, ref)
@@ -164,8 +299,8 @@ function M:GetWeekDayInSameWeek(weekday, flags, ref)
     C.wxDateTime_GetWeekDayInSameWeek(self._ptr, weekday, flags, _H.ptr(ref))
 end
 
-function M:GetWeekDayName(weekday, flags)
-    return _H.wxs_to_str(C.wxDateTime_GetWeekDayName(self._ptr, weekday, flags))
+function M.GetWeekDayName(weekday, flags)
+    return _H.wxs_to_str(C.wxDateTime_GetWeekDayName(weekday, flags))
 end
 
 function M:GetWeekDayTZ(timeZone)
@@ -192,28 +327,28 @@ function M:IsDST(country)
     return _H.to_bool(C.wxDateTime_IsDST(self._ptr, country))
 end
 
-function M:IsDSTApplicable(year, country)
-    return _H.to_bool(C.wxDateTime_IsDSTApplicable(self._ptr, year, country))
+function M.IsDSTApplicable(year, country)
+    return _H.to_bool(C.wxDateTime_IsDSTApplicable(year, country))
 end
 
 function M:IsEarlierThan(datetime)
-    return _H.to_bool(C.wxDateTime_IsEarlierThan(self._ptr, datetime))
+    return _H.to_bool(C.wxDateTime_IsEarlierThan(self._ptr, _H.ptr(datetime)))
 end
 
 function M:IsEqualTo(datetime)
-    return _H.to_bool(C.wxDateTime_IsEqualTo(self._ptr, datetime))
+    return _H.to_bool(C.wxDateTime_IsEqualTo(self._ptr, _H.ptr(datetime)))
 end
 
 function M:IsEqualUpTo(dateTime, timeSpan)
-    return _H.to_bool(C.wxDateTime_IsEqualUpTo(self._ptr, _H.ptr(dateTime), timeSpan))
+    return _H.to_bool(C.wxDateTime_IsEqualUpTo(self._ptr, _H.ptr(dateTime), _H.ptr(timeSpan)))
 end
 
 function M:IsLaterThan(datetime)
-    return _H.to_bool(C.wxDateTime_IsLaterThan(self._ptr, datetime))
+    return _H.to_bool(C.wxDateTime_IsLaterThan(self._ptr, _H.ptr(datetime)))
 end
 
-function M:IsLeapYear(year, cal)
-    return _H.to_bool(C.wxDateTime_IsLeapYear(self._ptr, year, cal))
+function M.IsLeapYear(year, cal)
+    return _H.to_bool(C.wxDateTime_IsLeapYear(year, cal))
 end
 
 function M:IsSameDate(dateTime)
@@ -232,8 +367,8 @@ function M:IsValid()
     return _H.to_bool(C.wxDateTime_IsValid(self._ptr))
 end
 
-function M:IsWestEuropeanCountry(country)
-    return _H.to_bool(C.wxDateTime_IsWestEuropeanCountry(self._ptr, country))
+function M.IsWestEuropeanCountry(country)
+    return _H.to_bool(C.wxDateTime_IsWestEuropeanCountry(country))
 end
 
 function M:IsWorkDay(country)
@@ -253,23 +388,26 @@ function M:Now()
 end
 
 function M:ParseDate(date)
-    return C.wxDateTime_ParseDate(self._ptr, date)
+    return C.wxDateTime_ParseDate(self._ptr, _H.ptr(date))
 end
 
 function M:ParseDateTime(datetime)
-    return C.wxDateTime_ParseDateTime(self._ptr, datetime)
+    return C.wxDateTime_ParseDateTime(self._ptr, _H.ptr(datetime))
 end
 
 function M:ParseFormat(date, format, dateDef)
-    return C.wxDateTime_ParseFormat(self._ptr, date, format, dateDef)
+    return C.wxDateTime_ParseFormat(self._ptr, _H.ptr(date), _H.ptr(format), _H.ptr(dateDef))
 end
 
 function M:ParseRfc822Date(date)
-    return C.wxDateTime_ParseRfc822Date(self._ptr, date)
+    return C.wxDateTime_ParseRfc822Date(self._ptr, _H.ptr(date))
 end
 
 function M:ParseTime(time)
-    return C.wxDateTime_ParseTime(self._ptr, _H.ptr(time))
+    local _ws_time = _H.wxs(time)
+    local _result = C.wxDateTime_ParseTime(self._ptr, _ws_time)
+    _H.wxs_free(_ws_time)
+    return _result
 end
 
 function M:ResetTime()
@@ -280,8 +418,8 @@ function M:Set(day, month, year, hour, minute, second, millisec)
     C.wxDateTime_Set(self._ptr, day, month, year, hour, minute, second, millisec)
 end
 
-function M:SetCountry(country)
-    C.wxDateTime_SetCountry(self._ptr, country)
+function M.SetCountry(country)
+    C.wxDateTime_SetCountry(country)
 end
 
 function M:SetDay(day)
@@ -345,11 +483,11 @@ function M:SetYear(year)
 end
 
 function M:SubtractDate(diff, ref)
-    C.wxDateTime_SubtractDate(self._ptr, diff, _H.ptr(ref))
+    C.wxDateTime_SubtractDate(self._ptr, _H.ptr(diff), _H.ptr(ref))
 end
 
 function M:SubtractTime(diff, ref)
-    C.wxDateTime_SubtractTime(self._ptr, diff, _H.ptr(ref))
+    C.wxDateTime_SubtractTime(self._ptr, _H.ptr(diff), _H.ptr(ref))
 end
 
 function M:ToGMT(noDST)
@@ -368,8 +506,16 @@ function M:UNow()
     C.wxDateTime_UNow(self._ptr)
 end
 
-function M:wxDateTime(hi_long, lo_long)
-    return C.wxDateTime_wxDateTime(self._ptr, hi_long, lo_long)
+function M.wxDateTime(hi_long, lo_long)
+    return C.wxDateTime_wxDateTime(hi_long, lo_long)
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxDateTime_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

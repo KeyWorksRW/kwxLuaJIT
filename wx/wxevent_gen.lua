@@ -3,14 +3,31 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+function M:GetCallbackUserData()
+    return C.wxEvent_GetCallbackUserData(self._ptr)
+end
+
+function M:SetCallbackUserData(obj)
+    C.wxEvent_SetCallbackUserData(self._ptr, _H.ptr(obj))
+end
+
 function M:GetEventObject()
-    return C.wxEvent_GetEventObject(self._ptr)
+    return _H.wrap("wxobject_gen", C.wxEvent_GetEventObject(self._ptr))
 end
 
 function M:GetEventType()
@@ -33,8 +50,12 @@ function M:IsCommandEvent()
     return _H.to_bool(C.wxEvent_IsCommandEvent(self._ptr))
 end
 
-function M:NewEventType()
-    return C.wxEvent_NewEventType(self._ptr)
+function M:IsOfClass(className)
+    return _H.to_bool(C.wxEvent_IsOfClass(self._ptr, className))
+end
+
+function M.NewEventType()
+    return C.wxEvent_NewEventType()
 end
 
 function M:SetEventObject(obj)
@@ -55,6 +76,10 @@ end
 
 function M:Skip(skip)
     C.wxEvent_Skip(self._ptr, _H.from_bool(skip))
+end
+
+function M:SetOnClone(pFunction)
+    C.wxEvent_SetOnClone(self._ptr, _H.ptr(pFunction))
 end
 
 return M

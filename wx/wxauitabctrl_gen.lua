@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,7 +23,7 @@ function M:SetArtProvider(artId)
 end
 
 function M:GetArtProvider()
-    return C.wxAuiTabCtrl_GetArtProvider(self._ptr)
+    return _H.wrap("wxauitabart_gen", C.wxAuiTabCtrl_GetArtProvider(self._ptr))
 end
 
 function M:SetFlags(flags)
@@ -59,7 +67,7 @@ function M:GetActivePage()
 end
 
 function M:GetWindowFromIdx(idx)
-    return C.wxAuiTabCtrl_GetWindowFromIdx(self._ptr, idx)
+    return _H.wrap("wxwindow_gen", C.wxAuiTabCtrl_GetWindowFromIdx(self._ptr, idx))
 end
 
 function M:GetIdxFromWindow(page)
@@ -71,11 +79,11 @@ function M:GetPageCount()
 end
 
 function M:GetPage(idx)
-    return C.wxAuiTabCtrl_GetPage(self._ptr, idx)
+    return _H.wrap("wxauinotebookpage_gen", C.wxAuiTabCtrl_GetPage(self._ptr, idx))
 end
 
 function M:GetPages()
-    return C.wxAuiTabCtrl_GetPages(self._ptr)
+    return _H.wrap("wxauinotebookpagearray_gen", C.wxAuiTabCtrl_GetPages(self._ptr))
 end
 
 function M:SetNormalFont(normalFont)

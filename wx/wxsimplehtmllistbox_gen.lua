@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxhtmllistbox_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -51,7 +60,7 @@ end
 
 function M:AppendData(item, data)
     local _ws_item = _H.wxs(item)
-    local _result = C.wxSimpleHtmlListBox_AppendData(self._ptr, _ws_item, data)
+    local _result = C.wxSimpleHtmlListBox_AppendData(self._ptr, _ws_item, _H.ptr(data))
     _H.wxs_free(_ws_item)
     return _result
 end
@@ -65,7 +74,7 @@ end
 
 function M:InsertData(item, pos, data)
     local _ws_item = _H.wxs(item)
-    local _result = C.wxSimpleHtmlListBox_InsertData(self._ptr, _ws_item, pos, data)
+    local _result = C.wxSimpleHtmlListBox_InsertData(self._ptr, _ws_item, pos, _H.ptr(data))
     _H.wxs_free(_ws_item)
     return _result
 end
@@ -82,7 +91,7 @@ function M:GetClientData(index)
 end
 
 function M:SetClientData(index, data)
-    C.wxSimpleHtmlListBox_SetClientData(self._ptr, index, data)
+    C.wxSimpleHtmlListBox_SetClientData(self._ptr, index, _H.ptr(data))
 end
 
 function M:IsEmpty()

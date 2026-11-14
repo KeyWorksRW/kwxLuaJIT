@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,6 +25,14 @@ function M.Create(parent, id, text, left, top, width, height, n, strings, dimens
     _H.wxs_free(_ws_text)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:Enable(n, enable)
+    return _H.to_bool(C.wxRadioBox_Enable(self._ptr, n, _H.from_bool(enable)))
+end
+
+function M:Show(n, show)
+    return _H.to_bool(C.wxRadioBox_Show(self._ptr, n, _H.from_bool(show)))
 end
 
 function M:EnableItem(item, enable)

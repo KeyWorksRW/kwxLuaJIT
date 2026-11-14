@@ -7,8 +7,24 @@ local _parent = require("wxstreambase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:CanRead()
+    return _H.to_bool(C.wxInputStream_CanRead(self._ptr))
+end
+
+function M:TellI()
+    return C.wxInputStream_TellI(self._ptr)
+end
 
 function M:Eof()
     return _H.to_bool(C.wxInputStream_Eof(self._ptr))
@@ -27,7 +43,7 @@ function M:Peek()
 end
 
 function M:Read(buffer, size)
-    C.wxInputStream_Read(self._ptr, buffer, size)
+    C.wxInputStream_Read(self._ptr, _H.ptr(buffer), size)
 end
 
 function M:SeekI(pos, mode)
@@ -39,7 +55,7 @@ function M:Tell()
 end
 
 function M:UngetBuffer(buffer, size)
-    return C.wxInputStream_UngetBuffer(self._ptr, buffer, size)
+    return C.wxInputStream_UngetBuffer(self._ptr, _H.ptr(buffer), size)
 end
 
 function M:Ungetch(character)
@@ -48,7 +64,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxInputStream_Delete(self._ptr)
         self._ptr = nil
     end

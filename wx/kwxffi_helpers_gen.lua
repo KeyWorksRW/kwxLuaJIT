@@ -43,6 +43,24 @@ function M.ptr(obj)
     return obj._ptr
 end
 
+M._wrap_cache = {}
+
+--- Wrap a raw C pointer returned by the FFI layer in its generated class module.
+--- A table is returned unchanged, so a consumer may call this on an already-wrapped value.
+--- @param module_name string generated class module, e.g. "wxsize_gen"
+--- @param ptr cdata|table|nil raw pointer or existing wrapper
+--- @param owned boolean|nil true when the caller owns the native allocation
+function M.wrap(module_name, ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    local mod = M._wrap_cache[module_name]
+    if mod == nil then
+        mod = require(module_name)
+        M._wrap_cache[module_name] = mod
+    end
+    return mod.FromPtr(ptr, owned)
+end
+
 --- Convert a C int to a Lua boolean.
 --- @param val number
 --- @return boolean

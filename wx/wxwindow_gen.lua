@@ -7,6 +7,14 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,605 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxWindow_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SetAccessible(accessible)
+    C.wxWindow_SetAccessible(self._ptr, _H.ptr(accessible))
+end
+
+function M:GetAccessible()
+    return _H.wrap("wxaccessible_gen", C.wxWindow_GetAccessible(self._ptr))
+end
+
+function M:GetOrCreateAccessible()
+    return _H.wrap("wxaccessible_gen", C.wxWindow_GetOrCreateAccessible(self._ptr))
+end
+
+function M:CreateAccessible()
+    return _H.wrap("wxaccessible_gen", C.wxWindow_CreateAccessible(self._ptr))
+end
+
+function M:SetAccessibleName(name)
+    local _ws_name = _H.wxs(name)
+    C.wxWindow_SetAccessibleName(self._ptr, _ws_name)
+    _H.wxs_free(_ws_name)
+end
+
+function M:ConvertDialogToPixelsEx(x, y)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertDialogToPixelsEx(self._ptr, x, y))
+end
+
+function M:ConvertPixelsToDialogEx(x, y)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertPixelsToDialogEx(self._ptr, x, y))
+end
+
+function M:ScreenToClient2(x, y)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ScreenToClient2(self._ptr, x, y))
+end
+
+function M.NewControlId(count)
+    return C.wxWindow_NewControlId(count)
+end
+
+function M:CentreOnParent(dir)
+    C.wxWindow_CentreOnParent(self._ptr, dir)
+end
+
+function M.FindWindowById(winid, parent)
+    return _H.wrap("wxwindow_gen", C.wxWindow_FindWindowById(winid, _H.ptr(parent)))
+end
+
+function M.FindWindowByName(name, parent)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.wrap("wxwindow_gen", C.wxWindow_FindWindowByName(_ws_name, _H.ptr(parent)))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M:GetContainingSizer()
+    return _H.wrap("wxsizer_gen", C.wxWindow_GetContainingSizer(self._ptr))
+end
+
+function M:GetMinSizeFromKnownDirection(direction, size, availableOtherDir)
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMinSizeFromKnownDirection(self._ptr, direction, size, availableOtherDir))
+end
+
+function M:IsTransparentBackgroundSupported(reason)
+    return _H.to_bool(C.wxWindow_IsTransparentBackgroundSupported(self._ptr, _H.ptr(reason)))
+end
+
+function M:PostSizeEvent()
+    C.wxWindow_PostSizeEvent(self._ptr)
+end
+
+function M.UnreserveControlId(id, count)
+    C.wxWindow_UnreserveControlId(id, count)
+end
+
+function M:GetWindowVariant()
+    return C.wxWindow_GetWindowVariant(self._ptr)
+end
+
+function M:SetWindowVariant(variant)
+    C.wxWindow_SetWindowVariant(self._ptr, variant)
+end
+
+function M:GetLayoutDirection()
+    return C.wxWindow_GetLayoutDirection(self._ptr)
+end
+
+function M:SetLayoutDirection(direction)
+    C.wxWindow_SetLayoutDirection(self._ptr, direction)
+end
+
+function M:SetPosition(x, y)
+    C.wxWindow_SetPosition(self._ptr, x, y)
+end
+
+function M:GetScreenPosition(x, y)
+    C.wxWindow_GetScreenPosition(self._ptr, x, y)
+end
+
+function M:GetScreenRect()
+    return _H.wrap("wxrect_gen", C.wxWindow_GetScreenRect(self._ptr))
+end
+
+function M:GetClientAreaOrigin(x, y)
+    C.wxWindow_GetClientAreaOrigin(self._ptr, x, y)
+end
+
+function M:GetClientRect()
+    return _H.wrap("wxrect_gen", C.wxWindow_GetClientRect(self._ptr))
+end
+
+function M:ClientToWindowSize(width, height)
+    C.wxWindow_ClientToWindowSize(self._ptr, width, height)
+end
+
+function M:WindowToClientSize(width, height)
+    C.wxWindow_WindowToClientSize(self._ptr, width, height)
+end
+
+function M:GetBestHeight(width)
+    return C.wxWindow_GetBestHeight(self._ptr, width)
+end
+
+function M:GetBestWidth(height)
+    return C.wxWindow_GetBestWidth(self._ptr, height)
+end
+
+function M:InvalidateBestSize()
+    C.wxWindow_InvalidateBestSize(self._ptr)
+end
+
+function M:CacheBestSize(width, height)
+    C.wxWindow_CacheBestSize(self._ptr, width, height)
+end
+
+function M:SetInitialSize(width, height)
+    return _H.to_bool(C.wxWindow_SetInitialSize(self._ptr, width, height))
+end
+
+function M:Centre(direction)
+    C.wxWindow_Centre(self._ptr, direction)
+end
+
+function M:GetMinSize()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMinSize(self._ptr))
+end
+
+function M:GetMaxSize()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMaxSize(self._ptr))
+end
+
+function M:SetMinClientSize(width, height)
+    C.wxWindow_SetMinClientSize(self._ptr, width, height)
+end
+
+function M:SetMaxClientSize(width, height)
+    C.wxWindow_SetMaxClientSize(self._ptr, width, height)
+end
+
+function M:GetMinClientSize()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMinClientSize(self._ptr))
+end
+
+function M:GetMaxClientSize()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMaxClientSize(self._ptr))
+end
+
+function M:GetBestVirtualSize()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetBestVirtualSize(self._ptr))
+end
+
+function M:GetContentScaleFactor()
+    return C.wxWindow_GetContentScaleFactor(self._ptr)
+end
+
+function M:GetDPIScaleFactor()
+    return C.wxWindow_GetDPIScaleFactor(self._ptr)
+end
+
+function M:GetWindowBorderSize()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetWindowBorderSize(self._ptr))
+end
+
+function M:SendSizeEvent(flags)
+    C.wxWindow_SendSizeEvent(self._ptr, flags)
+end
+
+function M:SendSizeEventToParent(flags)
+    C.wxWindow_SendSizeEventToParent(self._ptr, flags)
+end
+
+function M:ShowWithEffect(effect, timeout)
+    return _H.to_bool(C.wxWindow_ShowWithEffect(self._ptr, effect, timeout))
+end
+
+function M:HideWithEffect(effect, timeout)
+    return _H.to_bool(C.wxWindow_HideWithEffect(self._ptr, effect, timeout))
+end
+
+function M:IsThisEnabled()
+    return _H.to_bool(C.wxWindow_IsThisEnabled(self._ptr))
+end
+
+function M:IsShownOnScreen()
+    return _H.to_bool(C.wxWindow_IsShownOnScreen(self._ptr))
+end
+
+function M:SetWindowStyle(style)
+    C.wxWindow_SetWindowStyle(self._ptr, style)
+end
+
+function M:GetWindowStyle()
+    return C.wxWindow_GetWindowStyle(self._ptr)
+end
+
+function M:IsRetained()
+    return _H.to_bool(C.wxWindow_IsRetained(self._ptr))
+end
+
+function M:ToggleWindowStyle(flag)
+    return _H.to_bool(C.wxWindow_ToggleWindowStyle(self._ptr, flag))
+end
+
+function M:GetExtraStyle()
+    return C.wxWindow_GetExtraStyle(self._ptr)
+end
+
+function M:HasExtraStyle(exFlag)
+    return _H.to_bool(C.wxWindow_HasExtraStyle(self._ptr, exFlag))
+end
+
+function M:SetThemeEnabled(enableTheme)
+    C.wxWindow_SetThemeEnabled(self._ptr, _H.from_bool(enableTheme))
+end
+
+function M:GetThemeEnabled()
+    return _H.to_bool(C.wxWindow_GetThemeEnabled(self._ptr))
+end
+
+function M:SetFocusFromKbd()
+    C.wxWindow_SetFocusFromKbd(self._ptr)
+end
+
+function M:AcceptsFocus()
+    return _H.to_bool(C.wxWindow_AcceptsFocus(self._ptr))
+end
+
+function M:AcceptsFocusRecursively()
+    return _H.to_bool(C.wxWindow_AcceptsFocusRecursively(self._ptr))
+end
+
+function M:AcceptsFocusFromKeyboard()
+    return _H.to_bool(C.wxWindow_AcceptsFocusFromKeyboard(self._ptr))
+end
+
+function M:DisableFocusFromKeyboard()
+    C.wxWindow_DisableFocusFromKeyboard(self._ptr)
+end
+
+function M:EnableFocusFromKeyboard()
+    C.wxWindow_EnableFocusFromKeyboard(self._ptr)
+end
+
+function M:CanBeFocused()
+    return _H.to_bool(C.wxWindow_CanBeFocused(self._ptr))
+end
+
+function M:IsFocusable()
+    return _H.to_bool(C.wxWindow_IsFocusable(self._ptr))
+end
+
+function M:CanAcceptFocus()
+    return _H.to_bool(C.wxWindow_CanAcceptFocus(self._ptr))
+end
+
+function M:CanAcceptFocusFromKeyboard()
+    return _H.to_bool(C.wxWindow_CanAcceptFocusFromKeyboard(self._ptr))
+end
+
+function M:SetCanFocus(canFocus)
+    C.wxWindow_SetCanFocus(self._ptr, _H.from_bool(canFocus))
+end
+
+function M:EnableVisibleFocus(enabled)
+    C.wxWindow_EnableVisibleFocus(self._ptr, _H.from_bool(enabled))
+end
+
+function M:NavigateIn(flags)
+    return _H.to_bool(C.wxWindow_NavigateIn(self._ptr, flags))
+end
+
+function M:Navigate(flags)
+    return _H.to_bool(C.wxWindow_Navigate(self._ptr, flags))
+end
+
+function M:MoveBeforeInTabOrder(win)
+    C.wxWindow_MoveBeforeInTabOrder(self._ptr, _H.ptr(win))
+end
+
+function M:MoveAfterInTabOrder(win)
+    C.wxWindow_MoveAfterInTabOrder(self._ptr, _H.ptr(win))
+end
+
+function M:IsDescendant(win)
+    return _H.to_bool(C.wxWindow_IsDescendant(self._ptr, _H.ptr(win)))
+end
+
+function M:SetParent(parent)
+    C.wxWindow_SetParent(self._ptr, _H.ptr(parent))
+end
+
+function M:SetEventHandler(handler)
+    C.wxWindow_SetEventHandler(self._ptr, _H.ptr(handler))
+end
+
+function M:RemoveEventHandler(handler)
+    return _H.to_bool(C.wxWindow_RemoveEventHandler(self._ptr, _H.ptr(handler)))
+end
+
+function M:ProcessWindowEvent(event)
+    return _H.to_bool(C.wxWindow_ProcessWindowEvent(self._ptr, _H.ptr(event)))
+end
+
+function M:ProcessWindowEventLocally(event)
+    return _H.to_bool(C.wxWindow_ProcessWindowEventLocally(self._ptr, _H.ptr(event)))
+end
+
+function M:HandleWindowEvent(event)
+    return _H.to_bool(C.wxWindow_HandleWindowEvent(self._ptr, _H.ptr(event)))
+end
+
+function M:GetAcceleratorTable()
+    return _H.wrap("wxacceleratortable_gen", C.wxWindow_GetAcceleratorTable(self._ptr))
+end
+
+function M:RegisterHotKey(hotkeyId, modifiers, keycode)
+    return _H.to_bool(C.wxWindow_RegisterHotKey(self._ptr, hotkeyId, modifiers, keycode))
+end
+
+function M:UnregisterHotKey(hotkeyId)
+    return _H.to_bool(C.wxWindow_UnregisterHotKey(self._ptr, hotkeyId))
+end
+
+function M:GetDPI()
+    return _H.wrap("wxsize_gen", C.wxWindow_GetDPI(self._ptr))
+end
+
+function M:FromDIP(value)
+    return C.wxWindow_FromDIP(self._ptr, value)
+end
+
+function M:ToDIP(value)
+    return C.wxWindow_ToDIP(self._ptr, value)
+end
+
+function M:HasCapture()
+    return _H.to_bool(C.wxWindow_HasCapture(self._ptr))
+end
+
+function M:EnableTouchEvents(eventsMask)
+    return _H.to_bool(C.wxWindow_EnableTouchEvents(self._ptr, eventsMask))
+end
+
+function M:IsFrozen()
+    return _H.to_bool(C.wxWindow_IsFrozen(self._ptr))
+end
+
+function M:SetDoubleBuffered(on)
+    C.wxWindow_SetDoubleBuffered(self._ptr, _H.from_bool(on))
+end
+
+function M:IsDoubleBuffered()
+    return _H.to_bool(C.wxWindow_IsDoubleBuffered(self._ptr))
+end
+
+function M:GetUpdateClientRect()
+    return _H.wrap("wxrect_gen", C.wxWindow_GetUpdateClientRect(self._ptr))
+end
+
+function M:SetOwnBackgroundColour(colour)
+    C.wxWindow_SetOwnBackgroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:UseBgCol()
+    return _H.to_bool(C.wxWindow_UseBgCol(self._ptr))
+end
+
+function M:UseBackgroundColour()
+    return _H.to_bool(C.wxWindow_UseBackgroundColour(self._ptr))
+end
+
+function M:InheritsBackgroundColour()
+    return _H.to_bool(C.wxWindow_InheritsBackgroundColour(self._ptr))
+end
+
+function M:SetOwnForegroundColour(colour)
+    C.wxWindow_SetOwnForegroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:UseForegroundColour()
+    return _H.to_bool(C.wxWindow_UseForegroundColour(self._ptr))
+end
+
+function M:InheritsForegroundColour()
+    return _H.to_bool(C.wxWindow_InheritsForegroundColour(self._ptr))
+end
+
+function M:SetBackgroundStyle(style)
+    return _H.to_bool(C.wxWindow_SetBackgroundStyle(self._ptr, style))
+end
+
+function M:GetBackgroundStyle()
+    return C.wxWindow_GetBackgroundStyle(self._ptr)
+end
+
+function M:HasTransparentBackground()
+    return _H.to_bool(C.wxWindow_HasTransparentBackground(self._ptr))
+end
+
+function M:SetOwnFont(font)
+    C.wxWindow_SetOwnFont(self._ptr, _H.ptr(font))
+end
+
+function M:EnableInputMethod(enable)
+    C.wxWindow_EnableInputMethod(self._ptr, _H.from_bool(enable))
+end
+
+function M:IsInputMethodEnabled()
+    return _H.to_bool(C.wxWindow_IsInputMethodEnabled(self._ptr))
+end
+
+function M:UpdateInputMethodCursorRect(x, y, width, height)
+    C.wxWindow_UpdateInputMethodCursorRect(self._ptr, x, y, width, height)
+end
+
+function M:GetInputMethodCursorRect()
+    return _H.wrap("wxrect_gen", C.wxWindow_GetInputMethodCursorRect(self._ptr))
+end
+
+function M:HitTest(x, y)
+    return C.wxWindow_HitTest(self._ptr, x, y)
+end
+
+function M:GetBorder(flags)
+    return C.wxWindow_GetBorder(self._ptr, flags)
+end
+
+function M:HasMultiplePages()
+    return _H.to_bool(C.wxWindow_HasMultiplePages(self._ptr))
+end
+
+function M:CanScroll(orient)
+    return _H.to_bool(C.wxWindow_CanScroll(self._ptr, orient))
+end
+
+function M:HasScrollbar(orient)
+    return _H.to_bool(C.wxWindow_HasScrollbar(self._ptr, orient))
+end
+
+function M:GetScrollbarSize(orient)
+    return C.wxWindow_GetScrollbarSize(self._ptr, orient)
+end
+
+function M:ScrollLines(lines)
+    return _H.to_bool(C.wxWindow_ScrollLines(self._ptr, lines))
+end
+
+function M:ScrollPages(pages)
+    return _H.to_bool(C.wxWindow_ScrollPages(self._ptr, pages))
+end
+
+function M:LineUp()
+    return _H.to_bool(C.wxWindow_LineUp(self._ptr))
+end
+
+function M:LineDown()
+    return _H.to_bool(C.wxWindow_LineDown(self._ptr))
+end
+
+function M:PageUp()
+    return _H.to_bool(C.wxWindow_PageUp(self._ptr))
+end
+
+function M:PageDown()
+    return _H.to_bool(C.wxWindow_PageDown(self._ptr))
+end
+
+function M:AlwaysShowScrollbars(horz, vert)
+    C.wxWindow_AlwaysShowScrollbars(self._ptr, _H.from_bool(horz), _H.from_bool(vert))
+end
+
+function M:IsScrollbarAlwaysShown(orient)
+    return _H.to_bool(C.wxWindow_IsScrollbarAlwaysShown(self._ptr, orient))
+end
+
+function M:SetHelpText(text)
+    local _ws_text = _H.wxs(text)
+    C.wxWindow_SetHelpText(self._ptr, _ws_text)
+    _H.wxs_free(_ws_text)
+end
+
+function M:GetHelpText()
+    return _H.wxs_to_str(C.wxWindow_GetHelpText(self._ptr))
+end
+
+function M:UnsetToolTip()
+    C.wxWindow_UnsetToolTip(self._ptr)
+end
+
+function M:GetToolTipText()
+    return _H.wxs_to_str(C.wxWindow_GetToolTipText(self._ptr))
+end
+
+function M:DragAcceptFiles(accept)
+    C.wxWindow_DragAcceptFiles(self._ptr, _H.from_bool(accept))
+end
+
+function M:SetContainingSizer(sizer)
+    C.wxWindow_SetContainingSizer(self._ptr, _H.ptr(sizer))
+end
+
+function M:SetTransparent(alpha)
+    return _H.to_bool(C.wxWindow_SetTransparent(self._ptr, alpha))
+end
+
+function M:CanSetTransparent()
+    return _H.to_bool(C.wxWindow_CanSetTransparent(self._ptr))
+end
+
+function M:GetPalette()
+    return _H.wrap("wxpalette_gen", C.wxWindow_GetPalette(self._ptr))
+end
+
+function M:SetPalette(palette)
+    C.wxWindow_SetPalette(self._ptr, _H.ptr(palette))
+end
+
+function M:HasCustomPalette()
+    return _H.to_bool(C.wxWindow_HasCustomPalette(self._ptr))
+end
+
+function M:InheritAttributes()
+    C.wxWindow_InheritAttributes(self._ptr)
+end
+
+function M:ShouldInheritColours()
+    return _H.to_bool(C.wxWindow_ShouldInheritColours(self._ptr))
+end
+
+function M:GetPopupMenuSelectionFromUser(menu, x, y)
+    return C.wxWindow_GetPopupMenuSelectionFromUser(self._ptr, _H.ptr(menu), x, y)
+end
+
+function M:AdjustForLayoutDirection(x, width, widthTotal)
+    return C.wxWindow_AdjustForLayoutDirection(self._ptr, x, width, widthTotal)
+end
+
+function M:BeginRepositioningChildren()
+    return _H.to_bool(C.wxWindow_BeginRepositioningChildren(self._ptr))
+end
+
+function M:EndRepositioningChildren()
+    C.wxWindow_EndRepositioningChildren(self._ptr)
+end
+
+function M:IsClientAreaChild(child)
+    return _H.to_bool(C.wxWindow_IsClientAreaChild(self._ptr, _H.ptr(child)))
+end
+
+function M:FromPhys(value)
+    return C.wxWindow_FromPhys(self._ptr, value)
+end
+
+function M:ToPhys(value)
+    return C.wxWindow_ToPhys(self._ptr, value)
+end
+
+function M:GetHelpTextAtPoint(x, y, origin)
+    return _H.wxs_to_str(C.wxWindow_GetHelpTextAtPoint(self._ptr, x, y, origin))
+end
+
+function M:GetHelpIdAtPoint(x, y)
+    return C.wxWindow_GetHelpIdAtPoint(self._ptr, x, y)
+end
+
+function M:CopyToolTip(tip)
+    return _H.to_bool(C.wxWindow_CopyToolTip(self._ptr, _H.ptr(tip)))
+end
+
+function M:CanBeOutsideClientArea()
+    return _H.to_bool(C.wxWindow_CanBeOutsideClientArea(self._ptr))
+end
+
+function M:CanApplyThemeBorder()
+    return _H.to_bool(C.wxWindow_CanApplyThemeBorder(self._ptr))
+end
+
+function M:IsTopNavigationDomain(kind)
+    return _H.to_bool(C.wxWindow_IsTopNavigationDomain(self._ptr, kind))
 end
 
 function M:AddChild(child)
@@ -38,7 +645,7 @@ function M:ClearBackground()
 end
 
 function M:ClientToScreen(x, y)
-    return C.wxWindow_ClientToScreen(self._ptr, x, y)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ClientToScreen(self._ptr, x, y))
 end
 
 function M:Close(force)
@@ -46,11 +653,11 @@ function M:Close(force)
 end
 
 function M:ConvertDialogToPixels()
-    return C.wxWindow_ConvertDialogToPixels(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertDialogToPixels(self._ptr))
 end
 
 function M:ConvertPixelsToDialog()
-    return C.wxWindow_ConvertPixelsToDialog(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertPixelsToDialog(self._ptr))
 end
 
 function M:Destroy()
@@ -65,19 +672,23 @@ function M:Disable()
     return _H.to_bool(C.wxWindow_Disable(self._ptr))
 end
 
-function M:Enable()
-    return _H.to_bool(C.wxWindow_Enable(self._ptr))
+function M:Enable(enable)
+    return _H.to_bool(C.wxWindow_Enable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:FindFocus()
-    return C.wxWindow_FindFocus(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxWindow_FindFocus(self._ptr))
 end
 
 function M:FindWindow(name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxWindow_FindWindow(self._ptr, _ws_name)
+    local _result = _H.wrap("wxwindow_gen", C.wxWindow_FindWindow(self._ptr, _ws_name))
     _H.wxs_free(_ws_name)
     return _result
+end
+
+function M:FindWindowByIdSelf(id)
+    return _H.wrap("wxwindow_gen", C.wxWindow_FindWindowByIdSelf(self._ptr, id))
 end
 
 function M:Fit()
@@ -93,7 +704,7 @@ function M:Freeze()
 end
 
 function M:GetEffectiveMinSize()
-    return C.wxWindow_GetEffectiveMinSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxWindow_GetEffectiveMinSize(self._ptr))
 end
 
 function M:GetAutoLayout()
@@ -105,11 +716,11 @@ function M:GetBackgroundColour(ref)
 end
 
 function M:GetBestSize()
-    return C.wxWindow_GetBestSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxWindow_GetBestSize(self._ptr))
 end
 
 function M:GetCaret()
-    return C.wxWindow_GetCaret(self._ptr)
+    return _H.wrap("wxcaret_gen", C.wxWindow_GetCaret(self._ptr))
 end
 
 function M:GetCharHeight()
@@ -121,27 +732,27 @@ function M:GetCharWidth()
 end
 
 function M:GetChildren(result, count)
-    return C.wxWindow_GetChildren(self._ptr, result, count)
+    return C.wxWindow_GetChildren(self._ptr, _H.ptr(result), count)
 end
 
 function M:GetClientData()
-    return C.wxWindow_GetClientData(self._ptr)
+    return _H.wrap("wxclientdata_gen", C.wxWindow_GetClientData(self._ptr))
 end
 
 function M:GetClientSize()
-    return C.wxWindow_GetClientSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxWindow_GetClientSize(self._ptr))
 end
 
 function M:GetCursor()
-    return C.wxWindow_GetCursor(self._ptr)
+    return _H.wrap("wxcursor_gen", C.wxWindow_GetCursor(self._ptr))
 end
 
 function M:GetDropTarget()
-    return C.wxWindow_GetDropTarget(self._ptr)
+    return _H.wrap("wxdroptarget_gen", C.wxWindow_GetDropTarget(self._ptr))
 end
 
 function M:GetEventHandler()
-    return C.wxWindow_GetEventHandler(self._ptr)
+    return _H.wrap("wxevthandler_gen", C.wxWindow_GetEventHandler(self._ptr))
 end
 
 function M:GetFont(ref)
@@ -189,15 +800,15 @@ function M:GetName()
 end
 
 function M:GetParent()
-    return C.wxWindow_GetParent(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxWindow_GetParent(self._ptr))
 end
 
 function M:GetPosition()
-    return C.wxWindow_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxWindow_GetPosition(self._ptr))
 end
 
 function M:GetRect()
-    return C.wxWindow_GetRect(self._ptr)
+    return _H.wrap("wxrect_gen", C.wxWindow_GetRect(self._ptr))
 end
 
 function M:GetScrollPos(orient)
@@ -213,11 +824,11 @@ function M:GetScrollThumb(orient)
 end
 
 function M:GetSize()
-    return C.wxWindow_GetSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxWindow_GetSize(self._ptr))
 end
 
 function M:GetSizer()
-    return C.wxWindow_GetSizer(self._ptr)
+    return _H.wrap("wxsizer_gen", C.wxWindow_GetSizer(self._ptr))
 end
 
 function M:GetTextExtent(string, x, y, descent, externalLeading, theFont)
@@ -231,15 +842,15 @@ function M:GetToolTip()
 end
 
 function M:GetUpdateRegion()
-    return C.wxWindow_GetUpdateRegion(self._ptr)
+    return _H.wrap("wxregion_gen", C.wxWindow_GetUpdateRegion(self._ptr))
 end
 
 function M:GetValidator()
-    return C.wxWindow_GetValidator(self._ptr)
+    return _H.wrap("wxvalidator_gen", C.wxWindow_GetValidator(self._ptr))
 end
 
 function M:GetVirtualSize()
-    return C.wxWindow_GetVirtualSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxWindow_GetVirtualSize(self._ptr))
 end
 
 function M:GetWindowStyleFlag()
@@ -335,7 +946,7 @@ function M:Reparent(parent)
 end
 
 function M:ScreenToClient(x, y)
-    return C.wxWindow_ScreenToClient(self._ptr, x, y)
+    return _H.wrap("wxpoint_gen", C.wxWindow_ScreenToClient(self._ptr, x, y))
 end
 
 function M:ScrollWindow(dx, dy)
@@ -355,7 +966,7 @@ function M:SetAutoLayout(autoLayout)
 end
 
 function M:SetBackgroundColour(colour)
-    return C.wxWindow_SetBackgroundColour(self._ptr, _H.ptr(colour))
+    return _H.to_bool(C.wxWindow_SetBackgroundColour(self._ptr, _H.ptr(colour)))
 end
 
 function M:SetCaret(caret)
@@ -391,7 +1002,7 @@ function M:SetFocus()
 end
 
 function M:SetFont(font)
-    return C.wxWindow_SetFont(self._ptr, _H.ptr(font))
+    return _H.to_bool(C.wxWindow_SetFont(self._ptr, _H.ptr(font)))
 end
 
 function M:SetForegroundColour(colour)

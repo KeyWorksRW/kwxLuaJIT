@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -17,7 +26,7 @@ function M.Create(data)
 end
 
 function M:CreateAbortWindow(parent, printout)
-    return C.wxPrinter_CreateAbortWindow(self._ptr, _H.ptr(parent), _H.ptr(printout))
+    return _H.wrap("wxwindow_gen", C.wxPrinter_CreateAbortWindow(self._ptr, _H.ptr(parent), _H.ptr(printout)))
 end
 
 function M:GetAbort()
@@ -37,7 +46,7 @@ function M:Print(parent, printout, prompt)
 end
 
 function M:PrintDialog(parent)
-    return C.wxPrinter_PrintDialog(self._ptr, _H.ptr(parent))
+    return _H.wrap("wxdc_gen", C.wxPrinter_PrintDialog(self._ptr, _H.ptr(parent)))
 end
 
 function M:ReportError(parent, printout, message)
@@ -52,7 +61,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxPrinter_Delete(self._ptr)
         self._ptr = nil
     end

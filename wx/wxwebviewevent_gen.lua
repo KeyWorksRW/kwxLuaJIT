@@ -7,11 +7,35 @@ local _parent = require("wxnotifyevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:GetURL()
     return _H.wxs_to_str(C.wxWebViewEvent_GetURL(self._ptr))
+end
+
+function M:GetMessageHandler()
+    return _H.wxs_to_str(C.wxWebViewEvent_GetMessageHandler(self._ptr))
+end
+
+function M:GetTargetWindowFeatures()
+    return C.wxWebViewEvent_GetTargetWindowFeatures(self._ptr)
+end
+
+function M:IsError()
+    return _H.to_bool(C.wxWebViewEvent_IsError(self._ptr))
+end
+
+function M:IsTargetMainFrame()
+    return _H.to_bool(C.wxWebViewEvent_IsTargetMainFrame(self._ptr))
 end
 
 function M:GetTarget()

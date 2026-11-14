@@ -7,8 +7,54 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
+local _mixin_wxPropertyGridInterface = require("wxpropertygridinterface_gen")
+for _k, _v in pairs(_mixin_wxPropertyGridInterface) do if M[_k] == nil then M[_k] = _v end end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxPropertyGridPage_Create
+function M.Create()
+    local ptr = C.wxPropertyGridPage_Create()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:FitColumns()
+    return _H.wrap("wxsize_gen", C.wxPropertyGridPage_FitColumns(self._ptr))
+end
+
+function M:GetStatePtr()
+    return _H.wrap("wxpropertygridpagestate_gen", C.wxPropertyGridPage_GetStatePtr(self._ptr))
+end
+
+function M:GetToolId()
+    return C.wxPropertyGridPage_GetToolId(self._ptr)
+end
+
+function M:Init()
+    C.wxPropertyGridPage_Init(self._ptr)
+end
+
+function M:IsHandlingAllEvents()
+    return _H.to_bool(C.wxPropertyGridPage_IsHandlingAllEvents(self._ptr))
+end
+
+function M:OnShow()
+    C.wxPropertyGridPage_OnShow(self._ptr)
+end
+
+function M:RefreshProperty(property)
+    C.wxPropertyGridPage_RefreshProperty(self._ptr, _H.ptr(property))
+end
 
 function M:Clear()
     C.wxPropertyGridPage_Clear(self._ptr)
@@ -19,7 +65,7 @@ function M:GetIndex()
 end
 
 function M:GetRoot()
-    return C.wxPropertyGridPage_GetRoot(self._ptr)
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGridPage_GetRoot(self._ptr))
 end
 
 function M:GetSplitterPosition(col)
@@ -28,6 +74,14 @@ end
 
 function M:SetSplitterPosition(splitterPos, col)
     C.wxPropertyGridPage_SetSplitterPosition(self._ptr, splitterPos, col)
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxPropertyGridPage_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

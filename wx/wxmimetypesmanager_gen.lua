@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,7 +25,7 @@ function M.Create()
 end
 
 function M:AddFallbacks(types)
-    C.wxMimeTypesManager_AddFallbacks(self._ptr, types)
+    C.wxMimeTypesManager_AddFallbacks(self._ptr, _H.ptr(types))
 end
 
 function M:EnumAllFileTypes(list)
@@ -26,14 +34,14 @@ end
 
 function M:GetFileTypeFromExtension(extension)
     local _ws_extension = _H.wxs(extension)
-    local _result = C.wxMimeTypesManager_GetFileTypeFromExtension(self._ptr, _ws_extension)
+    local _result = _H.wrap("wxfiletype_gen", C.wxMimeTypesManager_GetFileTypeFromExtension(self._ptr, _ws_extension))
     _H.wxs_free(_ws_extension)
     return _result
 end
 
 function M:GetFileTypeFromMimeType(name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxMimeTypesManager_GetFileTypeFromMimeType(self._ptr, _ws_name)
+    local _result = _H.wrap("wxfiletype_gen", C.wxMimeTypesManager_GetFileTypeFromMimeType(self._ptr, _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end

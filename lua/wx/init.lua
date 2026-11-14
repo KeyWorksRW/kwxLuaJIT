@@ -74,6 +74,25 @@ local C = ffi.C
 -- Generated helpers: wxs(), wxs_free(), wxs_to_str(), ptr(), to_bool(), from_bool()
 local _H = require("kwxffi_helpers_gen")
 
+-- Generated symbol tables.
+--
+-- kwxgen appends a lazy lookup table to kwxffi_{events,keys,constants}_gen:
+-- each name maps to the export that backs it, the export is called on first
+-- use and the value is cached in the table.  Nothing is resolved at require
+-- time, so an unknown name simply returns nil.
+--
+--     event     wxEVT_MENU           -> events_gen.EVT_MENU
+--     key       K_BACK               -> keys_gen.K_BACK
+--     constant  STB_DEFAULT_STYLE    -> constants_gen.STB_DEFAULT_STYLE
+--               RIBBON_BAR_DEFAULT_STYLE -> constants_gen.RIBBON_BAR_DEFAULT_STYLE
+--
+-- Constants whose accessor returns an owned wxString* (the wxART_* art ids and
+-- a few default strings) are converted to Lua strings by the generated module,
+-- which also releases the wxString, so no raw pointer reaches the `wx` namespace.
+local constants_gen = require("kwxffi_constants_gen")
+local events_gen    = require("kwxffi_events_gen")
+local keys_gen      = require("kwxffi_keys_gen")
+
 --------------------------------------------------------------------------------
 -- Event System
 --------------------------------------------------------------------------------
@@ -174,9 +193,11 @@ end
 local wxFrame_gen = require("wxframe_gen")
 
 -- CreateStatusBar: default number=1, style=0
+-- wxFrame_CreateStatusBar(pObject, number, style, id) takes a trailing id;
+-- the override must forward it (wxID_ANY when omitted).
 local _raw_CreateStatusBar = wxFrame_gen.CreateStatusBar
-function wxFrame_gen:CreateStatusBar(number, style)
-    return _raw_CreateStatusBar(self, number or 1, style or 0)
+function wxFrame_gen:CreateStatusBar(number, style, id)
+    return _raw_CreateStatusBar(self, number or 1, style or 0, id or -1)
 end
 
 -- SetStatusText: default field=0
@@ -186,9 +207,10 @@ function wxFrame_gen:SetStatusText(text, field)
 end
 
 -- CreateToolBar: default style=0
+-- wxFrame_CreateToolBar(pObject, style, id) takes a trailing id; forward it.
 local _raw_CreateToolBar = wxFrame_gen.CreateToolBar
-function wxFrame_gen:CreateToolBar(style)
-    return _raw_CreateToolBar(self, style or 0)
+function wxFrame_gen:CreateToolBar(style, id)
+    return _raw_CreateToolBar(self, style or 0, id or -1)
 end
 
 --------------------------------------------------------------------------------
@@ -243,12 +265,19 @@ wx.toLuaString = _H.wxs_to_str
 
 --------------------------------------------------------------------------------
 -- Constants — fetched at runtime from kwxFFI to stay in sync with wxWidgets.
--- pcall wrapper provides safe fallback for any missing constants.
+-- Each call names the historical export symbol ("expwxOK"); C_const strips the
+-- prefix and resolves it through the constant resolver above. When kwxFFI has
+-- no such export the hardcoded fallback is used.
 --------------------------------------------------------------------------------
 
 local function C_const(name, fallback)
-    local ok, val = pcall(function() return C[name]() end)
-    return ok and val or fallback
+    -- `name` is the historical export symbol name, e.g. "expwxOK" or
+    -- "expwxSTB_DEFAULT_STYLE"; strip the export prefix to get the bare
+    -- wxWidgets name used by the generated constant table.
+    local key = name:match("^expwx(.*)$") or name:match("^exp_(.*)$") or name:match("^exp(.*)$") or name
+    local val = constants_gen[key]
+    if val == nil then return fallback end
+    return val
 end
 
 -- Window IDs
@@ -355,12 +384,14 @@ wx.HELP             = C_const("expwxHELP",             0x00008000)
 wx.NO_DEFAULT       = C_const("expwxNO_DEFAULT",       0x00000080)
 wx.CANCEL_DEFAULT   = C_const("expwxCANCEL_DEFAULT",   0x80000000)
 wx.YES_DEFAULT      = C_const("expwxYES_DEFAULT",      0x00000000)
-wx.ICON_EXCLAMATION = C_const("expwxICON_EXCLAMATION", 0x00000100)
-wx.ICON_HAND        = C_const("expwxICON_HAND",        0x00000200)
 wx.ICON_ERROR       = C_const("expwxICON_ERROR",       0x00000200)
 wx.ICON_QUESTION    = C_const("expwxICON_QUESTION",    0x00000400)
 wx.ICON_INFORMATION = C_const("expwxICON_INFORMATION",  0x00000800)
 wx.ICON_WARNING     = C_const("expwxICON_WARNING",      0x00000100)
+-- wxWidgets alias names; kwxFFI exports neither, so derive them from the
+-- constants that do resolve rather than freezing numeric literals here.
+wx.ICON_EXCLAMATION = wx.ICON_WARNING
+wx.ICON_HAND        = wx.ICON_ERROR
 
 -- Center flags
 wx.CENTRE           = C_const("expwxCENTRE",           0x0001)
@@ -369,24 +400,28 @@ wx.CENTRE_ON_SCREEN = C_const("expwxCENTRE_ON_SCREEN", 0x0001)
 wx.CENTER_ON_SCREEN = wx.CENTRE_ON_SCREEN
 
 --------------------------------------------------------------------------------
--- Event Types — resolved lazily via __index metamethod.
--- wx.EVT_BUTTON resolves to expEVT_BUTTON() on first access and is cached.
+-- Event types, key codes and remaining wxWidgets constants — resolved lazily
+-- through the __index metamethod and cached in the wx table.
+--   wx.EVT_BUTTON          -> events_gen.EVT_BUTTON
+--   wx.K_BACK              -> keys_gen.K_BACK
+--   wx.STB_DEFAULT_STYLE   -> constants_gen.STB_DEFAULT_STYLE
+--   wx.ART_MISSING_IMAGE   -> constants_gen.ART_MISSING_IMAGE (a Lua string)
+-- Unknown names resolve to nil (not 0), so a typo fails loudly instead of
+-- silently turning into wxEVT_NULL.
 --------------------------------------------------------------------------------
-
-local function getEventType(name)
-    local ok, fn = pcall(function() return C["exp" .. name] end)
-    if ok and fn then return fn() end
-    return 0
-end
 
 setmetatable(wx, {
     __index = function(t, k)
+        local val
         if k:sub(1, 4) == "EVT_" then
-            local val = getEventType(k)
-            rawset(t, k, val)
-            return val
+            val = events_gen[k]
+        elseif k:sub(1, 2) == "K_" then
+            val = keys_gen[k]
+        else
+            val = constants_gen[k]
         end
-        return nil
+        if val ~= nil then rawset(t, k, val) end
+        return val
     end
 })
 

@@ -3,9 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local _parent = require("wxcontrol_gen")
+local _parent = require("wxbookctrlbase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -15,6 +23,82 @@ function M.Create(parent, id, left, top, width, height, style)
     local ptr = C.wxNotebook_Create(_H.ptr(parent), id, left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:AssignImageList(imageList)
+    C.wxNotebook_AssignImageList(self._ptr, _H.ptr(imageList))
+end
+
+function M:GetCurrentPage()
+    return _H.wrap("wxwindow_gen", C.wxNotebook_GetCurrentPage(self._ptr))
+end
+
+function M:GetControllerSize()
+    return _H.wrap("wxsize_gen", C.wxNotebook_GetControllerSize(self._ptr))
+end
+
+function M:CalcSizeFromPage(width, height)
+    return _H.wrap("wxsize_gen", C.wxNotebook_CalcSizeFromPage(self._ptr, width, height))
+end
+
+function M:GetInternalBorder()
+    return C.wxNotebook_GetInternalBorder(self._ptr)
+end
+
+function M:SetInternalBorder(border)
+    C.wxNotebook_SetInternalBorder(self._ptr, border)
+end
+
+function M:SetControlMargin(margin)
+    C.wxNotebook_SetControlMargin(self._ptr, margin)
+end
+
+function M:GetControlMargin()
+    return C.wxNotebook_GetControlMargin(self._ptr)
+end
+
+function M:IsVertical()
+    return _H.to_bool(C.wxNotebook_IsVertical(self._ptr))
+end
+
+function M:SetFitToCurrentPage(fit)
+    C.wxNotebook_SetFitToCurrentPage(self._ptr, _H.from_bool(fit))
+end
+
+function M:GetFitToCurrentPage()
+    return _H.to_bool(C.wxNotebook_GetFitToCurrentPage(self._ptr))
+end
+
+function M:ChangeSelection(nPage)
+    return C.wxNotebook_ChangeSelection(self._ptr, nPage)
+end
+
+function M:FindPage(page)
+    return C.wxNotebook_FindPage(self._ptr, _H.ptr(page))
+end
+
+function M:SetTabSize(width, height)
+    C.wxNotebook_SetTabSize(self._ptr, width, height)
+end
+
+function M:GetTabRect(page)
+    return _H.wrap("wxrect_gen", C.wxNotebook_GetTabRect(self._ptr, page))
+end
+
+function M:GetTabOrientation()
+    return C.wxNotebook_GetTabOrientation(self._ptr)
+end
+
+function M:GetThemeBackgroundColour()
+    return _H.wrap("wxcolour_gen", C.wxNotebook_GetThemeBackgroundColour(self._ptr))
+end
+
+function M:SendPageChangingEvent(nPage)
+    return _H.to_bool(C.wxNotebook_SendPageChangingEvent(self._ptr, nPage))
+end
+
+function M:SendPageChangedEvent(nPageOld, nPageNew)
+    C.wxNotebook_SendPageChangedEvent(self._ptr, nPageOld, nPageNew)
 end
 
 function M:AddPage(pPage, strText, bSelect, imageId)
@@ -37,11 +121,11 @@ function M:DeletePage(nPage)
 end
 
 function M:GetImageList()
-    return C.wxNotebook_GetImageList(self._ptr)
+    return _H.wrap("wximagelist_gen", C.wxNotebook_GetImageList(self._ptr))
 end
 
 function M:GetPage(nPage)
-    return C.wxNotebook_GetPage(self._ptr, nPage)
+    return _H.wrap("wxwindow_gen", C.wxNotebook_GetPage(self._ptr, nPage))
 end
 
 function M:GetPageCount()

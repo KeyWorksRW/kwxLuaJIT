@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -23,71 +31,127 @@ function M.Create(source)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetName()
+    return _H.wxs_to_str(C.wxAuiPaneInfo_GetName(self._ptr))
+end
+
+function M:GetCaption()
+    return _H.wxs_to_str(C.wxAuiPaneInfo_GetCaption(self._ptr))
+end
+
+function M:GetWindow()
+    return _H.wrap("wxwindow_gen", C.wxAuiPaneInfo_GetWindow(self._ptr))
+end
+
+function M:GetDockDirection()
+    return C.wxAuiPaneInfo_GetDockDirection(self._ptr)
+end
+
+function M:GetDockLayer()
+    return C.wxAuiPaneInfo_GetDockLayer(self._ptr)
+end
+
+function M:GetDockRow()
+    return C.wxAuiPaneInfo_GetDockRow(self._ptr)
+end
+
+function M:GetDockPos()
+    return C.wxAuiPaneInfo_GetDockPos(self._ptr)
+end
+
+function M:GetDockProportion()
+    return C.wxAuiPaneInfo_GetDockProportion(self._ptr)
+end
+
+function M:GetDockSize()
+    return C.wxAuiPaneInfo_GetDockSize(self._ptr)
+end
+
+function M:GetFloatingPos()
+    return _H.wrap("wxpoint_gen", C.wxAuiPaneInfo_GetFloatingPos(self._ptr), true)
+end
+
+function M:GetFloatingSize()
+    return _H.wrap("wxsize_gen", C.wxAuiPaneInfo_GetFloatingSize(self._ptr), true)
+end
+
+function M:IsMaximized()
+    return _H.to_bool(C.wxAuiPaneInfo_IsMaximized(self._ptr))
+end
+
+function M:FloatingClientSize(size)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_FloatingClientSize(self._ptr, _H.ptr(size)))
+end
+
+function M:IconMin(b)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_IconMin(self._ptr, _H.ptr(b)))
+end
+
 function M:Bottom()
-    return C.wxAuiPaneInfo_Bottom(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Bottom(self._ptr))
 end
 
 function M:BottomDockable(enable)
-    return C.wxAuiPaneInfo_BottomDockable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_BottomDockable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Caption(caption)
     local _ws_caption = _H.wxs(caption)
-    local _result = C.wxAuiPaneInfo_Caption(self._ptr, _ws_caption)
+    local _result = _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Caption(self._ptr, _ws_caption))
     _H.wxs_free(_ws_caption)
     return _result
 end
 
 function M:CaptionVisible(visible)
-    return C.wxAuiPaneInfo_CaptionVisible(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_CaptionVisible(self._ptr, _H.from_bool(visible)))
 end
 
 function M:CloseButton(visible)
-    return C.wxAuiPaneInfo_CloseButton(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_CloseButton(self._ptr, _H.from_bool(visible)))
 end
 
 function M:DefaultPane()
-    return C.wxAuiPaneInfo_DefaultPane(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_DefaultPane(self._ptr))
 end
 
 function M:DestroyOnClose(enable)
-    return C.wxAuiPaneInfo_DestroyOnClose(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_DestroyOnClose(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Direction(direction)
-    return C.wxAuiPaneInfo_Direction(self._ptr, direction)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Direction(self._ptr, direction))
 end
 
 function M:Dock()
-    return C.wxAuiPaneInfo_Dock(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Dock(self._ptr))
 end
 
 function M:DockFixed(enable)
-    return C.wxAuiPaneInfo_DockFixed(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_DockFixed(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Dockable(enable)
-    return C.wxAuiPaneInfo_Dockable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Dockable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Fixed()
-    return C.wxAuiPaneInfo_Fixed(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Fixed(self._ptr))
 end
 
 function M:Float()
-    return C.wxAuiPaneInfo_Float(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Float(self._ptr))
 end
 
 function M:Floatable(enable)
-    return C.wxAuiPaneInfo_Floatable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Floatable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Gripper(visible)
-    return C.wxAuiPaneInfo_Gripper(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Gripper(self._ptr, _H.from_bool(visible)))
 end
 
 function M:GripperTop(attop)
-    return C.wxAuiPaneInfo_GripperTop(self._ptr, _H.from_bool(attop))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_GripperTop(self._ptr, _H.from_bool(attop)))
 end
 
 function M:HasBorder()
@@ -127,11 +191,11 @@ function M:HasPinButton()
 end
 
 function M:Hide()
-    return C.wxAuiPaneInfo_Hide(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Hide(self._ptr))
 end
 
 function M:Icon(bitmap)
-    return C.wxAuiPaneInfo_Icon(self._ptr, _H.ptr(bitmap))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Icon(self._ptr, _H.ptr(bitmap)))
 end
 
 function M:IsBottomDockable()
@@ -191,62 +255,62 @@ function M:IsTopDockable()
 end
 
 function M:Layer(layer)
-    return C.wxAuiPaneInfo_Layer(self._ptr, layer)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Layer(self._ptr, layer))
 end
 
 function M:Left()
-    return C.wxAuiPaneInfo_Left(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Left(self._ptr))
 end
 
 function M:LeftDockable(enable)
-    return C.wxAuiPaneInfo_LeftDockable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_LeftDockable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:MaximizeButton(visible)
-    return C.wxAuiPaneInfo_MaximizeButton(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MaximizeButton(self._ptr, _H.from_bool(visible)))
 end
 
 function M:MinimizeButton(visible)
-    return C.wxAuiPaneInfo_MinimizeButton(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MinimizeButton(self._ptr, _H.from_bool(visible)))
 end
 
 function M:Movable(enable)
-    return C.wxAuiPaneInfo_Movable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Movable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Name(name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxAuiPaneInfo_Name(self._ptr, _ws_name)
+    local _result = _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Name(self._ptr, _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
 function M:PaneBorder(visible)
-    return C.wxAuiPaneInfo_PaneBorder(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_PaneBorder(self._ptr, _H.from_bool(visible)))
 end
 
 function M:PinButton(visible)
-    return C.wxAuiPaneInfo_PinButton(self._ptr, _H.from_bool(visible))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_PinButton(self._ptr, _H.from_bool(visible)))
 end
 
 function M:Position(pos)
-    return C.wxAuiPaneInfo_Position(self._ptr, pos)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Position(self._ptr, pos))
 end
 
 function M:Resizable(resizable)
-    return C.wxAuiPaneInfo_Resizable(self._ptr, _H.from_bool(resizable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Resizable(self._ptr, _H.from_bool(resizable)))
 end
 
 function M:Right()
-    return C.wxAuiPaneInfo_Right(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Right(self._ptr))
 end
 
 function M:RightDockable(enable)
-    return C.wxAuiPaneInfo_RightDockable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_RightDockable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Row(row)
-    return C.wxAuiPaneInfo_Row(self._ptr, row)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Row(self._ptr, row))
 end
 
 function M:SafeSet(source)
@@ -254,87 +318,95 @@ function M:SafeSet(source)
 end
 
 function M:SetFlag(flag, option_state)
-    return C.wxAuiPaneInfo_SetFlag(self._ptr, flag, _H.from_bool(option_state))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_SetFlag(self._ptr, flag, _H.from_bool(option_state)))
 end
 
 function M:Show(show)
-    return C.wxAuiPaneInfo_Show(self._ptr, _H.from_bool(show))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Show(self._ptr, _H.from_bool(show)))
 end
 
 function M:ToolbarPane()
-    return C.wxAuiPaneInfo_ToolbarPane(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_ToolbarPane(self._ptr))
 end
 
 function M:Top()
-    return C.wxAuiPaneInfo_Top(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Top(self._ptr))
 end
 
 function M:TopDockable(enable)
-    return C.wxAuiPaneInfo_TopDockable(self._ptr, _H.from_bool(enable))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_TopDockable(self._ptr, _H.from_bool(enable)))
 end
 
 function M:Window(window)
-    return C.wxAuiPaneInfo_Window(self._ptr, _H.ptr(window))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Window(self._ptr, _H.ptr(window)))
 end
 
 function M:Copy(source)
-    return C.wxAuiPaneInfo_Copy(self._ptr, _H.ptr(source))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Copy(self._ptr, _H.ptr(source)))
 end
 
 function M:BestSize(width, height)
-    return C.wxAuiPaneInfo_BestSize(self._ptr, width, height)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_BestSize(self._ptr, width, height))
 end
 
 function M:BestSizeXY(x, y)
-    return C.wxAuiPaneInfo_BestSizeXY(self._ptr, x, y)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_BestSizeXY(self._ptr, x, y))
 end
 
 function M:Centre()
-    return C.wxAuiPaneInfo_Centre(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Centre(self._ptr))
 end
 
 function M:Center()
-    return C.wxAuiPaneInfo_Center(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_Center(self._ptr))
 end
 
 function M:CentrePane()
-    return C.wxAuiPaneInfo_CentrePane(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_CentrePane(self._ptr))
 end
 
 function M:CenterPane()
-    return C.wxAuiPaneInfo_CenterPane(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_CenterPane(self._ptr))
 end
 
 function M:FloatingPosition(x, y)
-    return C.wxAuiPaneInfo_FloatingPosition(self._ptr, x, y)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_FloatingPosition(self._ptr, x, y))
 end
 
 function M:FloatingPositionXY(x, y)
-    return C.wxAuiPaneInfo_FloatingPositionXY(self._ptr, x, y)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_FloatingPositionXY(self._ptr, x, y))
 end
 
 function M:FloatingSize(width, height)
-    return C.wxAuiPaneInfo_FloatingSize(self._ptr, width, height)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_FloatingSize(self._ptr, width, height))
 end
 
 function M:FloatingSizeXY(x, y)
-    return C.wxAuiPaneInfo_FloatingSizeXY(self._ptr, x, y)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_FloatingSizeXY(self._ptr, x, y))
 end
 
 function M:MaxSize(width, height)
-    return C.wxAuiPaneInfo_MaxSize(self._ptr, width, height)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MaxSize(self._ptr, width, height))
 end
 
 function M:MaxSizeXY(x, y)
-    return C.wxAuiPaneInfo_MaxSizeXY(self._ptr, x, y)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MaxSizeXY(self._ptr, x, y))
 end
 
 function M:MinSize(width, height)
-    return C.wxAuiPaneInfo_MinSize(self._ptr, width, height)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MinSize(self._ptr, width, height))
 end
 
 function M:MinSizeXY(x, y)
-    return C.wxAuiPaneInfo_MinSizeXY(self._ptr, x, y)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MinSizeXY(self._ptr, x, y))
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxAuiPaneInfo_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

@@ -6,13 +6,21 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: kwxDragDataObject_Create
 function M.Create(pObject, format, fnGetDataSize, fnGetDataHere, fnSetData)
     local _ws_format = _H.wxs(format)
-    local ptr = C.kwxDragDataObject_Create(pObject, _ws_format, fnGetDataSize, fnGetDataHere, fnSetData)
+    local ptr = C.kwxDragDataObject_Create(_H.ptr(pObject), _ws_format, _H.ptr(fnGetDataSize), _H.ptr(fnGetDataHere), _H.ptr(fnSetData))
     _H.wxs_free(_ws_format)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
@@ -20,7 +28,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.kwxDragDataObject_Delete(self._ptr)
         self._ptr = nil
     end

@@ -7,6 +7,14 @@ local _parent = require("wxbookctrlbase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -37,11 +45,11 @@ function M:DeletePage(nPage)
 end
 
 function M:GetImageList()
-    return C.wxToolbook_GetImageList(self._ptr)
+    return _H.wrap("wximagelist_gen", C.wxToolbook_GetImageList(self._ptr))
 end
 
 function M:GetPage(nPage)
-    return C.wxToolbook_GetPage(self._ptr, nPage)
+    return _H.wrap("wxwindow_gen", C.wxToolbook_GetPage(self._ptr, nPage))
 end
 
 function M:GetPageCount()
@@ -61,7 +69,7 @@ function M:GetSelection()
 end
 
 function M:GetToolBar()
-    return C.wxToolbook_GetToolBar(self._ptr)
+    return _H.wrap("wxtoolbarbase_gen", C.wxToolbook_GetToolBar(self._ptr))
 end
 
 function M:HitTest(x, y, flags)

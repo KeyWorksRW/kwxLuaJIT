@@ -7,6 +7,14 @@ local _parent = require("wxwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,20 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxTreeListCtrl_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SetItemTextSimple(item, text)
+    local _ws_text = _H.wxs(text)
+    C.wxTreeListCtrl_SetItemTextSimple(self._ptr, _H.ptr(item), _ws_text)
+    _H.wxs_free(_ws_text)
+end
+
+function M:GetItemData(item)
+    return _H.wrap("wxclientdata_gen", C.wxTreeListCtrl_GetItemData(self._ptr, _H.ptr(item)))
+end
+
+function M:SetItemData(item, data)
+    C.wxTreeListCtrl_SetItemData(self._ptr, _H.ptr(item), _H.ptr(data))
 end
 
 function M:AppendColumn(title, width, align, flags)
@@ -188,11 +210,11 @@ function M:GetSortColumn(col, ascendingOrder)
 end
 
 function M:GetView()
-    return C.wxTreeListCtrl_GetView(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxTreeListCtrl_GetView(self._ptr))
 end
 
 function M:GetDataView()
-    return C.wxTreeListCtrl_GetDataView(self._ptr)
+    return _H.wrap("wxdataviewctrl_gen", C.wxTreeListCtrl_GetDataView(self._ptr))
 end
 
 return M

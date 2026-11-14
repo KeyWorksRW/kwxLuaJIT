@@ -7,6 +7,14 @@ local _parent = require("wxdialog_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -33,8 +41,8 @@ function M:GetStyle()
     return C.wxDirDialog_GetStyle(self._ptr)
 end
 
-function M:GetPaths(paths)
-    return C.wxDirDialog_GetPaths(self._ptr, paths)
+function M:GetPaths(paths, capacity)
+    return C.wxDirDialog_GetPaths(self._ptr, paths, capacity)
 end
 
 function M:SetMessage(msg)

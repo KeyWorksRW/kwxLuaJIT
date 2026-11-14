@@ -7,6 +7,14 @@ local _parent = require("wxframe_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -36,19 +44,19 @@ function M:Cascade()
 end
 
 function M:GetActiveChild()
-    return C.wxMDIParentFrame_GetActiveChild(self._ptr)
+    return _H.wrap("wxmdichildframe_gen", C.wxMDIParentFrame_GetActiveChild(self._ptr))
 end
 
 function M:GetClientWindow()
-    return C.wxMDIParentFrame_GetClientWindow(self._ptr)
+    return _H.wrap("wxmdiclientwindow_gen", C.wxMDIParentFrame_GetClientWindow(self._ptr))
 end
 
 function M:GetWindowMenu()
-    return C.wxMDIParentFrame_GetWindowMenu(self._ptr)
+    return _H.wrap("wxmenu_gen", C.wxMDIParentFrame_GetWindowMenu(self._ptr))
 end
 
 function M:OnCreateClient()
-    return C.wxMDIParentFrame_OnCreateClient(self._ptr)
+    return _H.wrap("wxmdiclientwindow_gen", C.wxMDIParentFrame_OnCreateClient(self._ptr))
 end
 
 function M:SetWindowMenu(menu)

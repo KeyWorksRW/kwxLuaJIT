@@ -7,6 +7,14 @@ local _parent = require("wxpanel_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,10 @@ function M.Create(parent, id, left, top, width, height, style)
     local ptr = C.wxScrolledWindow_Create(_H.ptr(parent), id, left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SetScrollRate(xstep, ystep)
+    C.wxScrolledWindow_SetScrollRate(self._ptr, xstep, ystep)
 end
 
 function M:AdjustScrollbars()
@@ -50,7 +62,7 @@ function M:GetScrollPixelsPerUnit(x, y)
 end
 
 function M:GetTargetWindow()
-    return C.wxScrolledWindow_GetTargetWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxScrolledWindow_GetTargetWindow(self._ptr))
 end
 
 function M:GetViewStart(x, y)

@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxribboncontrol_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -16,12 +25,54 @@ function M.Create(parent, id, x, y, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:AddPageHighlight(page, highlight)
+    C.wxRibbonBar_AddPageHighlight(self._ptr, page, _H.from_bool(highlight))
+end
+
+function M:ArePanelsShown()
+    return _H.to_bool(C.wxRibbonBar_ArePanelsShown(self._ptr))
+end
+
+function M:HidePage(page)
+    C.wxRibbonBar_HidePage(self._ptr, page)
+end
+
+function M:SetHelpButtonKeyTip(keytip)
+    local _ws_keytip = _H.wxs(keytip)
+    C.wxRibbonBar_SetHelpButtonKeyTip(self._ptr, _ws_keytip)
+    _H.wxs_free(_ws_keytip)
+end
+
+function M:SetPageKeyTip(page, keytip)
+    local _ws_keytip = _H.wxs(keytip)
+    C.wxRibbonBar_SetPageKeyTip(self._ptr, page, _ws_keytip)
+    _H.wxs_free(_ws_keytip)
+end
+
+function M:SetTabCtrlMargins(left, right)
+    C.wxRibbonBar_SetTabCtrlMargins(self._ptr, left, right)
+end
+
+function M:SetToggleButtonKeyTip(keytip)
+    local _ws_keytip = _H.wxs(keytip)
+    C.wxRibbonBar_SetToggleButtonKeyTip(self._ptr, _ws_keytip)
+    _H.wxs_free(_ws_keytip)
+end
+
+function M:ShowPage(page, show)
+    C.wxRibbonBar_ShowPage(self._ptr, page, _H.from_bool(show))
+end
+
+function M:ShowPanels(mode)
+    C.wxRibbonBar_ShowPanels(self._ptr, mode)
+end
+
 function M:DismissExpandedPanel()
     C.wxRibbonBar_DismissExpandedPanel(self._ptr)
 end
 
 function M:GetPage(index)
-    return C.wxRibbonBar_GetPage(self._ptr, index)
+    return _H.wrap("wxribbonpage_gen", C.wxRibbonBar_GetPage(self._ptr, index))
 end
 
 function M:GetPageCount()
@@ -49,7 +100,7 @@ function M:SetActivePage_ByPtr(page)
 end
 
 function M:Realize()
-    C.wxRibbonBar_Realize(self._ptr)
+    return _H.to_bool(C.wxRibbonBar_Realize(self._ptr))
 end
 
 function M:SetArtProvider(art)
@@ -57,7 +108,7 @@ function M:SetArtProvider(art)
 end
 
 function M:GetArtProvider()
-    return C.wxRibbonBar_GetArtProvider(self._ptr)
+    return _H.wrap("wxribbonartprovider_gen", C.wxRibbonBar_GetArtProvider(self._ptr))
 end
 
 return M

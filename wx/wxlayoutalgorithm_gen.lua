@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -17,7 +26,7 @@ function M.Create()
 end
 
 function M:LayoutFrame(frame, mainWindow)
-    return _H.to_bool(C.wxLayoutAlgorithm_LayoutFrame(self._ptr, _H.ptr(frame), mainWindow))
+    return _H.to_bool(C.wxLayoutAlgorithm_LayoutFrame(self._ptr, _H.ptr(frame), _H.ptr(mainWindow)))
 end
 
 function M:LayoutMDIFrame(frame, x, y, width, height, use)
@@ -25,12 +34,12 @@ function M:LayoutMDIFrame(frame, x, y, width, height, use)
 end
 
 function M:LayoutWindow(frame, mainWindow)
-    return _H.to_bool(C.wxLayoutAlgorithm_LayoutWindow(self._ptr, _H.ptr(frame), mainWindow))
+    return _H.to_bool(C.wxLayoutAlgorithm_LayoutWindow(self._ptr, _H.ptr(frame), _H.ptr(mainWindow)))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxLayoutAlgorithm_Delete(self._ptr)
         self._ptr = nil
     end

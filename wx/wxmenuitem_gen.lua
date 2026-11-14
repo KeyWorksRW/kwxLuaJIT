@@ -3,11 +3,49 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxMenuItem_CreateEx
+function M.CreateEx(id, text, helpstr, itemkind, submenu)
+    local _ws_text = _H.wxs(text)
+    local _ws_helpstr = _H.wxs(helpstr)
+    local ptr = C.wxMenuItem_CreateEx(id, _ws_text, _ws_helpstr, itemkind, _H.ptr(submenu))
+    _H.wxs_free(_ws_text)
+    _H.wxs_free(_ws_helpstr)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxMenuItem_CreateExWithParent
+function M.CreateExWithParent(parentMenu, id, text, helpstr, itemkind, subMenu)
+    local _ws_text = _H.wxs(text)
+    local _ws_helpstr = _H.wxs(helpstr)
+    local ptr = C.wxMenuItem_CreateExWithParent(_H.ptr(parentMenu), id, _ws_text, _ws_helpstr, itemkind, _H.ptr(subMenu))
+    _H.wxs_free(_ws_text)
+    _H.wxs_free(_ws_helpstr)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxMenuItem_CreateSeparator
+function M.CreateSeparator()
+    local ptr = C.wxMenuItem_CreateSeparator()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxMenuItem_Create
 function M.Create()
@@ -18,6 +56,14 @@ end
 
 function M:Check(check)
     C.wxMenuItem_Check(self._ptr, _H.from_bool(check))
+end
+
+function M:SetBitmaps(bmpChecked, bmpUnchecked)
+    C.wxMenuItem_SetBitmaps(self._ptr, _H.ptr(bmpChecked), _H.ptr(bmpUnchecked))
+end
+
+function M:SetDisabledBitmap(bmpDisabled)
+    C.wxMenuItem_SetDisabledBitmap(self._ptr, _H.ptr(bmpDisabled))
 end
 
 function M:Enable(enable)
@@ -36,16 +82,16 @@ function M:GetItemLabelText()
     return _H.wxs_to_str(C.wxMenuItem_GetItemLabelText(self._ptr))
 end
 
-function M:GetLabelText(text)
-    return _H.wxs_to_str(C.wxMenuItem_GetLabelText(self._ptr, text))
+function M.GetLabelText(text)
+    return _H.wxs_to_str(C.wxMenuItem_GetLabelText(text))
 end
 
 function M:GetMenu()
-    return C.wxMenuItem_GetMenu(self._ptr)
+    return _H.wrap("wxmenu_gen", C.wxMenuItem_GetMenu(self._ptr))
 end
 
 function M:GetSubMenu()
-    return C.wxMenuItem_GetSubMenu(self._ptr)
+    return _H.wrap("wxmenu_gen", C.wxMenuItem_GetSubMenu(self._ptr))
 end
 
 function M:GetItemLabel()
@@ -117,12 +163,16 @@ function M:SetBitmap(bmp)
 end
 
 function M:GetBitmap()
-    return C.wxMenuItem_GetBitmap(self._ptr)
+    return _H.wrap("wxbitmap_gen", C.wxMenuItem_GetBitmap(self._ptr))
+end
+
+function M:GetAccel()
+    return _H.wrap("wxacceleratorentry_gen", C.wxMenuItem_GetAccel(self._ptr))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxMenuItem_Delete(self._ptr)
         self._ptr = nil
     end

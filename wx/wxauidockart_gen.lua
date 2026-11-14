@@ -6,11 +6,31 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:DrawBackground(dc, window, orientation, rect)
     C.wxAuiDockArt_DrawBackground(self._ptr, _H.ptr(dc), _H.ptr(window), orientation, _H.ptr(rect))
+end
+
+function M:GetColor(id)
+    return _H.wrap("wxcolour_gen", C.wxAuiDockArt_GetColor(self._ptr, id))
+end
+
+function M:GetMetricForWindow(id, window)
+    return C.wxAuiDockArt_GetMetricForWindow(self._ptr, id, _H.ptr(window))
+end
+
+function M:SetColor(id, color)
+    C.wxAuiDockArt_SetColor(self._ptr, id, _H.ptr(color))
 end
 
 function M:DrawBorder(dc, window, rect, pane)
@@ -36,11 +56,11 @@ function M:DrawSash(dc, window, orientation, rect)
 end
 
 function M:GetColour(id)
-    return C.wxAuiDockArt_GetColour(self._ptr, id)
+    return _H.wrap("wxcolour_gen", C.wxAuiDockArt_GetColour(self._ptr, id))
 end
 
 function M:GetFont(id)
-    return C.wxAuiDockArt_GetFont(self._ptr, id)
+    return _H.wrap("wxfont_gen", C.wxAuiDockArt_GetFont(self._ptr, id))
 end
 
 function M:GetMetric(id)

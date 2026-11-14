@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,13 @@ function M.Create(parent, id, text, left, top, width, height, style)
     local _ws_text = _H.wxs(text)
     local ptr = C.wxStaticBox_Create(_H.ptr(parent), id, _ws_text, left, top, width, height, style)
     _H.wxs_free(_ws_text)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxStaticBox_CreateWithLabelWindow
+function M.CreateWithLabelWindow(parent, id, label, left, top, width, height, style)
+    local ptr = C.wxStaticBox_CreateWithLabelWindow(_H.ptr(parent), id, _H.ptr(label), left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end

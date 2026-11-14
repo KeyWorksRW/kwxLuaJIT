@@ -7,6 +7,14 @@ local _parent = require("wxscrolledwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -19,6 +27,16 @@ end
 
 function M:AppendCols(numCols, updateLabels)
     return _H.to_bool(C.wxGrid_AppendCols(self._ptr, numCols, _H.from_bool(updateLabels)))
+end
+
+function M:HideRowLabels()
+    C.wxGrid_HideRowLabels(self._ptr)
+end
+
+function M:SetColFormatDate(col, format)
+    local _ws_format = _H.wxs(format)
+    C.wxGrid_SetColFormatDate(self._ptr, col, _ws_format)
+    _H.wxs_free(_ws_format)
 end
 
 function M:AppendRows(numRows, updateLabels)
@@ -50,7 +68,7 @@ function M:BeginBatch()
 end
 
 function M:BlockToDeviceRect(top, left, bottom, right)
-    return C.wxGrid_BlockToDeviceRect(self._ptr, top, left, bottom, right)
+    return _H.wrap("wxrect_gen", C.wxGrid_BlockToDeviceRect(self._ptr, top, left, bottom, right))
 end
 
 function M:CanDragColSize(col)
@@ -70,7 +88,7 @@ function M:CanEnableCellControl()
 end
 
 function M:CellToRect(row, col)
-    return C.wxGrid_CellToRect(self._ptr, row, col)
+    return _H.wrap("wxrect_gen", C.wxGrid_CellToRect(self._ptr, row, col))
 end
 
 function M:ClearGrid()
@@ -192,7 +210,7 @@ function M:GetCellBackgroundColour(row, col, colour)
 end
 
 function M:GetCellEditor(row, col)
-    return C.wxGrid_GetCellEditor(self._ptr, row, col)
+    return _H.wrap("wxgridcelleditor_gen", C.wxGrid_GetCellEditor(self._ptr, row, col))
 end
 
 function M:GetCellFont(row, col, font)
@@ -204,7 +222,7 @@ function M:GetCellHighlightColour(ref)
 end
 
 function M:GetCellRenderer(row, col)
-    return C.wxGrid_GetCellRenderer(self._ptr, row, col)
+    return _H.wrap("wxgridcellrenderer_gen", C.wxGrid_GetCellRenderer(self._ptr, row, col))
 end
 
 function M:GetCellTextColour(row, col, colour)
@@ -256,31 +274,31 @@ function M:GetDefaultColSize()
 end
 
 function M:GetDefaultEditor()
-    return C.wxGrid_GetDefaultEditor(self._ptr)
+    return _H.wrap("wxgridcelleditor_gen", C.wxGrid_GetDefaultEditor(self._ptr))
 end
 
 function M:GetDefaultEditorForCell(row, col)
-    return C.wxGrid_GetDefaultEditorForCell(self._ptr, row, col)
+    return _H.wrap("wxgridcelleditor_gen", C.wxGrid_GetDefaultEditorForCell(self._ptr, row, col))
 end
 
 function M:GetDefaultEditorForType(typeName)
     local _ws_typeName = _H.wxs(typeName)
-    local _result = C.wxGrid_GetDefaultEditorForType(self._ptr, _ws_typeName)
+    local _result = _H.wrap("wxgridcelleditor_gen", C.wxGrid_GetDefaultEditorForType(self._ptr, _ws_typeName))
     _H.wxs_free(_ws_typeName)
     return _result
 end
 
 function M:GetDefaultRenderer()
-    return C.wxGrid_GetDefaultRenderer(self._ptr)
+    return _H.wrap("wxgridcellrenderer_gen", C.wxGrid_GetDefaultRenderer(self._ptr))
 end
 
 function M:GetDefaultRendererForCell(row, col)
-    return C.wxGrid_GetDefaultRendererForCell(self._ptr, row, col)
+    return _H.wrap("wxgridcellrenderer_gen", C.wxGrid_GetDefaultRendererForCell(self._ptr, row, col))
 end
 
 function M:GetDefaultRendererForType(typeName)
     local _ws_typeName = _H.wxs(typeName)
-    local _result = C.wxGrid_GetDefaultRendererForType(self._ptr, _ws_typeName)
+    local _result = _H.wrap("wxgridcellrenderer_gen", C.wxGrid_GetDefaultRendererForType(self._ptr, _ws_typeName))
     _H.wxs_free(_ws_typeName)
     return _result
 end
@@ -350,7 +368,7 @@ function M:GetSelectionForeground(ref)
 end
 
 function M:GetTable()
-    return C.wxGrid_GetTable(self._ptr)
+    return _H.wrap("wxgridtablebase_gen", C.wxGrid_GetTable(self._ptr))
 end
 
 function M:GetTextBoxSize(dc, count, lines, width, height)
@@ -665,7 +683,7 @@ end
 
 function M:StringToLines(value, lines)
     local _ws_value = _H.wxs(value)
-    local _result = C.wxGrid_StringToLines(self._ptr, _ws_value, lines)
+    local _result = C.wxGrid_StringToLines(self._ptr, _ws_value, _H.ptr(lines))
     _H.wxs_free(_ws_value)
     return _result
 end
@@ -702,6 +720,10 @@ function M:GetSelectionBlockBottomRight(array)
     C.wxGrid_GetSelectionBlockBottomRight(self._ptr, _H.ptr(array))
 end
 
+function M:GetSelectedBlocks(array)
+    C.wxGrid_GetSelectedBlocks(self._ptr, _H.ptr(array))
+end
+
 function M:GetSelectedRows(array)
     return C.wxGrid_GetSelectedRows(self._ptr, array)
 end
@@ -716,6 +738,210 @@ end
 
 function M:SetCellSize(row, col, srow, scol)
     C.wxGrid_SetCellSize(self._ptr, row, col, srow, scol)
+end
+
+function M:FreezeTo(row, col)
+    return _H.to_bool(C.wxGrid_FreezeTo(self._ptr, row, col))
+end
+
+function M:IsFrozen()
+    return _H.to_bool(C.wxGrid_IsFrozen(self._ptr))
+end
+
+function M:SetGridFrozenBorderColour(col)
+    C.wxGrid_SetGridFrozenBorderColour(self._ptr, _H.ptr(col))
+end
+
+function M:UseNativeColHeader(native)
+    return _H.to_bool(C.wxGrid_UseNativeColHeader(self._ptr, _H.from_bool(native)))
+end
+
+function M:SetUseNativeColLabels(native)
+    C.wxGrid_SetUseNativeColLabels(self._ptr, _H.from_bool(native))
+end
+
+function M:EnableHidingColumns(enable)
+    return _H.to_bool(C.wxGrid_EnableHidingColumns(self._ptr, _H.from_bool(enable)))
+end
+
+function M:CanHideColumns()
+    return _H.to_bool(C.wxGrid_CanHideColumns(self._ptr))
+end
+
+function M:EnableDragRowMove(enable)
+    return _H.to_bool(C.wxGrid_EnableDragRowMove(self._ptr, _H.from_bool(enable)))
+end
+
+function M:EnableDragColMove(enable)
+    return _H.to_bool(C.wxGrid_EnableDragColMove(self._ptr, _H.from_bool(enable)))
+end
+
+function M:EnableDragCell(enable)
+    C.wxGrid_EnableDragCell(self._ptr, _H.from_bool(enable))
+end
+
+function M:EnableDragRowLabelSize(enable)
+    C.wxGrid_EnableDragRowLabelSize(self._ptr, _H.from_bool(enable))
+end
+
+function M:EnableDragColLabelSize(enable)
+    C.wxGrid_EnableDragColLabelSize(self._ptr, _H.from_bool(enable))
+end
+
+function M:SetTabBehaviour(behaviour)
+    C.wxGrid_SetTabBehaviour(self._ptr, behaviour)
+end
+
+function M:SetCellOverflow(row, col, allow)
+    C.wxGrid_SetCellOverflow(self._ptr, row, col, _H.from_bool(allow))
+end
+
+function M:SetDefaultCellOverflow(allow)
+    C.wxGrid_SetDefaultCellOverflow(self._ptr, _H.from_bool(allow))
+end
+
+function M:SetCellFitMode(row, col, fitMode)
+    C.wxGrid_SetCellFitMode(self._ptr, row, col, _H.ptr(fitMode))
+end
+
+function M:SetDefaultCellFitMode(fitMode)
+    C.wxGrid_SetDefaultCellFitMode(self._ptr, _H.ptr(fitMode))
+end
+
+function M:GetCornerLabelAlignment(horiz, vert)
+    C.wxGrid_GetCornerLabelAlignment(self._ptr, horiz, vert)
+end
+
+function M:SetCornerLabelAlignment(horiz, vert)
+    C.wxGrid_SetCornerLabelAlignment(self._ptr, horiz, vert)
+end
+
+function M:GetCornerLabelTextOrientation()
+    return C.wxGrid_GetCornerLabelTextOrientation(self._ptr)
+end
+
+function M:SetCornerLabelTextOrientation(textOrientation)
+    C.wxGrid_SetCornerLabelTextOrientation(self._ptr, textOrientation)
+end
+
+function M:GetCellHighlightPenWidth()
+    return C.wxGrid_GetCellHighlightPenWidth(self._ptr)
+end
+
+function M:SetCellHighlightPenWidth(width)
+    C.wxGrid_SetCellHighlightPenWidth(self._ptr, width)
+end
+
+function M:GetCellHighlightROPenWidth()
+    return C.wxGrid_GetCellHighlightROPenWidth(self._ptr)
+end
+
+function M:SetCellHighlightROPenWidth(width)
+    C.wxGrid_SetCellHighlightROPenWidth(self._ptr, width)
+end
+
+function M:DeselectCell(row, col)
+    C.wxGrid_DeselectCell(self._ptr, row, col)
+end
+
+function M:DeselectCol(col)
+    C.wxGrid_DeselectCol(self._ptr, col)
+end
+
+function M:DeselectRow(row)
+    C.wxGrid_DeselectRow(self._ptr, row)
+end
+
+function M:DisableOverlaySelection()
+    C.wxGrid_DisableOverlaySelection(self._ptr)
+end
+
+function M:ForceRefresh()
+    C.wxGrid_ForceRefresh(self._ptr)
+end
+
+function M:AutoSizeRowLabelSize(row)
+    C.wxGrid_AutoSizeRowLabelSize(self._ptr, row)
+end
+
+function M:AutoSizeColLabelSize(col)
+    C.wxGrid_AutoSizeColLabelSize(self._ptr, col)
+end
+
+function M:DisableRowResize(row)
+    C.wxGrid_DisableRowResize(self._ptr, row)
+end
+
+function M:HideCol(col)
+    C.wxGrid_HideCol(self._ptr, col)
+end
+
+function M:ShowCol(col)
+    C.wxGrid_ShowCol(self._ptr, col)
+end
+
+function M:HideRow(row)
+    C.wxGrid_HideRow(self._ptr, row)
+end
+
+function M:ShowRow(row)
+    C.wxGrid_ShowRow(self._ptr, row)
+end
+
+function M:SetAttr(row, col, attr)
+    C.wxGrid_SetAttr(self._ptr, row, col, _H.ptr(attr))
+end
+
+function M:AssignTable(table, selmode)
+    C.wxGrid_AssignTable(self._ptr, _H.ptr(table), selmode)
+end
+
+function M:GetRowPos(idx)
+    return C.wxGrid_GetRowPos(self._ptr, idx)
+end
+
+function M:GetColPos(idx)
+    return C.wxGrid_GetColPos(self._ptr, idx)
+end
+
+function M:GetRowAt(pos)
+    return C.wxGrid_GetRowAt(self._ptr, pos)
+end
+
+function M:GetColAt(pos)
+    return C.wxGrid_GetColAt(self._ptr, pos)
+end
+
+function M:SetColPos(idx, pos)
+    C.wxGrid_SetColPos(self._ptr, idx, pos)
+end
+
+function M:ResetColPos()
+    C.wxGrid_ResetColPos(self._ptr)
+end
+
+function M:GetSelectionMode()
+    return C.wxGrid_GetSelectionMode(self._ptr)
+end
+
+function M:GetSortingColumn()
+    return C.wxGrid_GetSortingColumn(self._ptr)
+end
+
+function M:IsSortingBy(col)
+    return _H.to_bool(C.wxGrid_IsSortingBy(self._ptr, col))
+end
+
+function M:IsSortOrderAscending()
+    return _H.to_bool(C.wxGrid_IsSortOrderAscending(self._ptr))
+end
+
+function M:SetSortingColumn(col, ascending)
+    C.wxGrid_SetSortingColumn(self._ptr, col, _H.from_bool(ascending))
+end
+
+function M:Render(dc, x, y, width, height, topLeftRow, topLeftCol, bottomRightRow, bottomRightCol, style)
+    C.wxGrid_Render(self._ptr, _H.ptr(dc), x, y, width, height, topLeftRow, topLeftCol, bottomRightRow, bottomRightCol, style)
 end
 
 return M

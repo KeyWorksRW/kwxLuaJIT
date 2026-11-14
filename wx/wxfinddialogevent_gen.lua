@@ -7,19 +7,31 @@ local _parent = require("wxcommandevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
-function M:GetFindString(ref)
-    return C.wxFindDialogEvent_GetFindString(self._ptr, ref)
+function M:GetFindString()
+    return _H.wxs_to_str(C.wxFindDialogEvent_GetFindString(self._ptr))
+end
+
+function M:GetDialog()
+    return _H.wrap("wxfindreplacedialog_gen", C.wxFindDialogEvent_GetDialog(self._ptr))
 end
 
 function M:GetFlags()
     return C.wxFindDialogEvent_GetFlags(self._ptr)
 end
 
-function M:GetReplaceString(ref)
-    return C.wxFindDialogEvent_GetReplaceString(self._ptr, ref)
+function M:GetReplaceString()
+    return _H.wxs_to_str(C.wxFindDialogEvent_GetReplaceString(self._ptr))
 end
 
 return M

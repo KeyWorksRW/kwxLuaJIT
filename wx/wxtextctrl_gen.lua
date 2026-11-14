@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 local _mixin_wxTextEntry = require("wxtextentry_gen")
 for _k, _v in pairs(_mixin_wxTextEntry) do if M[_k] == nil then M[_k] = _v end end
 
@@ -20,6 +28,48 @@ function M.Create(parent, id, text, left, top, width, height, style)
     _H.wxs_free(_ws_text)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:EmulateKeyPress(keyevent)
+    return C.wxTextCtrl_EmulateKeyPress(self._ptr, _H.ptr(keyevent))
+end
+
+function M:GetRange(from, toPos)
+    return _H.wxs_to_str(C.wxTextCtrl_GetRange(self._ptr, from, toPos))
+end
+
+function M:GetStringSelection()
+    return _H.wxs_to_str(C.wxTextCtrl_GetStringSelection(self._ptr))
+end
+
+function M:PositionToCoords(pos)
+    return _H.wrap("wxpoint_gen", C.wxTextCtrl_PositionToCoords(self._ptr, pos))
+end
+
+function M:HitTest(x, y, pos)
+    return C.wxTextCtrl_HitTest(self._ptr, x, y, pos)
+end
+
+function M:HitTestColumnRow(x, y, column, row)
+    return C.wxTextCtrl_HitTestColumnRow(self._ptr, x, y, column, row)
+end
+
+function M:IsRTFSupported()
+    return _H.to_bool(C.wxTextCtrl_IsRTFSupported(self._ptr))
+end
+
+function M:GetRTFValue()
+    return _H.wxs_to_str(C.wxTextCtrl_GetRTFValue(self._ptr))
+end
+
+function M:SetRTFValue(value)
+    local _ws_value = _H.wxs(value)
+    C.wxTextCtrl_SetRTFValue(self._ptr, _ws_value)
+    _H.wxs_free(_ws_value)
+end
+
+function M:ShouldInheritColours()
+    return _H.to_bool(C.wxTextCtrl_ShouldInheritColours(self._ptr))
 end
 
 function M:AppendText(text)
@@ -91,7 +141,7 @@ function M:GetNumberOfLines()
 end
 
 function M:GetSelection(from, toPos)
-    C.wxTextCtrl_GetSelection(self._ptr, from, toPos)
+    C.wxTextCtrl_GetSelection(self._ptr, _H.ptr(from), _H.ptr(toPos))
 end
 
 function M:GetValue()
@@ -167,7 +217,7 @@ function M:EmptyUndoBuffer()
 end
 
 function M:GetDefaultStyle()
-    return C.wxTextCtrl_GetDefaultStyle(self._ptr)
+    return _H.wrap("wxtextattr_gen", C.wxTextCtrl_GetDefaultStyle(self._ptr))
 end
 
 function M:GetStyle(position, style)

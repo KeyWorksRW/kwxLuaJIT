@@ -102,3 +102,128 @@ ffi.cdef[[
     int expK_TAB();
     int expK_UP();
 ]]
+
+local C = ffi.C
+
+local _wstring = {}
+
+-- Key codes exported as K_* accessors.  Each name resolves through its C accessor on first use and is cached in the
+-- table.
+local _symbols = {
+    K_ADD = "expK_ADD",
+    K_ALT = "expK_ALT",
+    K_BACK = "expK_BACK",
+    K_CANCEL = "expK_CANCEL",
+    K_CAPITAL = "expK_CAPITAL",
+    K_CLEAR = "expK_CLEAR",
+    K_CONTROL = "expK_CONTROL",
+    K_DECIMAL = "expK_DECIMAL",
+    K_DELETE = "expK_DELETE",
+    K_DIVIDE = "expK_DIVIDE",
+    K_DOWN = "expK_DOWN",
+    K_END = "expK_END",
+    K_ESCAPE = "expK_ESCAPE",
+    K_EXECUTE = "expK_EXECUTE",
+    K_F1 = "expK_F1",
+    K_F10 = "expK_F10",
+    K_F11 = "expK_F11",
+    K_F12 = "expK_F12",
+    K_F13 = "expK_F13",
+    K_F14 = "expK_F14",
+    K_F15 = "expK_F15",
+    K_F16 = "expK_F16",
+    K_F17 = "expK_F17",
+    K_F18 = "expK_F18",
+    K_F19 = "expK_F19",
+    K_F2 = "expK_F2",
+    K_F20 = "expK_F20",
+    K_F21 = "expK_F21",
+    K_F22 = "expK_F22",
+    K_F23 = "expK_F23",
+    K_F24 = "expK_F24",
+    K_F3 = "expK_F3",
+    K_F4 = "expK_F4",
+    K_F5 = "expK_F5",
+    K_F6 = "expK_F6",
+    K_F7 = "expK_F7",
+    K_F8 = "expK_F8",
+    K_F9 = "expK_F9",
+    K_HELP = "expK_HELP",
+    K_HOME = "expK_HOME",
+    K_INSERT = "expK_INSERT",
+    K_LBUTTON = "expK_LBUTTON",
+    K_LEFT = "expK_LEFT",
+    K_MBUTTON = "expK_MBUTTON",
+    K_MENU = "expK_MENU",
+    K_MULTIPLY = "expK_MULTIPLY",
+    K_NUMLOCK = "expK_NUMLOCK",
+    K_NUMPAD0 = "expK_NUMPAD0",
+    K_NUMPAD1 = "expK_NUMPAD1",
+    K_NUMPAD2 = "expK_NUMPAD2",
+    K_NUMPAD3 = "expK_NUMPAD3",
+    K_NUMPAD4 = "expK_NUMPAD4",
+    K_NUMPAD5 = "expK_NUMPAD5",
+    K_NUMPAD6 = "expK_NUMPAD6",
+    K_NUMPAD7 = "expK_NUMPAD7",
+    K_NUMPAD8 = "expK_NUMPAD8",
+    K_NUMPAD9 = "expK_NUMPAD9",
+    K_NUMPAD_ADD = "expK_NUMPAD_ADD",
+    K_NUMPAD_BEGIN = "expK_NUMPAD_BEGIN",
+    K_NUMPAD_DECIMAL = "expK_NUMPAD_DECIMAL",
+    K_NUMPAD_DELETE = "expK_NUMPAD_DELETE",
+    K_NUMPAD_DIVIDE = "expK_NUMPAD_DIVIDE",
+    K_NUMPAD_DOWN = "expK_NUMPAD_DOWN",
+    K_NUMPAD_END = "expK_NUMPAD_END",
+    K_NUMPAD_ENTER = "expK_NUMPAD_ENTER",
+    K_NUMPAD_EQUAL = "expK_NUMPAD_EQUAL",
+    K_NUMPAD_F1 = "expK_NUMPAD_F1",
+    K_NUMPAD_F2 = "expK_NUMPAD_F2",
+    K_NUMPAD_F3 = "expK_NUMPAD_F3",
+    K_NUMPAD_F4 = "expK_NUMPAD_F4",
+    K_NUMPAD_HOME = "expK_NUMPAD_HOME",
+    K_NUMPAD_INSERT = "expK_NUMPAD_INSERT",
+    K_NUMPAD_LEFT = "expK_NUMPAD_LEFT",
+    K_NUMPAD_MULTIPLY = "expK_NUMPAD_MULTIPLY",
+    K_NUMPAD_PAGEDOWN = "expK_NUMPAD_PAGEDOWN",
+    K_NUMPAD_PAGEUP = "expK_NUMPAD_PAGEUP",
+    K_NUMPAD_RIGHT = "expK_NUMPAD_RIGHT",
+    K_NUMPAD_SEPARATOR = "expK_NUMPAD_SEPARATOR",
+    K_NUMPAD_SPACE = "expK_NUMPAD_SPACE",
+    K_NUMPAD_SUBTRACT = "expK_NUMPAD_SUBTRACT",
+    K_NUMPAD_TAB = "expK_NUMPAD_TAB",
+    K_NUMPAD_UP = "expK_NUMPAD_UP",
+    K_PAGEDOWN = "expK_PAGEDOWN",
+    K_PAGEUP = "expK_PAGEUP",
+    K_PAUSE = "expK_PAUSE",
+    K_PRINT = "expK_PRINT",
+    K_RBUTTON = "expK_RBUTTON",
+    K_RETURN = "expK_RETURN",
+    K_RIGHT = "expK_RIGHT",
+    K_SCROLL = "expK_SCROLL",
+    K_SELECT = "expK_SELECT",
+    K_SEPARATOR = "expK_SEPARATOR",
+    K_SHIFT = "expK_SHIFT",
+    K_SNAPSHOT = "expK_SNAPSHOT",
+    K_SPACE = "expK_SPACE",
+    K_START = "expK_START",
+    K_SUBTRACT = "expK_SUBTRACT",
+    K_TAB = "expK_TAB",
+    K_UP = "expK_UP",
+}
+
+local M = setmetatable({}, {
+    __index = function(self, name)
+        local symbol = _symbols[name]
+        if symbol == nil then
+            return nil
+        end
+        local value = C[symbol]()
+        if _wstring[name] then
+            value = _ws_to_str(value)
+        end
+        rawset(self, name, value)
+        return value
+    end,
+})
+
+return M

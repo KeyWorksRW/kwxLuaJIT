@@ -6,12 +6,20 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: wxCalendarDateAttr_Create
 function M.Create(textColour, backColour, borderColour, font, border)
-    local ptr = C.wxCalendarDateAttr_Create(textColour, backColour, borderColour, font, border)
+    local ptr = C.wxCalendarDateAttr_Create(_H.ptr(textColour), _H.ptr(backColour), _H.ptr(borderColour), _H.ptr(font), border)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -19,6 +27,13 @@ end
 --- Constructor: wxCalendarDateAttr_CreateDefault
 function M.CreateDefault()
     local ptr = C.wxCalendarDateAttr_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxCalendarDateAttr_CreateBorder
+function M.CreateBorder(border, colBorder)
+    local ptr = C.wxCalendarDateAttr_CreateBorder(border, _H.ptr(colBorder))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -93,7 +108,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxCalendarDateAttr_Delete(self._ptr)
         self._ptr = nil
     end

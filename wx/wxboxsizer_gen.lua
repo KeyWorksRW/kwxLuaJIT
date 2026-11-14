@@ -7,6 +7,14 @@ local _parent = require("wxsizer_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,8 +25,20 @@ function M.Create(orient)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:IsVertical()
+    return _H.to_bool(C.wxBoxSizer_IsVertical(self._ptr))
+end
+
+function M:SetOrientation(orient)
+    C.wxBoxSizer_SetOrientation(self._ptr, orient)
+end
+
 function M:CalcMin()
-    return C.wxBoxSizer_CalcMin(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxBoxSizer_CalcMin(self._ptr))
+end
+
+function M:AddSpacer(size)
+    return _H.wrap("wxsizeritem_gen", C.wxBoxSizer_AddSpacer(self._ptr, size))
 end
 
 function M:GetOrientation()

@@ -7,6 +7,14 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,12 +25,16 @@ function M.Create()
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:GetWindow()
-    return C.wxValidator_GetWindow(self._ptr)
+function M.IsSilent()
+    return _H.to_bool(C.wxValidator_IsSilent())
 end
 
-function M:SuppressBellOnError(doIt)
-    C.wxValidator_SuppressBellOnError(self._ptr, _H.from_bool(doIt))
+function M:GetWindow()
+    return _H.wrap("wxwindow_gen", C.wxValidator_GetWindow(self._ptr))
+end
+
+function M.SuppressBellOnError(doIt)
+    C.wxValidator_SuppressBellOnError(_H.from_bool(doIt))
 end
 
 function M:SetWindow(win)
@@ -41,9 +53,25 @@ function M:Validate(parent)
     return _H.to_bool(C.wxValidator_Validate(self._ptr, _H.ptr(parent)))
 end
 
+function M:SetOnClone(pFunction)
+    C.wxValidator_SetOnClone(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnValidate(pFunction)
+    C.wxValidator_SetOnValidate(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnTransferFromWindow(pFunction)
+    C.wxValidator_SetOnTransferFromWindow(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnTransferToWindow(pFunction)
+    C.wxValidator_SetOnTransferToWindow(self._ptr, _H.ptr(pFunction))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxValidator_Delete(self._ptr)
         self._ptr = nil
     end

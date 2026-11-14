@@ -7,6 +7,14 @@ local _parent = require("wxframe_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -24,7 +32,7 @@ function M:Activate()
 end
 
 function M:GetMenuBar()
-    return C.wxAuiMDIChildFrame_GetMenuBar(self._ptr)
+    return _H.wrap("wxmenubar_gen", C.wxAuiMDIChildFrame_GetMenuBar(self._ptr))
 end
 
 function M:SetMenuBar(menuBar)
@@ -32,19 +40,19 @@ function M:SetMenuBar(menuBar)
 end
 
 function M:GetStatusBar()
-    return C.wxAuiMDIChildFrame_GetStatusBar(self._ptr)
+    return _H.wrap("wxstatusbar_gen", C.wxAuiMDIChildFrame_GetStatusBar(self._ptr))
 end
 
 function M:CreateStatusBar(number, style, id)
-    return C.wxAuiMDIChildFrame_CreateStatusBar(self._ptr, number, style, id)
+    return _H.wrap("wxstatusbar_gen", C.wxAuiMDIChildFrame_CreateStatusBar(self._ptr, number, style, id))
 end
 
 function M:GetToolBar()
-    return C.wxAuiMDIChildFrame_GetToolBar(self._ptr)
+    return _H.wrap("wxtoolbar_gen", C.wxAuiMDIChildFrame_GetToolBar(self._ptr))
 end
 
 function M:CreateToolBar(style, id)
-    return C.wxAuiMDIChildFrame_CreateToolBar(self._ptr, style, id)
+    return _H.wrap("wxtoolbar_gen", C.wxAuiMDIChildFrame_CreateToolBar(self._ptr, style, id))
 end
 
 function M:SetTitle(title)
@@ -62,7 +70,7 @@ function M:SetIcons(icons)
 end
 
 function M:GetIcons()
-    return C.wxAuiMDIChildFrame_GetIcons(self._ptr)
+    return _H.wrap("wxiconbundle_gen", C.wxAuiMDIChildFrame_GetIcons(self._ptr))
 end
 
 function M:SetIcon(icon)
@@ -70,11 +78,11 @@ function M:SetIcon(icon)
 end
 
 function M:GetIcon()
-    return C.wxAuiMDIChildFrame_GetIcon(self._ptr)
+    return _H.wrap("wxicon_gen", C.wxAuiMDIChildFrame_GetIcon(self._ptr))
 end
 
 function M:GetMDIParent()
-    return C.wxAuiMDIChildFrame_GetMDIParent(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxAuiMDIChildFrame_GetMDIParent(self._ptr))
 end
 
 return M

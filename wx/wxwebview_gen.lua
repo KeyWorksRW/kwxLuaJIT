@@ -7,16 +7,115 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
-function M:New(parent, id, url, x, y, width, height, backend, style)
+function M:RegisterHandler(handler)
+    C.wxWebView_RegisterHandler(self._ptr, _H.ptr(handler))
+end
+
+function M.New(parent, id, url, x, y, width, height, backend, style)
     local _ws_url = _H.wxs(url)
     local _ws_backend = _H.wxs(backend)
-    local _result = C.wxWebView_New(self._ptr, _H.ptr(parent), id, _ws_url, x, y, width, height, _ws_backend, style)
+    local _result = _H.wrap("wxwebview_gen", C.wxWebView_New(_H.ptr(parent), id, _ws_url, x, y, width, height, _ws_backend, style))
     _H.wxs_free(_ws_url)
     _H.wxs_free(_ws_backend)
     return _result
+end
+
+function M:AddScriptMessageHandler(name)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.to_bool(C.wxWebView_AddScriptMessageHandler(self._ptr, _ws_name))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M:AddUserScript(javascript, injectionTime)
+    local _ws_javascript = _H.wxs(javascript)
+    local _result = _H.to_bool(C.wxWebView_AddUserScript(self._ptr, _ws_javascript, injectionTime))
+    _H.wxs_free(_ws_javascript)
+    return _result
+end
+
+function M:AreBrowserAcceleratorKeysEnabled()
+    return _H.to_bool(C.wxWebView_AreBrowserAcceleratorKeysEnabled(self._ptr))
+end
+
+function M:CanRedo()
+    return _H.to_bool(C.wxWebView_CanRedo(self._ptr))
+end
+
+function M:CanSetZoomType(type)
+    return _H.to_bool(C.wxWebView_CanSetZoomType(self._ptr, type))
+end
+
+function M:CanUndo()
+    return _H.to_bool(C.wxWebView_CanUndo(self._ptr))
+end
+
+function M:ClearBrowsingData()
+    C.wxWebView_ClearBrowsingData(self._ptr)
+end
+
+function M:ClearHistory()
+    C.wxWebView_ClearHistory(self._ptr)
+end
+
+function M:DeleteSelection()
+    C.wxWebView_DeleteSelection(self._ptr)
+end
+
+function M:EnableHistory(enable)
+    C.wxWebView_EnableHistory(self._ptr, _H.from_bool(enable))
+end
+
+function M:GetUserAgent()
+    return _H.wxs_to_str(C.wxWebView_GetUserAgent(self._ptr))
+end
+
+function M.NewConfiguration(backend)
+    local _ws_backend = _H.wxs(backend)
+    local _result = C.wxWebView_NewConfiguration(_ws_backend)
+    _H.wxs_free(_ws_backend)
+    return _result
+end
+
+function M:Redo()
+    C.wxWebView_Redo(self._ptr)
+end
+
+function M:SelectAll()
+    C.wxWebView_SelectAll(self._ptr)
+end
+
+function M:SetProxy(proxy)
+    local _ws_proxy = _H.wxs(proxy)
+    local _result = _H.to_bool(C.wxWebView_SetProxy(self._ptr, _ws_proxy))
+    _H.wxs_free(_ws_proxy)
+    return _result
+end
+
+function M:SetUserAgent(userAgent)
+    local _ws_userAgent = _H.wxs(userAgent)
+    local _result = _H.to_bool(C.wxWebView_SetUserAgent(self._ptr, _ws_userAgent))
+    _H.wxs_free(_ws_userAgent)
+    return _result
+end
+
+function M:ShowDevTools()
+    return _H.to_bool(C.wxWebView_ShowDevTools(self._ptr))
+end
+
+function M:Undo()
+    C.wxWebView_Undo(self._ptr)
 end
 
 function M:LoadURL(url)
@@ -177,9 +276,9 @@ function M:EnableAccessToDevTools(enable)
     C.wxWebView_EnableAccessToDevTools(self._ptr, _H.from_bool(enable))
 end
 
-function M:IsBackendAvailable(backend)
+function M.IsBackendAvailable(backend)
     local _ws_backend = _H.wxs(backend)
-    local _result = _H.to_bool(C.wxWebView_IsBackendAvailable(self._ptr, _ws_backend))
+    local _result = _H.to_bool(C.wxWebView_IsBackendAvailable(_ws_backend))
     _H.wxs_free(_ws_backend)
     return _result
 end

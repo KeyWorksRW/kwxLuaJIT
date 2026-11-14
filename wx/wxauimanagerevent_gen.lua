@@ -7,6 +7,14 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -26,7 +34,7 @@ function M:GetButton()
 end
 
 function M:GetDC()
-    return C.wxAuiManagerEvent_GetDC(self._ptr)
+    return _H.wrap("wxdc_gen", C.wxAuiManagerEvent_GetDC(self._ptr))
 end
 
 function M:GetVeto()
@@ -34,11 +42,11 @@ function M:GetVeto()
 end
 
 function M:GetManager()
-    return C.wxAuiManagerEvent_GetManager(self._ptr)
+    return _H.wrap("wxauimanager_gen", C.wxAuiManagerEvent_GetManager(self._ptr))
 end
 
 function M:GetPane()
-    return C.wxAuiManagerEvent_GetPane(self._ptr)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiManagerEvent_GetPane(self._ptr))
 end
 
 function M:SetButton(button)

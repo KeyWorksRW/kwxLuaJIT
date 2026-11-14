@@ -7,20 +7,110 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
+local _mixin_wxComboPopup = require("wxcombopopup_gen")
+for _k, _v in pairs(_mixin_wxComboPopup) do if M[_k] == nil then M[_k] = _v end end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
---- Constructor: wxTreeCtrl_Create
-function M.Create(pObject, compareFunc, parent, id, left, top, width, height, style)
-    local ptr = C.wxTreeCtrl_Create(pObject, compareFunc, _H.ptr(parent), id, left, top, width, height, style)
+--- Constructor: wxTreeCtrl_Create2
+function M.Create2(parent, id, x, y, width, height, style)
+    local ptr = C.wxTreeCtrl_Create2(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxTreeCtrl_Create
+function M.Create(pObject, compareFunc, parent, id, left, top, width, height, style)
+    local ptr = C.wxTreeCtrl_Create(_H.ptr(pObject), _H.ptr(compareFunc), _H.ptr(parent), id, left, top, width, height, style)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:AssignImageList(imageList)
+    C.wxTreeCtrl_AssignImageList(self._ptr, _H.ptr(imageList))
+end
+
+function M:AssignStateImageList(imageList)
+    C.wxTreeCtrl_AssignStateImageList(self._ptr, _H.ptr(imageList))
+end
+
+function M:GetItemClientClosure(item)
+    return C.wxTreeCtrl_GetItemClientClosure(self._ptr, _H.ptr(item))
+end
+
+function M:InsertItem2(parent, idPrevious, text, image, selectedImage, closure, item)
+    local _ws_text = _H.wxs(text)
+    C.wxTreeCtrl_InsertItem2(self._ptr, _H.ptr(parent), _H.ptr(idPrevious), _ws_text, image, selectedImage, _H.ptr(closure), _H.ptr(item))
+    _H.wxs_free(_ws_text)
+end
+
+function M:InsertItemByIndex2(parent, index, text, image, selectedImage, data, item)
+    local _ws_text = _H.wxs(text)
+    C.wxTreeCtrl_InsertItemByIndex2(self._ptr, _H.ptr(parent), index, _ws_text, image, selectedImage, _H.ptr(data), _H.ptr(item))
+    _H.wxs_free(_ws_text)
+end
+
+function M:SetItemClientClosure(item, closure)
+    C.wxTreeCtrl_SetItemClientClosure(self._ptr, _H.ptr(item), _H.ptr(closure))
+end
+
+function M:HasImages()
+    return _H.to_bool(C.wxTreeCtrl_HasImages(self._ptr))
+end
+
+function M:GetImageCount()
+    return C.wxTreeCtrl_GetImageCount(self._ptr)
+end
+
+function M:HasStateImages()
+    return _H.to_bool(C.wxTreeCtrl_HasStateImages(self._ptr))
+end
+
+function M:GetStateImageCount()
+    return C.wxTreeCtrl_GetStateImageCount(self._ptr)
+end
+
+function M:HasChildren(item)
+    return _H.to_bool(C.wxTreeCtrl_HasChildren(self._ptr, _H.ptr(item)))
+end
+
+function M:IsEmpty()
+    return _H.to_bool(C.wxTreeCtrl_IsEmpty(self._ptr))
+end
+
+function M:UnselectItem(item)
+    C.wxTreeCtrl_UnselectItem(self._ptr, _H.ptr(item))
+end
+
+function M:ToggleItemSelection(item)
+    C.wxTreeCtrl_ToggleItemSelection(self._ptr, _H.ptr(item))
+end
+
+function M:EnableBellOnNoMatch(on)
+    C.wxTreeCtrl_EnableBellOnNoMatch(self._ptr, _H.from_bool(on))
 end
 
 function M:AddRoot(text, image, selectedImage, data, item)
     local _ws_text = _H.wxs(text)
     C.wxTreeCtrl_AddRoot(self._ptr, _ws_text, image, selectedImage, _H.ptr(data), _H.ptr(item))
     _H.wxs_free(_ws_text)
+end
+
+function M:AssignButtonsImageList(imageList)
+    C.wxTreeCtrl_AssignButtonsImageList(self._ptr, _H.ptr(imageList))
+end
+
+function M:SetButtonsImageList(imageList)
+    C.wxTreeCtrl_SetButtonsImageList(self._ptr, _H.ptr(imageList))
 end
 
 function M:AppendItem(parent, text, image, selectedImage, data, item)
@@ -62,7 +152,7 @@ function M:Expand(item)
 end
 
 function M:GetBoundingRect(item, textOnly)
-    return C.wxTreeCtrl_GetBoundingRect(self._ptr, _H.ptr(item), _H.from_bool(textOnly))
+    return _H.wrap("wxrect_gen", C.wxTreeCtrl_GetBoundingRect(self._ptr, _H.ptr(item), _H.from_bool(textOnly)))
 end
 
 function M:GetChildrenCount(item, recursively)
@@ -74,7 +164,7 @@ function M:GetCount()
 end
 
 function M:GetEditControl()
-    return C.wxTreeCtrl_GetEditControl(self._ptr)
+    return _H.wrap("wxtextctrl_gen", C.wxTreeCtrl_GetEditControl(self._ptr))
 end
 
 function M:GetFirstChild(inputItem, cookie, result)
@@ -86,7 +176,7 @@ function M:GetFirstVisibleItem(result)
 end
 
 function M:GetImageList()
-    return C.wxTreeCtrl_GetImageList(self._ptr)
+    return _H.wrap("wximagelist_gen", C.wxTreeCtrl_GetImageList(self._ptr))
 end
 
 function M:GetIndent()
@@ -150,7 +240,7 @@ function M:GetSpacing()
 end
 
 function M:GetStateImageList()
-    return C.wxTreeCtrl_GetStateImageList(self._ptr)
+    return _H.wrap("wximagelist_gen", C.wxTreeCtrl_GetStateImageList(self._ptr))
 end
 
 function M:HitTest(x, y, flags, item)
@@ -159,13 +249,13 @@ end
 
 function M:InsertItem(parent, idPrevious, text, image, selectedImage, data, item)
     local _ws_text = _H.wxs(text)
-    C.wxTreeCtrl_InsertItem(self._ptr, _H.ptr(parent), _H.ptr(idPrevious), _ws_text, image, selectedImage, data, _H.ptr(item))
+    C.wxTreeCtrl_InsertItem(self._ptr, _H.ptr(parent), _H.ptr(idPrevious), _ws_text, image, selectedImage, _H.ptr(data), _H.ptr(item))
     _H.wxs_free(_ws_text)
 end
 
 function M:InsertItemByIndex(parent, index, text, image, selectedImage, data, item)
     local _ws_text = _H.wxs(text)
-    C.wxTreeCtrl_InsertItemByIndex(self._ptr, _H.ptr(parent), index, _ws_text, image, selectedImage, data, _H.ptr(item))
+    C.wxTreeCtrl_InsertItemByIndex(self._ptr, _H.ptr(parent), index, _ws_text, image, selectedImage, _H.ptr(data), _H.ptr(item))
     _H.wxs_free(_ws_text)
 end
 
@@ -195,7 +285,7 @@ end
 
 function M:PrependItem(parent, text, image, selectedImage, data, item)
     local _ws_text = _H.wxs(text)
-    C.wxTreeCtrl_PrependItem(self._ptr, _H.ptr(parent), _ws_text, image, selectedImage, data, _H.ptr(item))
+    C.wxTreeCtrl_PrependItem(self._ptr, _H.ptr(parent), _ws_text, image, selectedImage, _H.ptr(data), _H.ptr(item))
     _H.wxs_free(_ws_text)
 end
 
@@ -207,8 +297,20 @@ function M:SelectItem(item)
     C.wxTreeCtrl_SelectItem(self._ptr, _H.ptr(item))
 end
 
+function M:SelectItem2(item, select)
+    C.wxTreeCtrl_SelectItem2(self._ptr, _H.ptr(item), _H.from_bool(select))
+end
+
 function M:SetImageList(imageList)
     C.wxTreeCtrl_SetImageList(self._ptr, _H.ptr(imageList))
+end
+
+function M:SetImages(images)
+    C.wxTreeCtrl_SetImages(self._ptr, _H.ptr(images))
+end
+
+function M:SetStateImages(images)
+    C.wxTreeCtrl_SetStateImages(self._ptr, _H.ptr(images))
 end
 
 function M:SetIndent(indent)
@@ -224,7 +326,7 @@ function M:SetItemBold(item, bold)
 end
 
 function M:SetItemData(item, data)
-    C.wxTreeCtrl_SetItemData(self._ptr, _H.ptr(item), data)
+    C.wxTreeCtrl_SetItemData(self._ptr, _H.ptr(item), _H.ptr(data))
 end
 
 function M:SetItemDropHighlight(item, highlight)
@@ -318,15 +420,15 @@ function M:SetItemState(item, state)
 end
 
 function M:GetItemTextColour(item)
-    return C.wxTreeCtrl_GetItemTextColour(self._ptr, _H.ptr(item))
+    return _H.wrap("wxcolour_gen", C.wxTreeCtrl_GetItemTextColour(self._ptr, _H.ptr(item)))
 end
 
 function M:GetItemBackgroundColour(item)
-    return C.wxTreeCtrl_GetItemBackgroundColour(self._ptr, _H.ptr(item))
+    return _H.wrap("wxcolour_gen", C.wxTreeCtrl_GetItemBackgroundColour(self._ptr, _H.ptr(item)))
 end
 
 function M:GetItemFont(item)
-    return C.wxTreeCtrl_GetItemFont(self._ptr, _H.ptr(item))
+    return _H.wrap("wxfont_gen", C.wxTreeCtrl_GetItemFont(self._ptr, _H.ptr(item)))
 end
 
 function M:Delete(item)

@@ -6,11 +6,19 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:ExpandCommand(command, params)
-    return _H.wxs_to_str(C.wxFileType_ExpandCommand(self._ptr, command, params))
+    return _H.wxs_to_str(C.wxFileType_ExpandCommand(self._ptr, _H.ptr(command), _H.ptr(params)))
 end
 
 function M:GetDescription()
@@ -34,16 +42,16 @@ function M:GetMimeTypes(list)
 end
 
 function M:GetOpenCommand(buffer, params)
-    return C.wxFileType_GetOpenCommand(self._ptr, buffer, params)
+    return C.wxFileType_GetOpenCommand(self._ptr, _H.ptr(buffer), _H.ptr(params))
 end
 
 function M:GetPrintCommand(buffer, params)
-    return C.wxFileType_GetPrintCommand(self._ptr, buffer, params)
+    return C.wxFileType_GetPrintCommand(self._ptr, _H.ptr(buffer), _H.ptr(params))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxFileType_Delete(self._ptr)
         self._ptr = nil
     end

@@ -3,11 +3,34 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxColour_CreateFromInt
+function M.CreateFromInt(rgb)
+    local ptr = C.wxColour_CreateFromInt(rgb)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxColour_CreateFromUnsignedInt
+function M.CreateFromUnsignedInt(rgba)
+    local ptr = C.wxColour_CreateFromUnsignedInt(rgba)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxColour_CreateByName
 function M.CreateByName(name)
@@ -39,12 +62,28 @@ function M.CreateRGB(red, green, blue, alpha)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetInt()
+    return C.wxColour_GetInt(self._ptr)
+end
+
+function M:GetUnsignedInt()
+    return C.wxColour_GetUnsignedInt(self._ptr)
+end
+
 function M:Alpha()
     return C.wxColour_Alpha(self._ptr)
 end
 
+function M:GetAsString(flags)
+    return _H.wxs_to_str(C.wxColour_GetAsString(self._ptr, flags))
+end
+
+function M.MakeDisabled(r, g, b, brightness)
+    C.wxColour_MakeDisabled(r, g, b, brightness)
+end
+
 function M:Assign(other)
-    C.wxColour_Assign(self._ptr, other)
+    C.wxColour_Assign(self._ptr, _H.ptr(other))
 end
 
 function M:Blue()
@@ -52,7 +91,7 @@ function M:Blue()
 end
 
 function M:Copy(other)
-    C.wxColour_Copy(self._ptr, other)
+    C.wxColour_Copy(self._ptr, _H.ptr(other))
 end
 
 function M:Green()
@@ -77,13 +116,13 @@ function M:SetByName(name)
     _H.wxs_free(_ws_name)
 end
 
-function M:ValidName(name)
-    return _H.to_bool(C.wxColour_ValidName(self._ptr, name))
+function M.ValidName(name)
+    return _H.to_bool(C.wxColour_ValidName(name))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxColour_Delete(self._ptr)
         self._ptr = nil
     end
