@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -23,6 +31,10 @@ end
 
 function M:HitTest(x, y, flags)
     return C.wxBookCtrlBase_HitTest(self._ptr, x, y, flags)
+end
+
+function M:HitTestFlags(x, y, flags)
+    return C.wxBookCtrlBase_HitTestFlags(self._ptr, x, y, flags)
 end
 
 function M:GetPageImage(nPage)
@@ -49,7 +61,7 @@ function M:GetSelection()
 end
 
 function M:GetCurrentPage()
-    return C.wxBookCtrlBase_GetCurrentPage(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxBookCtrlBase_GetCurrentPage(self._ptr))
 end
 
 function M:SetSelection(page)
@@ -99,7 +111,7 @@ function M:GetPageCount()
 end
 
 function M:GetPage(page)
-    return C.wxBookCtrlBase_GetPage(self._ptr, page)
+    return _H.wrap("wxwindow_gen", C.wxBookCtrlBase_GetPage(self._ptr, page))
 end
 
 function M:AssignImageList(imageList)
@@ -111,7 +123,23 @@ function M:SetImageList(imageList)
 end
 
 function M:GetImageList()
-    return C.wxBookCtrlBase_GetImageList(self._ptr)
+    return _H.wrap("wximagelist_gen", C.wxBookCtrlBase_GetImageList(self._ptr))
+end
+
+function M:SetImages(images)
+    C.wxBookCtrlBase_SetImages(self._ptr, _H.ptr(images))
+end
+
+function M:GetImageCount()
+    return C.wxBookCtrlBase_GetImageCount(self._ptr)
+end
+
+function M:HasImages()
+    return _H.to_bool(C.wxBookCtrlBase_HasImages(self._ptr))
+end
+
+function M:GetImage(iconIndex)
+    return _H.wrap("wxicon_gen", C.wxBookCtrlBase_GetImage(self._ptr, iconIndex))
 end
 
 return M

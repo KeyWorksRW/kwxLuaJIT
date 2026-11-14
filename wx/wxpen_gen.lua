@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -50,7 +59,7 @@ function M:GetColour(ref)
 end
 
 function M:GetDashes(ptr)
-    return C.wxPen_GetDashes(self._ptr, ptr)
+    return C.wxPen_GetDashes(self._ptr, _H.ptr(ptr))
 end
 
 function M:GetJoin()
@@ -90,7 +99,7 @@ function M:SetColourSingle(red, green, blue)
 end
 
 function M:SetDashes(nb_dashes, dash)
-    C.wxPen_SetDashes(self._ptr, nb_dashes, dash)
+    C.wxPen_SetDashes(self._ptr, nb_dashes, _H.ptr(dash))
 end
 
 function M:SetJoin(join)
@@ -111,7 +120,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxPen_Delete(self._ptr)
         self._ptr = nil
     end

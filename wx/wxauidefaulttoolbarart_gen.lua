@@ -7,6 +7,14 @@ local _parent = require("wxauitoolbarart_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -18,7 +26,7 @@ function M.Create()
 end
 
 function M:Clone()
-    return C.wxAuiDefaultToolBarArt_Clone(self._ptr)
+    return _H.wrap("wxauitoolbarart_gen", C.wxAuiDefaultToolBarArt_Clone(self._ptr))
 end
 
 function M:SetFlags(flags)
@@ -34,7 +42,7 @@ function M:SetFont(font)
 end
 
 function M:GetFont()
-    return C.wxAuiDefaultToolBarArt_GetFont(self._ptr)
+    return _H.wrap("wxfont_gen", C.wxAuiDefaultToolBarArt_GetFont(self._ptr))
 end
 
 function M:SetTextOrientation(orientation)
@@ -82,11 +90,11 @@ function M:DrawOverflowButton(dc, window, rect, state)
 end
 
 function M:GetLabelSize(dc, window, item)
-    return C.wxAuiDefaultToolBarArt_GetLabelSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item))
+    return _H.wrap("wxsize_gen", C.wxAuiDefaultToolBarArt_GetLabelSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item)))
 end
 
 function M:GetToolSize(dc, window, item)
-    return C.wxAuiDefaultToolBarArt_GetToolSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item))
+    return _H.wrap("wxsize_gen", C.wxAuiDefaultToolBarArt_GetToolSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item)))
 end
 
 function M:GetElementSize(element)

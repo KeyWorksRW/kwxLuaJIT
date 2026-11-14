@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -13,7 +21,7 @@ function M:Ptr() return self._ptr end
 function M.Create(pObject, name, path)
     local _ws_name = _H.wxs(name)
     local _ws_path = _H.wxs(path)
-    local ptr = C.wxSingleInstanceChecker_Create(pObject, _ws_name, _ws_path)
+    local ptr = C.wxSingleInstanceChecker_Create(_H.ptr(pObject), _ws_name, _ws_path)
     _H.wxs_free(_ws_name)
     _H.wxs_free(_ws_path)
     if ptr == nil then return nil end
@@ -33,7 +41,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxSingleInstanceChecker_Delete(self._ptr)
         self._ptr = nil
     end

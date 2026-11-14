@@ -21,42 +21,35 @@ project(kwxlua
 )
 
 # ###################### General Settings #######################
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# ###################### sccache #######################
+find_program(SCCACHE_PROGRAM sccache)
+if(SCCACHE_PROGRAM)
+    message(STATUS "sccache found: ${SCCACHE_PROGRAM}")
+    set(CMAKE_C_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}")
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}")
+else()
+    message(STATUS "sccache not found; building without a compiler cache")
+endif()
 
 # ###################### Options #######################
 
 # Only generate compile_commands.json for local development
-if ( NOT DEFINED ENV{CI} )
+if(NOT DEFINED ENV{CI})
     # creates a compile_commands.json file in the build directory, suitable for clangd
-    set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
-# ###################### ccache support #######################
-find_program(CCACHE_PROGRAM ccache)
+# ###################### sccache support #######################
+find_program(SCCACHE_PROGRAM sccache)
 
-if(CCACHE_PROGRAM)
-    message(STATUS "Using ccache: ${CCACHE_PROGRAM}")
-    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-
-    message(NOTICE "ccache detected. Configure ccache globally for your development environment:")
-    message(NOTICE "  Recommended for all platforms:")
-    message(NOTICE "    ccache --set-config=compression=true")
-    message(NOTICE "    ccache --set-config=max_size=<appropriate for your projects>")
-    message(NOTICE "    ccache --set-config=sloppiness=pch_defines,time_macros,include_file_mtime,include_file_ctime")
-
-    if(MSVC)
-        message(NOTICE "  Required for MSVC:")
-
-        message(NOTICE "    ccache --set-config=pch_external_checksum=true")
-        message(NOTICE "    ccache --set-config=depend_mode=true")
-        message(NOTICE "    ccache --set-config=\"ignore_options=/Zi /Z7 /ZI /FS /Fd*\"")
-    endif()
-
-    message(NOTICE "  Run 'ccache --show-config' to verify current settings")
-    message(NOTICE "  Run 'ccache -s' to monitor cache usage")
+if(SCCACHE_PROGRAM)
+    message(STATUS "Using sccache: ${SCCACHE_PROGRAM}")
+    set(CMAKE_C_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}")
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}")
 endif()
 
 # ###################### LuaJIT #######################
@@ -76,7 +69,8 @@ message(STATUS "Fetching kwxFFI and wxWidgets (this may take awhile) ...")
 
 FetchContent_Declare(
     kwxFFI
-    GIT_REPOSITORY https://github.com/KeyWorksRW/kwxFFI.git
+    # TEMPORARY: use the local sibling checkout so source changes show up immediately.
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../kwxFFI
     GIT_TAG origin/main
     GIT_SHALLOW TRUE
     UPDATE_DISCONNECTED FALSE
@@ -93,7 +87,6 @@ message(STATUS "kwxFFI sources: ${kwxFFI_SOURCE_DIR}")
 
 # disabled until the new kwxgen repository is ready
 # include (cmake/kwxgen.cmake)
-
 
 # Define wxWidgets paths (kwxFFI fetches wxWidgets as a subdependency)
 set(WX_SRC_DIR ${CMAKE_BINARY_DIR}/_deps/wxwidgets-src)
@@ -142,13 +135,13 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
 # and restore add_custom_command(OUTPUT ...) with kwxgen as a DEPENDS entry.
 add_custom_target(compile_lua_bytecode ALL
     COMMAND ${CMAKE_COMMAND}
-        -DLUAJIT_EXE=$<TARGET_FILE:luajit_exe>
-        -DLUAJIT_JIT_DIR=${CMAKE_SOURCE_DIR}/external/luaJIT/src
-        -DWX_SRC_DIR=${CMAKE_SOURCE_DIR}/wx
-        -DLUA_SRC_DIR=${CMAKE_SOURCE_DIR}/lua
-        -DOUT_DIR=${LUA_BC_DIR}
-        -DCOMBINED_OUTPUT=${LUA_EMBEDDED_C}
-        -P ${CMAKE_SOURCE_DIR}/cmake/compile_lua_bytecode.cmake
+    -DLUAJIT_EXE=$<TARGET_FILE:luajit_exe>
+    -DLUAJIT_JIT_DIR=${CMAKE_SOURCE_DIR}/external/luaJIT/src
+    -DWX_SRC_DIR=${CMAKE_SOURCE_DIR}/wx
+    -DLUA_SRC_DIR=${CMAKE_SOURCE_DIR}/lua
+    -DOUT_DIR=${LUA_BC_DIR}
+    -DCOMBINED_OUTPUT=${LUA_EMBEDDED_C}
+    -P ${CMAKE_SOURCE_DIR}/cmake/compile_lua_bytecode.cmake
     BYPRODUCTS ${LUA_EMBEDDED_C}
     DEPENDS luajit_exe
     COMMENT "Compiling Lua modules to embedded bytecode"
@@ -201,7 +194,7 @@ elseif(UNIX)
         ${WX_BUILD_DIR}/lib/gtk3_unixu-3.3/include
     )
 else()
-    message( FATAL_ERROR "Unsupported platform: Only WIN32, APPLE, or UNIX are supported." )
+    message(FATAL_ERROR "Unsupported platform: Only WIN32, APPLE, or UNIX are supported.")
 endif()
 
 # Link against LuaJIT and kwxFFI. All wxWidgets libraries are pulled in
@@ -221,6 +214,6 @@ set_target_properties(kwxlua PROPERTIES
     ENABLE_EXPORTS TRUE
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/Debug"
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/Release"
     RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_SOURCE_DIR}/bin/RelWithDebInfo"
 )

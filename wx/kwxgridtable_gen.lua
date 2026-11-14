@@ -3,30 +3,95 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxgridtablebase_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: kwxGridTable_Create
 function M.Create(pObject, fnGetNumberRows, fnGetNumberCols, fnGetValue, fnSetValue, fnIsEmptyCell, fnClear, fnInsertRows, fnAppendRows, fnDeleteRows, fnInsertCols, fnAppendCols, fnDeleteCols, fnSetRowLabelValue, fnSetColLabelValue, fnGetRowLabelValue, fnGetColLabelValue)
-    local ptr = C.kwxGridTable_Create(pObject, fnGetNumberRows, fnGetNumberCols, fnGetValue, fnSetValue, fnIsEmptyCell, fnClear, fnInsertRows, fnAppendRows, fnDeleteRows, fnInsertCols, fnAppendCols, fnDeleteCols, fnSetRowLabelValue, fnSetColLabelValue, fnGetRowLabelValue, fnGetColLabelValue)
+    local ptr = C.kwxGridTable_Create(_H.ptr(pObject), _H.ptr(fnGetNumberRows), _H.ptr(fnGetNumberCols), _H.ptr(fnGetValue), _H.ptr(fnSetValue), _H.ptr(fnIsEmptyCell), _H.ptr(fnClear), _H.ptr(fnInsertRows), _H.ptr(fnAppendRows), _H.ptr(fnDeleteRows), _H.ptr(fnInsertCols), _H.ptr(fnAppendCols), _H.ptr(fnDeleteCols), _H.ptr(fnSetRowLabelValue), _H.ptr(fnSetColLabelValue), _H.ptr(fnGetRowLabelValue), _H.ptr(fnGetColLabelValue))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 function M:GetView()
-    return C.kwxGridTable_GetView(self._ptr)
+    return _H.wrap("wxgrid_gen", C.kwxGridTable_GetView(self._ptr))
 end
 
 function M:SendTableMessage(id, val1, val2)
     return C.kwxGridTable_SendTableMessage(self._ptr, id, val1, val2)
 end
 
+function M:SetOnGetTypeName(pFunction)
+    C.kwxGridTable_SetOnGetTypeName(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnCanGetValueAs(pFunction)
+    C.kwxGridTable_SetOnCanGetValueAs(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnCanSetValueAs(pFunction)
+    C.kwxGridTable_SetOnCanSetValueAs(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnGetValueAsLong(pFunction)
+    C.kwxGridTable_SetOnGetValueAsLong(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnGetValueAsBool(pFunction)
+    C.kwxGridTable_SetOnGetValueAsBool(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnSetValueAsLong(pFunction)
+    C.kwxGridTable_SetOnSetValueAsLong(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnSetValueAsBool(pFunction)
+    C.kwxGridTable_SetOnSetValueAsBool(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnGetNumberRows(pFunction)
+    C.kwxGridTable_SetOnGetNumberRows(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnGetNumberCols(pFunction)
+    C.kwxGridTable_SetOnGetNumberCols(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnGetValue(pFunction)
+    C.kwxGridTable_SetOnGetValue(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnSetValue(pFunction)
+    C.kwxGridTable_SetOnSetValue(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnIsEmptyCell(pFunction)
+    C.kwxGridTable_SetOnIsEmptyCell(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnGetColLabelValue(pFunction)
+    C.kwxGridTable_SetOnGetColLabelValue(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnSetColLabelValue(pFunction)
+    C.kwxGridTable_SetOnSetColLabelValue(self._ptr, _H.ptr(pFunction))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.kwxGridTable_Delete(self._ptr)
         self._ptr = nil
     end

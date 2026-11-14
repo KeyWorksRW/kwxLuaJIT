@@ -7,6 +7,14 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -19,12 +27,53 @@ function M.Create(title, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetMenuBar()
+    return _H.wrap("wxmenubar_gen", C.wxMenu_GetMenuBar(self._ptr))
+end
+
+function M:AppendSubMenu(submenu, text, help)
+    local _ws_text = _H.wxs(text)
+    local _ws_help = _H.wxs(help)
+    local _result = _H.wrap("wxmenuitem_gen", C.wxMenu_AppendSubMenu(self._ptr, _H.ptr(submenu), _ws_text, _ws_help))
+    _H.wxs_free(_ws_text)
+    _H.wxs_free(_ws_help)
+    return _result
+end
+
+function M:RemoveItem(id)
+    return _H.wrap("wxmenuitem_gen", C.wxMenu_RemoveItem(self._ptr, id))
+end
+
+function M:GetLabel(id)
+    return _H.wxs_to_str(C.wxMenu_GetLabel(self._ptr, id))
+end
+
+function M:GetWindow()
+    return _H.wrap("wxwindow_gen", C.wxMenu_GetWindow(self._ptr))
+end
+
+function M:Detach()
+    C.wxMenu_Detach(self._ptr)
+end
+
+function M.LockAccels(locked)
+    C.wxMenu_LockAccels(_H.from_bool(locked))
+end
+
 function M:Append(id, text, help, isCheckable)
     local _ws_text = _H.wxs(text)
     local _ws_help = _H.wxs(help)
     C.wxMenu_Append(self._ptr, id, _ws_text, _ws_help, _H.from_bool(isCheckable))
     _H.wxs_free(_ws_text)
     _H.wxs_free(_ws_help)
+end
+
+function M:AppendById(id)
+    C.wxMenu_AppendById(self._ptr, id)
+end
+
+function M:Destroy(itemid)
+    return _H.to_bool(C.wxMenu_Destroy(self._ptr, itemid))
 end
 
 function M:AppendItem(item)
@@ -76,7 +125,7 @@ function M:Enable(id, enable)
 end
 
 function M:FindItem(id)
-    return C.wxMenu_FindItem(self._ptr, id)
+    return _H.wrap("wxmenuitem_gen", C.wxMenu_FindItem(self._ptr, id))
 end
 
 function M:FindItemByLabel(itemString)
@@ -87,7 +136,7 @@ function M:FindItemByLabel(itemString)
 end
 
 function M:GetClientData()
-    return C.wxMenu_GetClientData(self._ptr)
+    return _H.wrap("wxclientdata_gen", C.wxMenu_GetClientData(self._ptr))
 end
 
 function M:GetHelpString(id)
@@ -95,7 +144,7 @@ function M:GetHelpString(id)
 end
 
 function M:GetInvokingWindow()
-    return C.wxMenu_GetInvokingWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxMenu_GetInvokingWindow(self._ptr))
 end
 
 function M:GetLabelText(id)
@@ -111,7 +160,7 @@ function M:GetMenuItems(list)
 end
 
 function M:GetParent()
-    return C.wxMenu_GetParent(self._ptr)
+    return _H.wrap("wxmenu_gen", C.wxMenu_GetParent(self._ptr))
 end
 
 function M:GetStyle()
@@ -179,7 +228,7 @@ function M:RemoveById(id, item)
 end
 
 function M:RemoveByItem(item)
-    C.wxMenu_RemoveByItem(self._ptr, item)
+    C.wxMenu_RemoveByItem(self._ptr, _H.ptr(item))
 end
 
 function M:SetClientData(clientData)
@@ -217,7 +266,7 @@ function M:SetTitle(title)
 end
 
 function M:UpdateUI(source)
-    C.wxMenu_UpdateUI(self._ptr, source)
+    C.wxMenu_UpdateUI(self._ptr, _H.ptr(source))
 end
 
 function M:AppendCheckItem(id, text, help)
@@ -277,11 +326,11 @@ function M:PrependRadioItem(id, text, help)
 end
 
 function M:FindItemByPosition(pos)
-    return C.wxMenu_FindItemByPosition(self._ptr, pos)
+    return _H.wrap("wxmenuitem_gen", C.wxMenu_FindItemByPosition(self._ptr, pos))
 end
 
 function M:GetEventHandler()
-    return C.wxMenu_GetEventHandler(self._ptr)
+    return _H.wrap("wxevthandler_gen", C.wxMenu_GetEventHandler(self._ptr))
 end
 
 return M

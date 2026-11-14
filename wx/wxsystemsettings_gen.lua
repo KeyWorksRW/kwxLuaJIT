@@ -3,26 +3,43 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
-function M:GetColour(index, ref)
-    C.wxSystemSettings_GetColour(self._ptr, index, _H.ptr(ref))
+function M.GetColour(index, ref)
+    C.wxSystemSettings_GetColour(index, _H.ptr(ref))
 end
 
-function M:GetFont(index, ref)
-    C.wxSystemSettings_GetFont(self._ptr, index, _H.ptr(ref))
+function M.GetAppearance()
+    return _H.wrap("wxsystemappearance_gen", C.wxSystemSettings_GetAppearance())
 end
 
-function M:GetMetric(index)
-    return C.wxSystemSettings_GetMetric(self._ptr, index)
+function M.GetFont(index, ref)
+    C.wxSystemSettings_GetFont(index, _H.ptr(ref))
 end
 
-function M:GetScreenType()
-    return C.wxSystemSettings_GetScreenType(self._ptr)
+function M.GetMetric(index)
+    return C.wxSystemSettings_GetMetric(index)
+end
+
+function M.GetScreenType()
+    return C.wxSystemSettings_GetScreenType()
+end
+
+function M.SelectLightDark(colForLight, colForDark)
+    return _H.wrap("wxcolour_gen", C.wxSystemSettings_SelectLightDark(_H.ptr(colForLight), _H.ptr(colForDark)))
 end
 
 return M

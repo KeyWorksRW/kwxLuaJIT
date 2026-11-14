@@ -7,6 +7,14 @@ local _parent = require("wxlistbox_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 local _mixin_wxItemContainer = require("wxitemcontainer_gen")
 for _k, _v in pairs(_mixin_wxItemContainer) do if M[_k] == nil then M[_k] = _v end end
 
@@ -34,7 +42,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxCheckListBox_Delete(self._ptr)
         self._ptr = nil
     end

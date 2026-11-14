@@ -7,6 +7,14 @@ local _parent = require("wxsizer_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,8 +25,16 @@ function M.Create(rows, cols, vgap, hgap)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetEffectiveColsCount()
+    return C.wxGridSizer_GetEffectiveColsCount(self._ptr)
+end
+
+function M:GetEffectiveRowsCount()
+    return C.wxGridSizer_GetEffectiveRowsCount(self._ptr)
+end
+
 function M:CalcMin()
-    return C.wxGridSizer_CalcMin(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxGridSizer_CalcMin(self._ptr))
 end
 
 function M:GetCols()

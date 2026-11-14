@@ -3,15 +3,24 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxlog_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: kwxLog_Create
 function M.Create(pObject, pFunction)
-    local ptr = C.kwxLog_Create(pObject, pFunction)
+    local ptr = C.kwxLog_Create(_H.ptr(pObject), _H.ptr(pFunction))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -20,12 +29,20 @@ function M:AddTraceMask(str)
     C.kwxLog_AddTraceMask(self._ptr, str)
 end
 
+function M:SetOnDoLogRecord(pFunction)
+    C.kwxLog_SetOnDoLogRecord(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnDoLogTextAtLevel(pFunction)
+    C.kwxLog_SetOnDoLogTextAtLevel(self._ptr, _H.ptr(pFunction))
+end
+
 function M:DontCreateOnDemand()
     C.kwxLog_DontCreateOnDemand(self._ptr)
 end
 
 function M:EnableLogging(doIt)
-    return C.kwxLog_EnableLogging(self._ptr, _H.from_bool(doIt))
+    return _H.to_bool(C.kwxLog_EnableLogging(self._ptr, _H.from_bool(doIt)))
 end
 
 function M:Flush()
@@ -36,8 +53,8 @@ function M:FlushActive()
     C.kwxLog_FlushActive(self._ptr)
 end
 
-function M:GetActiveTarget()
-    return C.kwxLog_GetActiveTarget(self._ptr)
+function M.GetActiveTarget()
+    return C.kwxLog_GetActiveTarget()
 end
 
 function M:GetTimestamp()
@@ -45,7 +62,7 @@ function M:GetTimestamp()
 end
 
 function M:GetVerbose()
-    return C.kwxLog_GetVerbose(self._ptr)
+    return _H.to_bool(C.kwxLog_GetVerbose(self._ptr))
 end
 
 function M:HasPendingMessages()
@@ -53,7 +70,7 @@ function M:HasPendingMessages()
 end
 
 function M:IsAllowedTraceMask(mask)
-    return _H.to_bool(C.kwxLog_IsAllowedTraceMask(self._ptr, _H.ptr(mask)))
+    return _H.to_bool(C.kwxLog_IsAllowedTraceMask(self._ptr, mask))
 end
 
 function M:IsEnabled()
@@ -61,7 +78,7 @@ function M:IsEnabled()
 end
 
 function M:OnLog(level, szString, timestamp)
-    C.kwxLog_OnLog(self._ptr, level, szString, timestamp)
+    C.kwxLog_OnLog(self._ptr, level, _H.ptr(szString), timestamp)
 end
 
 function M:RemoveTraceMask(str)
@@ -81,7 +98,7 @@ function M:SetTimestamp(timestamp)
 end
 
 function M:SetVerbose(bVerbose)
-    C.kwxLog_SetVerbose(self._ptr, bVerbose)
+    C.kwxLog_SetVerbose(self._ptr, _H.from_bool(bVerbose))
 end
 
 function M:Suspend()
@@ -90,7 +107,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.kwxLog_Delete(self._ptr)
         self._ptr = nil
     end

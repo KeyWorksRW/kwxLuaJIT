@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -88,19 +97,19 @@ function M:GetEnablePrinter()
 end
 
 function M:GetMarginBottomRight()
-    return C.wxPageSetupDialogData_GetMarginBottomRight(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMarginBottomRight(self._ptr))
 end
 
 function M:GetMarginTopLeft()
-    return C.wxPageSetupDialogData_GetMarginTopLeft(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMarginTopLeft(self._ptr))
 end
 
 function M:GetMinMarginBottomRight()
-    return C.wxPageSetupDialogData_GetMinMarginBottomRight(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMinMarginBottomRight(self._ptr))
 end
 
 function M:GetMinMarginTopLeft()
-    return C.wxPageSetupDialogData_GetMinMarginTopLeft(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMinMarginTopLeft(self._ptr))
 end
 
 function M:GetPaperId()
@@ -108,7 +117,7 @@ function M:GetPaperId()
 end
 
 function M:GetPaperSize()
-    return C.wxPageSetupDialogData_GetPaperSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxPageSetupDialogData_GetPaperSize(self._ptr))
 end
 
 function M:GetPrintData(ref)
@@ -140,7 +149,7 @@ function M:SetMinMarginTopLeft(x, y)
 end
 
 function M:SetPaperId(id)
-    C.wxPageSetupDialogData_SetPaperId(self._ptr, id)
+    C.wxPageSetupDialogData_SetPaperId(self._ptr, _H.ptr(id))
 end
 
 function M:SetPaperSize(width, height)
@@ -157,7 +166,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxPageSetupDialogData_Delete(self._ptr)
         self._ptr = nil
     end

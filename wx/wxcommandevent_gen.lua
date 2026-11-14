@@ -7,6 +7,14 @@ local _parent = require("wxevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -18,11 +26,11 @@ function M.Create(type, id)
 end
 
 function M:GetClientData()
-    return C.wxCommandEvent_GetClientData(self._ptr)
+    return _H.wrap("wxclientdata_gen", C.wxCommandEvent_GetClientData(self._ptr))
 end
 
 function M:GetClientObject()
-    return C.wxCommandEvent_GetClientObject(self._ptr)
+    return _H.wrap("wxclientdata_gen", C.wxCommandEvent_GetClientObject(self._ptr))
 end
 
 function M:GetExtraLong()
@@ -73,7 +81,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxCommandEvent_Delete(self._ptr)
         self._ptr = nil
     end

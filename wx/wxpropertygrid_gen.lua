@@ -7,6 +7,17 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
+local _mixin_wxPropertyGridInterface = require("wxpropertygridinterface_gen")
+for _k, _v in pairs(_mixin_wxPropertyGridInterface) do if M[_k] == nil then M[_k] = _v end end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,8 +28,358 @@ function M.Create(parent, id, left, top, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetColumnCount()
+    return C.wxPropertyGrid_GetColumnCount(self._ptr)
+end
+
+function M:GetGoodEditorDialogPosition(p, sz)
+    return _H.wrap("wxpoint_gen", C.wxPropertyGrid_GetGoodEditorDialogPosition(self._ptr, _H.ptr(p), _H.ptr(sz)))
+end
+
+function M.RegisterEditorClass(editor, noDefCheck)
+    return C.wxPropertyGrid_RegisterEditorClass(_H.ptr(editor), _H.from_bool(noDefCheck))
+end
+
+function M:GetRowHeight()
+    return C.wxPropertyGrid_GetRowHeight(self._ptr)
+end
+
+function M:GetFontHeight()
+    return C.wxPropertyGrid_GetFontHeight(self._ptr)
+end
+
+function M:GetMarginWidth()
+    return C.wxPropertyGrid_GetMarginWidth(self._ptr)
+end
+
+function M:GetVerticalSpacing()
+    return C.wxPropertyGrid_GetVerticalSpacing(self._ptr)
+end
+
+function M:GetSpacingY()
+    return C.wxPropertyGrid_GetSpacingY(self._ptr)
+end
+
+function M:GetPanel()
+    return _H.wrap("wxwindow_gen", C.wxPropertyGrid_GetPanel(self._ptr))
+end
+
+function M:GetGrid()
+    return _H.wrap("wxpropertygrid_gen", C.wxPropertyGrid_GetGrid(self._ptr))
+end
+
+function M:GetRoot()
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGrid_GetRoot(self._ptr))
+end
+
+function M:GetLastItem(flags)
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGrid_GetLastItem(self._ptr, flags))
+end
+
+function M:GetSelectedProperty()
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGrid_GetSelectedProperty(self._ptr))
+end
+
+function M:GetSelection()
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGrid_GetSelection(self._ptr))
+end
+
+function M:GetEditorTextCtrl()
+    return _H.wrap("wxtextctrl_gen", C.wxPropertyGrid_GetEditorTextCtrl(self._ptr))
+end
+
+function M:GetEditorControl()
+    return _H.wrap("wxwindow_gen", C.wxPropertyGrid_GetEditorControl(self._ptr))
+end
+
+function M:GetEditorControlSecondary()
+    return _H.wrap("wxwindow_gen", C.wxPropertyGrid_GetEditorControlSecondary(self._ptr))
+end
+
+function M:GetLabelEditor()
+    return _H.wrap("wxtextctrl_gen", C.wxPropertyGrid_GetLabelEditor(self._ptr))
+end
+
+function M:GetValidationInfo()
+    return _H.wrap("wxpgvalidationinfo_gen", C.wxPropertyGrid_GetValidationInfo(self._ptr))
+end
+
+function M:GetImageSize(property, item)
+    return _H.wrap("wxsize_gen", C.wxPropertyGrid_GetImageSize(self._ptr, _H.ptr(property), item))
+end
+
+function M:GetImageRect(property, item)
+    return _H.wrap("wxrect_gen", C.wxPropertyGrid_GetImageRect(self._ptr, _H.ptr(property), item))
+end
+
+function M:GetPropertyRect(first, last)
+    return _H.wrap("wxrect_gen", C.wxPropertyGrid_GetPropertyRect(self._ptr, _H.ptr(first), _H.ptr(last)))
+end
+
+function M:FitColumns()
+    return _H.wrap("wxsize_gen", C.wxPropertyGrid_FitColumns(self._ptr))
+end
+
+function M:GetCaptionFont()
+    return _H.wrap("wxfont_gen", C.wxPropertyGrid_GetCaptionFont(self._ptr))
+end
+
+function M:GetCaptionBackgroundColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetCaptionBackgroundColour(self._ptr))
+end
+
+function M:GetCaptionForegroundColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetCaptionForegroundColour(self._ptr))
+end
+
+function M:GetCellBackgroundColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetCellBackgroundColour(self._ptr))
+end
+
+function M:GetCellDisabledTextColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetCellDisabledTextColour(self._ptr))
+end
+
+function M:GetCellTextColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetCellTextColour(self._ptr))
+end
+
+function M:GetEmptySpaceColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetEmptySpaceColour(self._ptr))
+end
+
+function M:GetLineColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetLineColour(self._ptr))
+end
+
+function M:GetMarginColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetMarginColour(self._ptr))
+end
+
+function M:GetSelectionBackgroundColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetSelectionBackgroundColour(self._ptr))
+end
+
+function M:GetSelectionForegroundColour()
+    return _H.wrap("wxcolour_gen", C.wxPropertyGrid_GetSelectionForegroundColour(self._ptr))
+end
+
+function M:SetCaptionBackgroundColour(colour)
+    C.wxPropertyGrid_SetCaptionBackgroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetCaptionTextColour(colour)
+    C.wxPropertyGrid_SetCaptionTextColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetCellBackgroundColour(colour)
+    C.wxPropertyGrid_SetCellBackgroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetCellDisabledTextColour(colour)
+    C.wxPropertyGrid_SetCellDisabledTextColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetCellTextColour(colour)
+    C.wxPropertyGrid_SetCellTextColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetEmptySpaceColour(colour)
+    C.wxPropertyGrid_SetEmptySpaceColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetLineColour(colour)
+    C.wxPropertyGrid_SetLineColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetMarginColour(colour)
+    C.wxPropertyGrid_SetMarginColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetSelectionBackgroundColour(colour)
+    C.wxPropertyGrid_SetSelectionBackgroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetSelectionTextColour(colour)
+    C.wxPropertyGrid_SetSelectionTextColour(self._ptr, _H.ptr(colour))
+end
+
+function M:GetPropertyDefaultCell()
+    return _H.wrap("wxpgcell_gen", C.wxPropertyGrid_GetPropertyDefaultCell(self._ptr))
+end
+
+function M:GetCategoryDefaultCell()
+    return _H.wrap("wxpgcell_gen", C.wxPropertyGrid_GetCategoryDefaultCell(self._ptr))
+end
+
+function M:GetUnspecifiedValueAppearance()
+    return _H.wrap("wxpgcell_gen", C.wxPropertyGrid_GetUnspecifiedValueAppearance(self._ptr))
+end
+
+function M:SetUnspecifiedValueAppearance(cell)
+    C.wxPropertyGrid_SetUnspecifiedValueAppearance(self._ptr, _H.ptr(cell))
+end
+
+function M:SetColumnCount(column_count)
+    C.wxPropertyGrid_SetColumnCount(self._ptr, column_count)
+end
+
+function M:SetSplitterPosition(position, column)
+    C.wxPropertyGrid_SetSplitterPosition(self._ptr, position, column)
+end
+
+function M:GetSplitterPosition(splitter_index)
+    return C.wxPropertyGrid_GetSplitterPosition(self._ptr, splitter_index)
+end
+
+function M:SetSplitterLeft(private_children_too)
+    C.wxPropertyGrid_SetSplitterLeft(self._ptr, _H.from_bool(private_children_too))
+end
+
+function M:SetVirtualWidth(width)
+    C.wxPropertyGrid_SetVirtualWidth(self._ptr, width)
+end
+
+function M:HasVirtualWidth()
+    return _H.to_bool(C.wxPropertyGrid_HasVirtualWidth(self._ptr))
+end
+
+function M:CenterSplitter(enable_auto_resizing)
+    C.wxPropertyGrid_CenterSplitter(self._ptr, _H.from_bool(enable_auto_resizing))
+end
+
+function M:ResetColumnSizes(enable_auto_resizing)
+    C.wxPropertyGrid_ResetColumnSizes(self._ptr, _H.from_bool(enable_auto_resizing))
+end
+
+function M:ResetColours()
+    C.wxPropertyGrid_ResetColours(self._ptr)
+end
+
+function M:MakeColumnEditable(column, editable)
+    C.wxPropertyGrid_MakeColumnEditable(self._ptr, column, _H.from_bool(editable))
+end
+
+function M:SetVerticalSpacing(spacing)
+    C.wxPropertyGrid_SetVerticalSpacing(self._ptr, spacing)
+end
+
+function M:SelectProperty(id, focus)
+    return _H.to_bool(C.wxPropertyGrid_SelectProperty(self._ptr, _H.ptr(id), _H.from_bool(focus)))
+end
+
+function M:AddToSelection(id)
+    return _H.to_bool(C.wxPropertyGrid_AddToSelection(self._ptr, _H.ptr(id)))
+end
+
+function M:RemoveFromSelection(id)
+    return _H.to_bool(C.wxPropertyGrid_RemoveFromSelection(self._ptr, _H.ptr(id)))
+end
+
+function M:EnsureVisible(id)
+    return _H.to_bool(C.wxPropertyGrid_EnsureVisible(self._ptr, _H.ptr(id)))
+end
+
+function M:EnableCategories(enable)
+    return _H.to_bool(C.wxPropertyGrid_EnableCategories(self._ptr, _H.from_bool(enable)))
+end
+
+function M:CommitChangesFromEditor(flags)
+    return _H.to_bool(C.wxPropertyGrid_CommitChangesFromEditor(self._ptr, flags))
+end
+
+function M:BeginLabelEdit(column)
+    C.wxPropertyGrid_BeginLabelEdit(self._ptr, column)
+end
+
+function M:EndLabelEdit(commit)
+    C.wxPropertyGrid_EndLabelEdit(self._ptr, _H.from_bool(commit))
+end
+
+function M:IsAnyModified()
+    return _H.to_bool(C.wxPropertyGrid_IsAnyModified(self._ptr))
+end
+
+function M:IsEditorFocused()
+    return _H.to_bool(C.wxPropertyGrid_IsEditorFocused(self._ptr))
+end
+
+function M:IsEditorsValueModified()
+    return _H.to_bool(C.wxPropertyGrid_IsEditorsValueModified(self._ptr))
+end
+
+function M:EditorsValueWasModified()
+    C.wxPropertyGrid_EditorsValueWasModified(self._ptr)
+end
+
+function M:EditorsValueWasNotModified()
+    C.wxPropertyGrid_EditorsValueWasNotModified(self._ptr)
+end
+
+function M:RefreshEditor()
+    C.wxPropertyGrid_RefreshEditor(self._ptr)
+end
+
+function M:UnfocusEditor()
+    return _H.to_bool(C.wxPropertyGrid_UnfocusEditor(self._ptr))
+end
+
+function M:RefreshProperty(property)
+    C.wxPropertyGrid_RefreshProperty(self._ptr, _H.ptr(property))
+end
+
+function M:SetCurrentCategory(id)
+    C.wxPropertyGrid_SetCurrentCategory(self._ptr, _H.ptr(id))
+end
+
+function M:DedicateKey(keycode)
+    C.wxPropertyGrid_DedicateKey(self._ptr, keycode)
+end
+
+function M:AddActionTrigger(action, keycode, modifiers)
+    C.wxPropertyGrid_AddActionTrigger(self._ptr, action, keycode, modifiers)
+end
+
+function M:ClearActionTriggers(action)
+    C.wxPropertyGrid_ClearActionTriggers(self._ptr, action)
+end
+
+function M:SetFont(font)
+    return _H.to_bool(C.wxPropertyGrid_SetFont(self._ptr, _H.ptr(font)))
+end
+
+function M:GetPropertyValue(id)
+    return _H.wrap("wxvariant_gen", C.wxPropertyGrid_GetPropertyValue(self._ptr, _H.ptr(id)))
+end
+
+function M:SetPropertyValue(id, value)
+    C.wxPropertyGrid_SetPropertyValue(self._ptr, _H.ptr(id), _H.ptr(value))
+end
+
+function M:SetPropertyValueUnspecified(id)
+    C.wxPropertyGrid_SetPropertyValueUnspecified(self._ptr, _H.ptr(id))
+end
+
+function M:GetPropertyHelpString(id)
+    return _H.wxs_to_str(C.wxPropertyGrid_GetPropertyHelpString(self._ptr, _H.ptr(id)))
+end
+
+function M:SetPropertyHelpString(id, help)
+    local _ws_help = _H.wxs(help)
+    C.wxPropertyGrid_SetPropertyHelpString(self._ptr, _H.ptr(id), _ws_help)
+    _H.wxs_free(_ws_help)
+end
+
+function M:IsPropertyModified(id)
+    return _H.to_bool(C.wxPropertyGrid_IsPropertyModified(self._ptr, _H.ptr(id)))
+end
+
+function M:GetUncommittedPropertyValue()
+    return _H.wrap("wxvariant_gen", C.wxPropertyGrid_GetUncommittedPropertyValue(self._ptr))
+end
+
 function M:Append(prop)
-    return C.wxPropertyGrid_Append(self._ptr, _H.ptr(prop))
+    return _H.wrap("wxpgproperty_gen", C.wxPropertyGrid_Append(self._ptr, _H.ptr(prop)))
 end
 
 function M:DisableProperty(propName)

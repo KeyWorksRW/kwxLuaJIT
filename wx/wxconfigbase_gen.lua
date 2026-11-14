@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -14,6 +23,41 @@ function M.Create()
     local ptr = C.wxConfigBase_Create()
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M.Get()
+    return _H.wrap("wxconfigbase_gen", C.wxConfigBase_Get())
+end
+
+function M:Set()
+    C.wxConfigBase_Set(self._ptr)
+end
+
+function M.DontCreateOnDemand()
+    C.wxConfigBase_DontCreateOnDemand()
+end
+
+function M:ReadLong(key, def_val)
+    local _ws_key = _H.wxs(key)
+    local _result = C.wxConfigBase_ReadLong(self._ptr, _ws_key, def_val)
+    _H.wxs_free(_ws_key)
+    return _result
+end
+
+function M:Read(key, pStr)
+    local _ws_key = _H.wxs(key)
+    local _result = _H.to_bool(C.wxConfigBase_Read(self._ptr, _ws_key, _H.ptr(pStr)))
+    _H.wxs_free(_ws_key)
+    return _result
+end
+
+function M:Write(key, value)
+    local _ws_key = _H.wxs(key)
+    local _ws_value = _H.wxs(value)
+    local _result = _H.to_bool(C.wxConfigBase_Write(self._ptr, _ws_key, _ws_value))
+    _H.wxs_free(_ws_key)
+    _H.wxs_free(_ws_value)
+    return _result
 end
 
 function M:DeleteAll()
@@ -64,19 +108,19 @@ function M:GetEntryType(name)
 end
 
 function M:GetFirstEntry(lIndex)
-    return _H.wxs_to_str(C.wxConfigBase_GetFirstEntry(self._ptr, lIndex))
+    return _H.wxs_to_str(C.wxConfigBase_GetFirstEntry(self._ptr, _H.ptr(lIndex)))
 end
 
 function M:GetFirstGroup(lIndex)
-    return _H.wxs_to_str(C.wxConfigBase_GetFirstGroup(self._ptr, lIndex))
+    return _H.wxs_to_str(C.wxConfigBase_GetFirstGroup(self._ptr, _H.ptr(lIndex)))
 end
 
 function M:GetNextEntry(lIndex)
-    return _H.wxs_to_str(C.wxConfigBase_GetNextEntry(self._ptr, lIndex))
+    return _H.wxs_to_str(C.wxConfigBase_GetNextEntry(self._ptr, _H.ptr(lIndex)))
 end
 
 function M:GetNextGroup(lIndex)
-    return _H.wxs_to_str(C.wxConfigBase_GetNextGroup(self._ptr, lIndex))
+    return _H.wxs_to_str(C.wxConfigBase_GetNextGroup(self._ptr, _H.ptr(lIndex)))
 end
 
 function M:GetNumberOfEntries(bRecursive)
@@ -238,7 +282,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxConfigBase_Delete(self._ptr)
         self._ptr = nil
     end

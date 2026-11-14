@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxcontrol_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -12,6 +21,13 @@ function M:Ptr() return self._ptr end
 --- Constructor: wxInfoBar_Create
 function M.Create(parent, id)
     local ptr = C.wxInfoBar_Create(_H.ptr(parent), id)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxInfoBar_CreateEx
+function M.CreateEx(parent, id, style)
+    local ptr = C.wxInfoBar_CreateEx(_H.ptr(parent), id, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -66,6 +82,30 @@ function M:ShowMessage(msg, flags)
     local _ws_msg = _H.wxs(msg)
     C.wxInfoBar_ShowMessage(self._ptr, _ws_msg, flags)
     _H.wxs_free(_ws_msg)
+end
+
+function M:ShowCheckBox(checkBoxText, checked)
+    local _ws_checkBoxText = _H.wxs(checkBoxText)
+    C.wxInfoBar_ShowCheckBox(self._ptr, _ws_checkBoxText, _H.from_bool(checked))
+    _H.wxs_free(_ws_checkBoxText)
+end
+
+function M:IsCheckBoxChecked()
+    return _H.to_bool(C.wxInfoBar_IsCheckBoxChecked(self._ptr))
+end
+
+function M:ShowMessageFor(msg, timeoutInSeconds, flags)
+    local _ws_msg = _H.wxs(msg)
+    C.wxInfoBar_ShowMessageFor(self._ptr, _ws_msg, timeoutInSeconds, flags)
+    _H.wxs_free(_ws_msg)
+end
+
+function M:RemoveAllButtons()
+    C.wxInfoBar_RemoveAllButtons(self._ptr)
+end
+
+function M:ShowCloseButton(show)
+    C.wxInfoBar_ShowCloseButton(self._ptr, show)
 end
 
 return M

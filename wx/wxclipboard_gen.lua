@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -54,6 +63,14 @@ end
 
 function M:UsePrimarySelection(primary)
     C.wxClipboard_UsePrimarySelection(self._ptr, _H.from_bool(primary))
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxClipboard_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

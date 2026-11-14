@@ -7,6 +7,14 @@ local _parent = require("wxbookctrlbase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -22,6 +30,38 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxAuiNotebook_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetActiveTabCtrl()
+    return C.wxAuiNotebook_GetActiveTabCtrl(self._ptr)
+end
+
+function M:GetMainTabCtrl()
+    return C.wxAuiNotebook_GetMainTabCtrl(self._ptr)
+end
+
+function M:GetPageKind(pageIdx)
+    return C.wxAuiNotebook_GetPageKind(self._ptr, pageIdx)
+end
+
+function M:GetPagePosition(page)
+    return C.wxAuiNotebook_GetPagePosition(self._ptr, page)
+end
+
+function M:SetManagerFlags(flags)
+    C.wxAuiNotebook_SetManagerFlags(self._ptr, flags)
+end
+
+function M:SetPageKind(pageIdx, kind)
+    return _H.to_bool(C.wxAuiNotebook_SetPageKind(self._ptr, pageIdx, kind))
+end
+
+function M:SetWindowStyleFlag(style)
+    C.wxAuiNotebook_SetWindowStyleFlag(self._ptr, style)
+end
+
+function M:UnsplitAll()
+    C.wxAuiNotebook_UnsplitAll(self._ptr)
 end
 
 function M:CreateFromDefault(parent, id, x, y, width, height, style)
@@ -59,11 +99,11 @@ function M:DeletePage(page)
 end
 
 function M:GetArtProvider()
-    return C.wxAuiNotebook_GetArtProvider(self._ptr)
+    return _H.wrap("wxauitabart_gen", C.wxAuiNotebook_GetArtProvider(self._ptr))
 end
 
 function M:GetCurrentPage()
-    return C.wxAuiNotebook_GetCurrentPage(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxAuiNotebook_GetCurrentPage(self._ptr))
 end
 
 function M:GetHeightForPageHeight(pageHeight)
@@ -71,7 +111,7 @@ function M:GetHeightForPageHeight(pageHeight)
 end
 
 function M:GetPage(page_idx)
-    return C.wxAuiNotebook_GetPage(self._ptr, page_idx)
+    return _H.wrap("wxwindow_gen", C.wxAuiNotebook_GetPage(self._ptr, page_idx))
 end
 
 function M:GetPageBitmap(page, bmp)
@@ -180,6 +220,30 @@ end
 
 function M:Split(page, direction)
     C.wxAuiNotebook_Split(self._ptr, page, direction)
+end
+
+function M:HitTest(point_x, point_y, flags)
+    return C.wxAuiNotebook_HitTest(self._ptr, point_x, point_y, flags)
+end
+
+function M:GetAllTabCtrls()
+    return _H.wrap("wxauitabctrlarray_gen", C.wxAuiNotebook_GetAllTabCtrls(self._ptr), true)
+end
+
+function M:GetPagesInDisplayOrder(tabCtrl)
+    return _H.wrap("wxarrayint_gen", C.wxAuiNotebook_GetPagesInDisplayOrder(self._ptr, _H.ptr(tabCtrl)), true)
+end
+
+function M:SaveLayout(name, serializer)
+    local _ws_name = _H.wxs(name)
+    C.wxAuiNotebook_SaveLayout(self._ptr, _ws_name, _H.ptr(serializer))
+    _H.wxs_free(_ws_name)
+end
+
+function M:LoadLayout(name, deserializer)
+    local _ws_name = _H.wxs(name)
+    C.wxAuiNotebook_LoadLayout(self._ptr, _ws_name, _H.ptr(deserializer))
+    _H.wxs_free(_ws_name)
 end
 
 return M

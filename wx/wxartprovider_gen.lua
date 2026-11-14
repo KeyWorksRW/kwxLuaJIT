@@ -3,14 +3,93 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
-function M:PopProvider()
-    return _H.to_bool(C.PopProvider(self._ptr))
+function M.GetBitmap(id, client, width, height)
+    local _ws_id = _H.wxs(id)
+    local _ws_client = _H.wxs(client)
+    local _result = _H.wrap("wxbitmap_gen", C.wxArtProvider_GetBitmap(_ws_id, _ws_client, width, height), true)
+    _H.wxs_free(_ws_id)
+    _H.wxs_free(_ws_client)
+    return _result
+end
+
+function M.Pop()
+    return _H.to_bool(C.wxArtProvider_Pop())
+end
+
+function M.Push(provider)
+    C.wxArtProvider_Push(_H.ptr(provider))
+end
+
+function M.GetBitmapBundle(id, client, width, height)
+    local _ws_id = _H.wxs(id)
+    local _ws_client = _H.wxs(client)
+    local _result = _H.wrap("wxbitmapbundle_gen", C.wxArtProvider_GetBitmapBundle(_ws_id, _ws_client, width, height), true)
+    _H.wxs_free(_ws_id)
+    _H.wxs_free(_ws_client)
+    return _result
+end
+
+function M.GetIcon(id, client, width, height)
+    local _ws_id = _H.wxs(id)
+    local _ws_client = _H.wxs(client)
+    local _result = _H.wrap("wxicon_gen", C.wxArtProvider_GetIcon(_ws_id, _ws_client, width, height), true)
+    _H.wxs_free(_ws_id)
+    _H.wxs_free(_ws_client)
+    return _result
+end
+
+function M.GetIconBundle(id, client)
+    local _ws_id = _H.wxs(id)
+    local _ws_client = _H.wxs(client)
+    local _result = _H.wrap("wxiconbundle_gen", C.wxArtProvider_GetIconBundle(_ws_id, _ws_client), true)
+    _H.wxs_free(_ws_id)
+    _H.wxs_free(_ws_client)
+    return _result
+end
+
+function M.GetNativeSizeHint(client, window)
+    local _ws_client = _H.wxs(client)
+    local _result = _H.wrap("wxsize_gen", C.wxArtProvider_GetNativeSizeHint(_ws_client, _H.ptr(window)), true)
+    _H.wxs_free(_ws_client)
+    return _result
+end
+
+function M.GetSizeHint(client, window)
+    local _ws_client = _H.wxs(client)
+    local _result = _H.wrap("wxsize_gen", C.wxArtProvider_GetSizeHint(_ws_client, _H.ptr(window)), true)
+    _H.wxs_free(_ws_client)
+    return _result
+end
+
+function M.HasNativeProvider()
+    return _H.to_bool(C.wxArtProvider_HasNativeProvider())
+end
+
+function M.PushBack(provider)
+    C.wxArtProvider_PushBack(_H.ptr(provider))
+end
+
+function M.DeleteProvider(provider)
+    return _H.to_bool(C.wxArtProvider_DeleteProvider(_H.ptr(provider)))
+end
+
+function M.PopProvider()
+    return _H.to_bool(C.PopProvider())
 end
 
 return M

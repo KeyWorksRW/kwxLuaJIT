@@ -7,39 +7,47 @@ local _parent = require("wxdroptarget_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: kwxTextDropTarget_Create
 function M.Create(pObject, pFunction)
-    local ptr = C.kwxTextDropTarget_Create(pObject, pFunction)
+    local ptr = C.kwxTextDropTarget_Create(_H.ptr(pObject), _H.ptr(pFunction))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 function M:SetOnData(pFunction)
-    C.kwxTextDropTarget_SetOnData(self._ptr, pFunction)
+    C.kwxTextDropTarget_SetOnData(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnDragOver(pFunction)
-    C.kwxTextDropTarget_SetOnDragOver(self._ptr, pFunction)
+    C.kwxTextDropTarget_SetOnDragOver(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnDrop(pFunction)
-    C.kwxTextDropTarget_SetOnDrop(self._ptr, pFunction)
+    C.kwxTextDropTarget_SetOnDrop(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnEnter(pFunction)
-    C.kwxTextDropTarget_SetOnEnter(self._ptr, pFunction)
+    C.kwxTextDropTarget_SetOnEnter(self._ptr, _H.ptr(pFunction))
 end
 
 function M:SetOnLeave(pFunction)
-    C.kwxTextDropTarget_SetOnLeave(self._ptr, pFunction)
+    C.kwxTextDropTarget_SetOnLeave(self._ptr, _H.ptr(pFunction))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.kwxTextDropTarget_Delete(self._ptr)
         self._ptr = nil
     end

@@ -7,6 +7,14 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,16 +25,32 @@ function M.Create(managedWnd, flags)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:AllowDocksForMinPanes(directions)
+    C.wxAuiManager_AllowDocksForMinPanes(self._ptr, directions)
+end
+
+function M.AlwaysUsesLiveResize(window)
+    return _H.to_bool(C.wxAuiManager_AlwaysUsesLiveResize(_H.ptr(window)))
+end
+
+function M:GetPane(window)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiManager_GetPane(self._ptr, _H.ptr(window)))
+end
+
+function M:SetDocksForMinPanesStyle(style)
+    C.wxAuiManager_SetDocksForMinPanesStyle(self._ptr, style)
+end
+
 function M:DetachPane(window)
     return _H.to_bool(C.wxAuiManager_DetachPane(self._ptr, _H.ptr(window)))
 end
 
 function M:GetAllPanes()
-    return C.wxAuiManager_GetAllPanes(self._ptr)
+    return _H.wrap("wxauipaneinfoarray_gen", C.wxAuiManager_GetAllPanes(self._ptr))
 end
 
 function M:GetArtProvider()
-    return C.wxAuiManager_GetArtProvider(self._ptr)
+    return _H.wrap("wxauidockart_gen", C.wxAuiManager_GetArtProvider(self._ptr))
 end
 
 function M:GetDockSizeConstraint(widthPct, heightPct)
@@ -38,7 +62,7 @@ function M:GetFlags()
 end
 
 function M:GetManagedWindow()
-    return C.wxAuiManager_GetManagedWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxAuiManager_GetManagedWindow(self._ptr))
 end
 
 function M:HideHint()
@@ -68,6 +92,14 @@ end
 
 function M:SavePerspective()
     return _H.wxs_to_str(C.wxAuiManager_SavePerspective(self._ptr))
+end
+
+function M:SaveLayout(serializer)
+    C.wxAuiManager_SaveLayout(self._ptr, _H.ptr(serializer))
+end
+
+function M:LoadLayout(deserializer)
+    C.wxAuiManager_LoadLayout(self._ptr, _H.ptr(deserializer))
 end
 
 function M:SetArtProvider(artProvider)
@@ -114,23 +146,23 @@ function M:AddPaneByPaneInfoAndDropPosition(window, paneInfo, x, y)
 end
 
 function M:GetPaneByWindow(window)
-    return C.wxAuiManager_GetPaneByWindow(self._ptr, _H.ptr(window))
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiManager_GetPaneByWindow(self._ptr, _H.ptr(window)))
 end
 
 function M:GetPaneByName(name)
     local _ws_name = _H.wxs(name)
-    local _result = C.wxAuiManager_GetPaneByName(self._ptr, _ws_name)
+    local _result = _H.wrap("wxauipaneinfo_gen", C.wxAuiManager_GetPaneByName(self._ptr, _ws_name))
     _H.wxs_free(_ws_name)
     return _result
 end
 
-function M:GetManager(window)
-    return C.wxAuiManager_GetManager(self._ptr, _H.ptr(window))
+function M.GetManager(window)
+    return _H.wrap("wxauimanager_gen", C.wxAuiManager_GetManager(_H.ptr(window)))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxAuiManager_Delete(self._ptr)
         self._ptr = nil
     end

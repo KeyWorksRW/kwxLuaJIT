@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -31,7 +39,7 @@ function M:EndEdit(row, col, grid, oldStr, newStr)
 end
 
 function M:GetControl()
-    return C.wxGridCellEditor_GetControl(self._ptr)
+    return _H.wrap("wxcontrol_gen", C.wxGridCellEditor_GetControl(self._ptr))
 end
 
 function M:HandleReturn(event)

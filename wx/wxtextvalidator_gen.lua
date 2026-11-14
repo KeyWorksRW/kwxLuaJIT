@@ -7,22 +7,56 @@ local _parent = require("wxvalidator_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: wxTextValidator_Create
 function M.Create(style, val)
-    local ptr = C.wxTextValidator_Create(style, val)
+    local ptr = C.wxTextValidator_Create(style, _H.ptr(val))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:GetExcludes(ref)
-    return C.wxTextValidator_GetExcludes(self._ptr, ref)
+function M:AddCharIncludes(chars)
+    local _ws_chars = _H.wxs(chars)
+    C.wxTextValidator_AddCharIncludes(self._ptr, _ws_chars)
+    _H.wxs_free(_ws_chars)
 end
 
-function M:GetIncludes(ref)
-    return C.wxTextValidator_GetIncludes(self._ptr, ref)
+function M:GetCharExcludes()
+    return _H.wxs_to_str(C.wxTextValidator_GetCharExcludes(self._ptr))
+end
+
+function M:GetCharIncludes()
+    return _H.wxs_to_str(C.wxTextValidator_GetCharIncludes(self._ptr))
+end
+
+function M:SetCharExcludes(chars)
+    local _ws_chars = _H.wxs(chars)
+    C.wxTextValidator_SetCharExcludes(self._ptr, _ws_chars)
+    _H.wxs_free(_ws_chars)
+end
+
+function M:SetCharIncludes(chars)
+    local _ws_chars = _H.wxs(chars)
+    C.wxTextValidator_SetCharIncludes(self._ptr, _ws_chars)
+    _H.wxs_free(_ws_chars)
+end
+
+function M:GetExcludes(count)
+    return C.wxTextValidator_GetExcludes(self._ptr, count)
+end
+
+function M:GetIncludes(count)
+    return C.wxTextValidator_GetIncludes(self._ptr, count)
 end
 
 function M:SetExcludes(list, count)
@@ -34,7 +68,7 @@ function M:SetIncludes(list, count)
 end
 
 function M:Clone()
-    return C.wxTextValidator_Clone(self._ptr)
+    return _H.wrap("wxvalidator_gen", C.wxTextValidator_Clone(self._ptr))
 end
 
 function M:TransferToWindow()

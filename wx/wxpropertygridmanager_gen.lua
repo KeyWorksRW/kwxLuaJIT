@@ -7,6 +7,17 @@ local _parent = require("wxpanel_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
+local _mixin_wxPropertyGridInterface = require("wxpropertygridinterface_gen")
+for _k, _v in pairs(_mixin_wxPropertyGridInterface) do if M[_k] == nil then M[_k] = _v end end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,16 +28,44 @@ function M.Create(parent, id, x, y, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:AddPageObject(label, bitmap, page)
+    local _ws_label = _H.wxs(label)
+    local _result = _H.wrap("wxpropertygridpage_gen", C.wxPropertyGridManager_AddPageObject(self._ptr, _ws_label, _H.ptr(bitmap), _H.ptr(page)))
+    _H.wxs_free(_ws_label)
+    return _result
+end
+
+function M:InsertPageObject(index, label, bitmap, page)
+    local _ws_label = _H.wxs(label)
+    local _result = _H.wrap("wxpropertygridpage_gen", C.wxPropertyGridManager_InsertPageObject(self._ptr, index, _ws_label, _H.ptr(bitmap), _H.ptr(page)))
+    _H.wxs_free(_ws_label)
+    return _result
+end
+
+function M:GetColumnCount(page)
+    return C.wxPropertyGridManager_GetColumnCount(self._ptr, page)
+end
+
+function M:SetColumnCount(colCount, page)
+    C.wxPropertyGridManager_SetColumnCount(self._ptr, colCount, page)
+end
+
+function M:SetColumnTitle(idx, title)
+    local _ws_title = _H.wxs(title)
+    C.wxPropertyGridManager_SetColumnTitle(self._ptr, idx, _ws_title)
+    _H.wxs_free(_ws_title)
+end
+
 function M:AddPage(label, bmp)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxPropertyGridManager_AddPage(self._ptr, _ws_label, _H.ptr(bmp))
+    local _result = _H.wrap("wxpropertygridpage_gen", C.wxPropertyGridManager_AddPage(self._ptr, _ws_label, _H.ptr(bmp)))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:InsertPage(index, label, bmp)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxPropertyGridManager_InsertPage(self._ptr, index, _ws_label, _H.ptr(bmp))
+    local _result = _H.wrap("wxpropertygridpage_gen", C.wxPropertyGridManager_InsertPage(self._ptr, index, _ws_label, _H.ptr(bmp)))
     _H.wxs_free(_ws_label)
     return _result
 end
@@ -44,7 +83,7 @@ function M:GetPageCount()
 end
 
 function M:GetPage(index)
-    return C.wxPropertyGridManager_GetPage(self._ptr, index)
+    return _H.wrap("wxpropertygridpage_gen", C.wxPropertyGridManager_GetPage(self._ptr, index))
 end
 
 function M:GetPageByName(name)
@@ -73,15 +112,15 @@ function M:SelectPageByLabel(label)
 end
 
 function M:GetGrid()
-    return C.wxPropertyGridManager_GetGrid(self._ptr)
+    return _H.wrap("wxpropertygrid_gen", C.wxPropertyGridManager_GetGrid(self._ptr))
 end
 
 function M:GetCurrentPage()
-    return C.wxPropertyGridManager_GetCurrentPage(self._ptr)
+    return _H.wrap("wxpropertygridpage_gen", C.wxPropertyGridManager_GetCurrentPage(self._ptr))
 end
 
 function M:GetToolBar()
-    return C.wxPropertyGridManager_GetToolBar(self._ptr)
+    return _H.wrap("wxtoolbar_gen", C.wxPropertyGridManager_GetToolBar(self._ptr))
 end
 
 function M:SetDescBoxHeight(descBoxHeight, refresh)

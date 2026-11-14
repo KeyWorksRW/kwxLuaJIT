@@ -7,11 +7,75 @@ local _parent = require("wxevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+function M:GetButton()
+    return C.wxMouseEvent_GetButton(self._ptr)
+end
+
+function M:GetWheelDelta()
+    return C.wxMouseEvent_GetWheelDelta(self._ptr)
+end
+
+function M:GetWheelRotation()
+    return C.wxMouseEvent_GetWheelRotation(self._ptr)
+end
+
 function M:AltDown()
     return _H.to_bool(C.wxMouseEvent_AltDown(self._ptr))
+end
+
+function M:Aux1DClick()
+    return _H.to_bool(C.wxMouseEvent_Aux1DClick(self._ptr))
+end
+
+function M:Aux1Down()
+    return _H.to_bool(C.wxMouseEvent_Aux1Down(self._ptr))
+end
+
+function M:Aux1IsDown()
+    return _H.to_bool(C.wxMouseEvent_Aux1IsDown(self._ptr))
+end
+
+function M:Aux1Up()
+    return _H.to_bool(C.wxMouseEvent_Aux1Up(self._ptr))
+end
+
+function M:Aux2DClick()
+    return _H.to_bool(C.wxMouseEvent_Aux2DClick(self._ptr))
+end
+
+function M:Aux2Down()
+    return _H.to_bool(C.wxMouseEvent_Aux2Down(self._ptr))
+end
+
+function M:Aux2IsDown()
+    return _H.to_bool(C.wxMouseEvent_Aux2IsDown(self._ptr))
+end
+
+function M:Aux2Up()
+    return _H.to_bool(C.wxMouseEvent_Aux2Up(self._ptr))
+end
+
+function M:GetModifiers()
+    return C.wxMouseEvent_GetModifiers(self._ptr)
+end
+
+function M:GetWheelAxis()
+    return C.wxMouseEvent_GetWheelAxis(self._ptr)
+end
+
+function M:IsWheelInverted()
+    return _H.to_bool(C.wxMouseEvent_IsWheelInverted(self._ptr))
 end
 
 function M:Button(but)
@@ -47,11 +111,11 @@ function M:Entering()
 end
 
 function M:GetLogicalPosition(dc)
-    return C.wxMouseEvent_GetLogicalPosition(self._ptr, _H.ptr(dc))
+    return _H.wrap("wxpoint_gen", C.wxMouseEvent_GetLogicalPosition(self._ptr, _H.ptr(dc)))
 end
 
 function M:GetPosition()
-    return C.wxMouseEvent_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxMouseEvent_GetPosition(self._ptr))
 end
 
 function M:GetX()

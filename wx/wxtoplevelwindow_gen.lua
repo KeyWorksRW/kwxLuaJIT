@@ -7,23 +7,55 @@ local _parent = require("wxwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:IsAlwaysMaximized()
+    return _H.to_bool(C.wxTopLevelWindow_IsAlwaysMaximized(self._ptr))
+end
+
+function M:GetIcons()
+    return _H.wrap("wxiconbundle_gen", C.wxTopLevelWindow_GetIcons(self._ptr))
+end
+
+function M:EnableFullScreenView(enable, style)
+    return _H.to_bool(C.wxTopLevelWindow_EnableFullScreenView(self._ptr, _H.from_bool(enable), style))
+end
+
+function M:GetContentProtection()
+    return C.wxTopLevelWindow_GetContentProtection(self._ptr)
+end
+
+function M.GetDefaultSize()
+    return _H.wrap("wxsize_gen", C.wxTopLevelWindow_GetDefaultSize())
+end
 
 function M:EnableCloseButton(enable)
     return _H.to_bool(C.wxTopLevelWindow_EnableCloseButton(self._ptr, _H.from_bool(enable)))
 end
 
+function M:CentreOnScreen(dir)
+    C.wxTopLevelWindow_CentreOnScreen(self._ptr, dir)
+end
+
 function M:GetDefaultButton()
-    return C.wxTopLevelWindow_GetDefaultButton(self._ptr)
+    return _H.wrap("wxbutton_gen", C.wxTopLevelWindow_GetDefaultButton(self._ptr))
 end
 
 function M:GetDefaultItem()
-    return C.wxTopLevelWindow_GetDefaultItem(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxTopLevelWindow_GetDefaultItem(self._ptr))
 end
 
 function M:GetIcon()
-    return C.wxTopLevelWindow_GetIcon(self._ptr)
+    return _H.wrap("wxicon_gen", C.wxTopLevelWindow_GetIcon(self._ptr))
 end
 
 function M:GetTitle()
@@ -67,7 +99,7 @@ function M:SetIcon(pIcon)
 end
 
 function M:SetIcons(icons)
-    C.wxTopLevelWindow_SetIcons(self._ptr, icons)
+    C.wxTopLevelWindow_SetIcons(self._ptr, _H.ptr(icons))
 end
 
 function M:SetMaxSize(width, height)

@@ -3,26 +3,91 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+function M:RemoveSizer(sizer)
+    return _H.to_bool(C.wxSizer_RemoveSizer(self._ptr, _H.ptr(sizer)))
+end
+
+function M:Remove(index)
+    return _H.to_bool(C.wxSizer_Remove(self._ptr, index))
+end
+
+function M:DeleteWindows()
+    C.wxSizer_DeleteWindows(self._ptr)
+end
+
+function M:ComputeFittingClientSize(window)
+    return _H.wrap("wxsize_gen", C.wxSizer_ComputeFittingClientSize(self._ptr, _H.ptr(window)))
+end
+
+function M:ComputeFittingWindowSize(window)
+    return _H.wrap("wxsize_gen", C.wxSizer_ComputeFittingWindowSize(self._ptr, _H.ptr(window)))
+end
+
+function M:FitWithSize(window)
+    return _H.wrap("wxsize_gen", C.wxSizer_FitWithSize(self._ptr, _H.ptr(window)))
+end
+
+function M:GetItemCount()
+    return C.wxSizer_GetItemCount(self._ptr)
+end
+
+function M.GetDefaultBorder()
+    return C.wxSizer_GetDefaultBorder()
+end
+
+function M:IsEmpty()
+    return _H.to_bool(C.wxSizer_IsEmpty(self._ptr))
+end
+
+function M:GetItemById(id, recursive)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_GetItemById(self._ptr, id, _H.from_bool(recursive)))
+end
+
+function M:ShowItems(show)
+    C.wxSizer_ShowItems(self._ptr, _H.from_bool(show))
+end
+
+function M:AreAnyItemsShown()
+    return _H.to_bool(C.wxSizer_AreAnyItemsShown(self._ptr))
+end
+
+function M:InformFirstDirection(direction, size, availableOtherDir)
+    return _H.to_bool(C.wxSizer_InformFirstDirection(self._ptr, direction, size, availableOtherDir))
+end
+
+function M:SetContainingWindow(window)
+    C.wxSizer_SetContainingWindow(self._ptr, _H.ptr(window))
+end
+
 function M:Add(width, height, option, flag, border, userData)
-    C.wxSizer_Add(self._ptr, width, height, option, flag, border, userData)
+    C.wxSizer_Add(self._ptr, width, height, option, flag, border, _H.ptr(userData))
 end
 
 function M:AddSizer(sizer, option, flag, border, userData)
-    C.wxSizer_AddSizer(self._ptr, _H.ptr(sizer), option, flag, border, userData)
+    C.wxSizer_AddSizer(self._ptr, _H.ptr(sizer), option, flag, border, _H.ptr(userData))
 end
 
 function M:AddWindow(window, option, flag, border, userData)
-    C.wxSizer_AddWindow(self._ptr, _H.ptr(window), option, flag, border, userData)
+    C.wxSizer_AddWindow(self._ptr, _H.ptr(window), option, flag, border, _H.ptr(userData))
 end
 
 function M:CalcMin()
-    return C.wxSizer_CalcMin(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizer_CalcMin(self._ptr))
 end
 
 function M:Fit(window)
@@ -30,31 +95,31 @@ function M:Fit(window)
 end
 
 function M:GetChildren(result, count)
-    return C.wxSizer_GetChildren(self._ptr, result, count)
+    return C.wxSizer_GetChildren(self._ptr, _H.ptr(result), count)
 end
 
 function M:GetMinSize()
-    return C.wxSizer_GetMinSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizer_GetMinSize(self._ptr))
 end
 
 function M:GetPosition()
-    return C.wxSizer_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxSizer_GetPosition(self._ptr))
 end
 
 function M:GetSize()
-    return C.wxSizer_GetSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizer_GetSize(self._ptr))
 end
 
 function M:Insert(before, width, height, option, flag, border, userData)
-    C.wxSizer_Insert(self._ptr, before, width, height, option, flag, border, userData)
+    C.wxSizer_Insert(self._ptr, before, width, height, option, flag, border, _H.ptr(userData))
 end
 
 function M:InsertSizer(before, sizer, option, flag, border, userData)
-    C.wxSizer_InsertSizer(self._ptr, before, _H.ptr(sizer), option, flag, border, userData)
+    C.wxSizer_InsertSizer(self._ptr, before, _H.ptr(sizer), option, flag, border, _H.ptr(userData))
 end
 
 function M:InsertWindow(before, window, option, flag, border, userData)
-    C.wxSizer_InsertWindow(self._ptr, before, _H.ptr(window), option, flag, border, userData)
+    C.wxSizer_InsertWindow(self._ptr, before, _H.ptr(window), option, flag, border, _H.ptr(userData))
 end
 
 function M:Layout()
@@ -62,15 +127,15 @@ function M:Layout()
 end
 
 function M:Prepend(width, height, option, flag, border, userData)
-    C.wxSizer_Prepend(self._ptr, width, height, option, flag, border, userData)
+    C.wxSizer_Prepend(self._ptr, width, height, option, flag, border, _H.ptr(userData))
 end
 
 function M:PrependSizer(sizer, option, flag, border, userData)
-    C.wxSizer_PrependSizer(self._ptr, _H.ptr(sizer), option, flag, border, userData)
+    C.wxSizer_PrependSizer(self._ptr, _H.ptr(sizer), option, flag, border, _H.ptr(userData))
 end
 
 function M:PrependWindow(window, option, flag, border, userData)
-    C.wxSizer_PrependWindow(self._ptr, _H.ptr(window), option, flag, border, userData)
+    C.wxSizer_PrependWindow(self._ptr, _H.ptr(window), option, flag, border, _H.ptr(userData))
 end
 
 function M:RecalcSizes()
@@ -102,7 +167,7 @@ function M:SetSizeHints(window)
 end
 
 function M:AddSpacer(size)
-    C.wxSizer_AddSpacer(self._ptr, size)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_AddSpacer(self._ptr, size))
 end
 
 function M:AddStretchSpacer(size)
@@ -130,19 +195,35 @@ function M:FitInside(window)
 end
 
 function M:GetContainingWindow()
-    return C.wxSizer_GetContainingWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxSizer_GetContainingWindow(self._ptr))
 end
 
 function M:GetItemWindow(window, recursive)
-    return C.wxSizer_GetItemWindow(self._ptr, _H.ptr(window), _H.from_bool(recursive))
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_GetItemWindow(self._ptr, _H.ptr(window), _H.from_bool(recursive)))
 end
 
 function M:GetItemSizer(window, recursive)
-    return C.wxSizer_GetItemSizer(self._ptr, _H.ptr(window), _H.from_bool(recursive))
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_GetItemSizer(self._ptr, _H.ptr(window), _H.from_bool(recursive)))
 end
 
 function M:GetItem(index)
-    return C.wxSizer_GetItem(self._ptr, index)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_GetItem(self._ptr, index))
+end
+
+function M:AddWindowFlags(window, flags)
+    C.wxSizer_AddWindowFlags(self._ptr, _H.ptr(window), _H.ptr(flags))
+end
+
+function M:AddSizerFlags(sizer, flags)
+    C.wxSizer_AddSizerFlags(self._ptr, _H.ptr(sizer), _H.ptr(flags))
+end
+
+function M:InsertWindowFlags(before, window, flags)
+    C.wxSizer_InsertWindowFlags(self._ptr, before, _H.ptr(window), _H.ptr(flags))
+end
+
+function M:InsertSizerFlags(before, sizer, flags)
+    C.wxSizer_InsertSizerFlags(self._ptr, before, _H.ptr(sizer), _H.ptr(flags))
 end
 
 function M:HideWindow(window)
@@ -158,11 +239,11 @@ function M:Hide(index)
 end
 
 function M:InsertSpacer(index, size)
-    return C.wxSizer_InsertSpacer(self._ptr, index, size)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_InsertSpacer(self._ptr, index, size))
 end
 
 function M:InsertStretchSpacer(index, prop)
-    return C.wxSizer_InsertStretchSpacer(self._ptr, index, prop)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_InsertStretchSpacer(self._ptr, index, prop))
 end
 
 function M:IsShownWindow(window)
@@ -178,11 +259,11 @@ function M:IsShown(index)
 end
 
 function M:PrependSpacer(size)
-    return C.wxSizer_PrependSpacer(self._ptr, size)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_PrependSpacer(self._ptr, size))
 end
 
 function M:PrependStretchSpacer(prop)
-    return C.wxSizer_PrependStretchSpacer(self._ptr, prop)
+    return _H.wrap("wxsizeritem_gen", C.wxSizer_PrependStretchSpacer(self._ptr, prop))
 end
 
 function M:ReplaceWindow(oldwin, newwin, recursive)

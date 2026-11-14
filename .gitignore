@@ -6,6 +6,11 @@ bin/
 .serena
 .shared
 
+*.exe
+*.dll
+*.so
+*.dylib
+
 src/version.h
 src/version.rc
 

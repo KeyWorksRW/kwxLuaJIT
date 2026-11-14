@@ -6,12 +6,27 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: wxFontEnumerator_Create
 function M.Create(pObject, pFunction)
-    local ptr = C.wxFontEnumerator_Create(pObject, pFunction)
+    local ptr = C.wxFontEnumerator_Create(_H.ptr(pObject), _H.ptr(pFunction))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxFontEnumerator_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxFontEnumerator_CreateDefault()
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -27,9 +42,20 @@ function M:EnumerateFacenames(encoding, fixedWidthOnly)
     return _H.to_bool(C.wxFontEnumerator_EnumerateFacenames(self._ptr, encoding, fixedWidthOnly))
 end
 
+function M:EnumerateFacenamesToArray(encoding, fixedWidthOnly, out)
+    return C.wxFontEnumerator_EnumerateFacenamesToArray(self._ptr, encoding, _H.from_bool(fixedWidthOnly), _H.ptr(out))
+end
+
+function M:EnumerateEncodingsToArray(facename, out)
+    local _ws_facename = _H.wxs(facename)
+    local _result = C.wxFontEnumerator_EnumerateEncodingsToArray(self._ptr, _ws_facename, _H.ptr(out))
+    _H.wxs_free(_ws_facename)
+    return _result
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxFontEnumerator_Delete(self._ptr)
         self._ptr = nil
     end

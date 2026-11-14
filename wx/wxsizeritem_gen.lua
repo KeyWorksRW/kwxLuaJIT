@@ -3,35 +3,48 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: wxSizerItem_Create
 function M.Create(width, height, option, flag, border, userData)
-    local ptr = C.wxSizerItem_Create(width, height, option, flag, border, userData)
+    local ptr = C.wxSizerItem_Create(width, height, option, flag, border, _H.ptr(userData))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 --- Constructor: wxSizerItem_CreateInSizer
 function M.CreateInSizer(sizer, option, flag, border, userData)
-    local ptr = C.wxSizerItem_CreateInSizer(_H.ptr(sizer), option, flag, border, userData)
+    local ptr = C.wxSizerItem_CreateInSizer(_H.ptr(sizer), option, flag, border, _H.ptr(userData))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 --- Constructor: wxSizerItem_CreateInWindow
 function M.CreateInWindow(window, option, flag, border, userData)
-    local ptr = C.wxSizerItem_CreateInWindow(_H.ptr(window), option, flag, border, userData)
+    local ptr = C.wxSizerItem_CreateInWindow(_H.ptr(window), option, flag, border, _H.ptr(userData))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
 function M:CalcMin()
-    return C.wxSizerItem_CalcMin(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizerItem_CalcMin(self._ptr))
+end
+
+function M:SetMinSize(size)
+    C.wxSizerItem_SetMinSize(self._ptr, _H.ptr(size))
 end
 
 function M:GetBorder()
@@ -43,11 +56,11 @@ function M:GetFlag()
 end
 
 function M:GetMinSize()
-    return C.wxSizerItem_GetMinSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizerItem_GetMinSize(self._ptr))
 end
 
 function M:GetPosition()
-    return C.wxSizerItem_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxSizerItem_GetPosition(self._ptr))
 end
 
 function M:GetRatio()
@@ -55,11 +68,11 @@ function M:GetRatio()
 end
 
 function M:GetSize()
-    return C.wxSizerItem_GetSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizerItem_GetSize(self._ptr))
 end
 
 function M:GetSizer()
-    return C.wxSizerItem_GetSizer(self._ptr)
+    return _H.wrap("wxsizer_gen", C.wxSizerItem_GetSizer(self._ptr))
 end
 
 function M:GetUserData()
@@ -67,7 +80,7 @@ function M:GetUserData()
 end
 
 function M:GetWindow()
-    return C.wxSizerItem_GetWindow(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxSizerItem_GetWindow(self._ptr))
 end
 
 function M:IsSizer()
@@ -127,11 +140,11 @@ function M:GetProportion()
 end
 
 function M:GetRect()
-    return C.wxSizerItem_GetRect(self._ptr)
+    return _H.wrap("wxrect_gen", C.wxSizerItem_GetRect(self._ptr))
 end
 
 function M:GetSpacer()
-    return C.wxSizerItem_GetSpacer(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxSizerItem_GetSpacer(self._ptr))
 end
 
 function M:IsShown()
@@ -152,7 +165,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxSizerItem_Delete(self._ptr)
         self._ptr = nil
     end

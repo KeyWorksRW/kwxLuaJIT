@@ -7,6 +7,14 @@ local _parent = require("wxgridsizer_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,16 +25,36 @@ function M.Create(vgap, hgap)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetCellSize(row, col)
+    return _H.wrap("wxsize_gen", C.wxGridBagSizer_GetCellSize(self._ptr, row, col))
+end
+
+function M:FindItem(window)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_FindItem(self._ptr, _H.ptr(window)))
+end
+
+function M:FindItemSizer(sizer)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_FindItemSizer(self._ptr, _H.ptr(sizer)))
+end
+
+function M:FindItemAtPoint(x, y)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_FindItemAtPoint(self._ptr, x, y))
+end
+
+function M:FindItemWithData(userData)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_FindItemWithData(self._ptr, _H.ptr(userData)))
+end
+
 function M:AddWindow(window, row, col, rowspan, colspan, flag, border, userData)
-    return C.wxGridBagSizer_AddWindow(self._ptr, _H.ptr(window), row, col, rowspan, colspan, flag, border, userData)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_AddWindow(self._ptr, _H.ptr(window), row, col, rowspan, colspan, flag, border, _H.ptr(userData)))
 end
 
 function M:AddSizer(sizer, row, col, rowspan, colspan, flag, border, userData)
-    return C.wxGridBagSizer_AddSizer(self._ptr, _H.ptr(sizer), row, col, rowspan, colspan, flag, border, userData)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_AddSizer(self._ptr, _H.ptr(sizer), row, col, rowspan, colspan, flag, border, _H.ptr(userData)))
 end
 
 function M:AddSpacer(width, height, row, col, rowspan, colspan, flag, border, userData)
-    return C.wxGridBagSizer_AddSpacer(self._ptr, width, height, row, col, rowspan, colspan, flag, border, userData)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_AddSpacer(self._ptr, width, height, row, col, rowspan, colspan, flag, border, _H.ptr(userData)))
 end
 
 function M:GetItemPosition(window, row, col)
@@ -78,7 +106,7 @@ function M:SetItemSpanIndex(index, rowspan, colspan)
 end
 
 function M:FindItemAtPosition(row, col)
-    return C.wxGridBagSizer_FindItemAtPosition(self._ptr, row, col)
+    return _H.wrap("wxsizeritem_gen", C.wxGridBagSizer_FindItemAtPosition(self._ptr, row, col))
 end
 
 function M:CheckForIntersection(item, excludeItem)

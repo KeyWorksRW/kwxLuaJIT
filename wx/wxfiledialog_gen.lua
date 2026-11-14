@@ -7,6 +7,14 @@ local _parent = require("wxdialog_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -25,6 +33,25 @@ function M.Create(parent, message, directory, files, weekday, left, top, style, 
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:SetExtraControlCreator(pFunction)
+    return _H.to_bool(C.wxFileDialog_SetExtraControlCreator(self._ptr, _H.ptr(pFunction)))
+end
+
+function M:AddShortcut(directory, flags)
+    local _ws_directory = _H.wxs(directory)
+    local _result = _H.to_bool(C.wxFileDialog_AddShortcut(self._ptr, _ws_directory, flags))
+    _H.wxs_free(_ws_directory)
+    return _result
+end
+
+function M:GetCurrentlySelectedFilterIndex()
+    return C.wxFileDialog_GetCurrentlySelectedFilterIndex(self._ptr)
+end
+
+function M:SetCustomizeHook(customizeHook)
+    return _H.to_bool(C.wxFileDialog_SetCustomizeHook(self._ptr, _H.ptr(customizeHook)))
+end
+
 function M:GetDirectory()
     return _H.wxs_to_str(C.wxFileDialog_GetDirectory(self._ptr))
 end
@@ -33,8 +60,8 @@ function M:GetFilename()
     return _H.wxs_to_str(C.wxFileDialog_GetFilename(self._ptr))
 end
 
-function M:GetFilenames(paths)
-    return C.wxFileDialog_GetFilenames(self._ptr, paths)
+function M:GetFilenames(paths, capacity)
+    return C.wxFileDialog_GetFilenames(self._ptr, paths, capacity)
 end
 
 function M:GetFilterIndex()
@@ -49,8 +76,8 @@ function M:GetPath()
     return _H.wxs_to_str(C.wxFileDialog_GetPath(self._ptr))
 end
 
-function M:GetPaths(paths)
-    return C.wxFileDialog_GetPaths(self._ptr, paths)
+function M:GetPaths(paths, capacity)
+    return C.wxFileDialog_GetPaths(self._ptr, paths, capacity)
 end
 
 function M:GetStyle()
@@ -104,7 +131,7 @@ function M:GetCurrentlySelectedFilename()
 end
 
 function M:GetExtraControl()
-    return C.wxFileDialog_GetExtraControl(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxFileDialog_GetExtraControl(self._ptr))
 end
 
 return M

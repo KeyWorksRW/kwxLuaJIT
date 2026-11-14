@@ -6,14 +6,62 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxAcceleratorEntry_CreateFromString
+function M.CreateFromString(str)
+    local _ws_str = _H.wxs(str)
+    local ptr = C.wxAcceleratorEntry_CreateFromString(_ws_str)
+    _H.wxs_free(_ws_str)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxAcceleratorEntry_Create
 function M.Create(flags, keyCode, cmd)
     local ptr = C.wxAcceleratorEntry_Create(flags, keyCode, cmd)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SetMenuItem(item)
+    C.wxAcceleratorEntry_SetMenuItem(self._ptr, _H.ptr(item))
+end
+
+function M:GetMenuItem()
+    return _H.wrap("wxmenuitem_gen", C.wxAcceleratorEntry_GetMenuItem(self._ptr))
+end
+
+function M:IsOk()
+    return _H.to_bool(C.wxAcceleratorEntry_IsOk(self._ptr))
+end
+
+function M:MatchesEvent(event)
+    return _H.to_bool(C.wxAcceleratorEntry_MatchesEvent(self._ptr, _H.ptr(event)))
+end
+
+function M:ToString()
+    return _H.wxs_to_str(C.wxAcceleratorEntry_ToString(self._ptr))
+end
+
+function M:ToRawString()
+    return _H.wxs_to_str(C.wxAcceleratorEntry_ToRawString(self._ptr))
+end
+
+function M:FromString(str)
+    local _ws_str = _H.wxs(str)
+    local _result = _H.to_bool(C.wxAcceleratorEntry_FromString(self._ptr, _ws_str))
+    _H.wxs_free(_ws_str)
+    return _result
 end
 
 function M:GetCommand()
@@ -29,12 +77,12 @@ function M:GetKeyCode()
 end
 
 function M:Set(flags, keyCode, cmd, item)
-    C.wxAcceleratorEntry_Set(self._ptr, flags, keyCode, cmd, item)
+    C.wxAcceleratorEntry_Set(self._ptr, flags, keyCode, cmd, _H.ptr(item))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxAcceleratorEntry_Delete(self._ptr)
         self._ptr = nil
     end

@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 local _mixin_wxItemContainer = require("wxitemcontainer_gen")
 for _k, _v in pairs(_mixin_wxItemContainer) do if M[_k] == nil then M[_k] = _v end end
 
@@ -26,9 +34,17 @@ function M:Append(item)
     _H.wxs_free(_ws_item)
 end
 
+function M:GetItem(n)
+    return C.wxListBox_GetItem(self._ptr, n)
+end
+
+function M:SetFont(font)
+    return _H.to_bool(C.wxListBox_SetFont(self._ptr, _H.ptr(font)))
+end
+
 function M:AppendData(item, data)
     local _ws_item = _H.wxs(item)
-    C.wxListBox_AppendData(self._ptr, _ws_item, data)
+    C.wxListBox_AppendData(self._ptr, _ws_item, _H.ptr(data))
     _H.wxs_free(_ws_item)
 end
 
@@ -44,7 +60,7 @@ function M:FindString(str)
 end
 
 function M:GetClientData(index)
-    return C.wxListBox_GetClientData(self._ptr, index)
+    return _H.wrap("wxclientdata_gen", C.wxListBox_GetClientData(self._ptr, index))
 end
 
 function M:GetCount()
@@ -64,7 +80,7 @@ function M:GetString(index)
 end
 
 function M:InsertItems(items, pos, count)
-    C.wxListBox_InsertItems(self._ptr, items, pos, count)
+    C.wxListBox_InsertItems(self._ptr, _H.ptr(items), pos, count)
 end
 
 function M:IsSelected(index)

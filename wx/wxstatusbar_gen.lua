@@ -7,6 +7,14 @@ local _parent = require("wxwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,14 @@ function M.Create(parent, id, left, top, width, height, style)
     local ptr = C.wxStatusBar_Create(_H.ptr(parent), id, left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetBorders()
+    return _H.wrap("wxsize_gen", C.wxStatusBar_GetBorders(self._ptr))
+end
+
+function M:AddFieldControl(n, win)
+    return _H.to_bool(C.wxStatusBar_AddFieldControl(self._ptr, n, _H.ptr(win)))
 end
 
 function M:GetBorderX()

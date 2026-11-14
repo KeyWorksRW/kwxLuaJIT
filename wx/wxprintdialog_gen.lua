@@ -7,6 +7,14 @@ local _parent = require("wxdialog_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -18,7 +26,7 @@ function M.Create(parent, data)
 end
 
 function M:GetPrintDC()
-    return C.wxPrintDialog_GetPrintDC(self._ptr)
+    return _H.wrap("wxdc_gen", C.wxPrintDialog_GetPrintDC(self._ptr))
 end
 
 function M:GetPrintData(ref)
@@ -26,7 +34,7 @@ function M:GetPrintData(ref)
 end
 
 function M:GetPrintDialogData()
-    return C.wxPrintDialog_GetPrintDialogData(self._ptr)
+    return _H.wrap("wxprintdialogdata_gen", C.wxPrintDialog_GetPrintDialogData(self._ptr))
 end
 
 return M

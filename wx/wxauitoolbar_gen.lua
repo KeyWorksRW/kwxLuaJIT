@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -41,7 +49,7 @@ function M:SetArtProvider(artId)
 end
 
 function M:GetArtProvider()
-    return C.wxAuiToolBar_GetArtProvider(self._ptr)
+    return _H.wrap("wxauitoolbarart_gen", C.wxAuiToolBar_GetArtProvider(self._ptr))
 end
 
 function M:SetFont(font)
@@ -51,7 +59,7 @@ end
 function M:AddToolByLabel(tool_id, label, bitmap, shortHelpString, kind)
     local _ws_label = _H.wxs(label)
     local _ws_shortHelpString = _H.wxs(shortHelpString)
-    local _result = C.wxAuiToolBar_AddToolByLabel(self._ptr, tool_id, _ws_label, _H.ptr(bitmap), _ws_shortHelpString, kind)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddToolByLabel(self._ptr, tool_id, _ws_label, _H.ptr(bitmap), _ws_shortHelpString, kind))
     _H.wxs_free(_ws_label)
     _H.wxs_free(_ws_shortHelpString)
     return _result
@@ -61,7 +69,7 @@ function M:AddTool(tool_id, label, bitmap, disabledBitmap, kind, shortHelpString
     local _ws_label = _H.wxs(label)
     local _ws_shortHelpString = _H.wxs(shortHelpString)
     local _ws_longHelpString = _H.wxs(longHelpString)
-    local _result = C.wxAuiToolBar_AddTool(self._ptr, tool_id, _ws_label, _H.ptr(bitmap), _H.ptr(disabledBitmap), kind, _ws_shortHelpString, _ws_longHelpString, _H.ptr(clientData))
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddTool(self._ptr, tool_id, _ws_label, _H.ptr(bitmap), _H.ptr(disabledBitmap), kind, _ws_shortHelpString, _ws_longHelpString, _H.ptr(clientData)))
     _H.wxs_free(_ws_label)
     _H.wxs_free(_ws_shortHelpString)
     _H.wxs_free(_ws_longHelpString)
@@ -71,7 +79,7 @@ end
 function M:AddToolByBitmap(tool_id, bitmap, disabledBitmap, toggle, clientData, shortHelpString, longHelpString)
     local _ws_shortHelpString = _H.wxs(shortHelpString)
     local _ws_longHelpString = _H.wxs(longHelpString)
-    local _result = C.wxAuiToolBar_AddToolByBitmap(self._ptr, tool_id, _H.ptr(bitmap), _H.ptr(disabledBitmap), _H.from_bool(toggle), _H.ptr(clientData), _ws_shortHelpString, _ws_longHelpString)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddToolByBitmap(self._ptr, tool_id, _H.ptr(bitmap), _H.ptr(disabledBitmap), _H.from_bool(toggle), _H.ptr(clientData), _ws_shortHelpString, _ws_longHelpString))
     _H.wxs_free(_ws_shortHelpString)
     _H.wxs_free(_ws_longHelpString)
     return _result
@@ -79,28 +87,28 @@ end
 
 function M:AddLabel(tool_id, label, width)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxAuiToolBar_AddLabel(self._ptr, tool_id, _ws_label, width)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddLabel(self._ptr, tool_id, _ws_label, width))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AddControl(control, label)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxAuiToolBar_AddControl(self._ptr, _H.ptr(control), _ws_label)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddControl(self._ptr, _H.ptr(control), _ws_label))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AddSeparator()
-    return C.wxAuiToolBar_AddSeparator(self._ptr)
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddSeparator(self._ptr))
 end
 
 function M:AddSpacer(pixels)
-    return C.wxAuiToolBar_AddSpacer(self._ptr, pixels)
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddSpacer(self._ptr, pixels))
 end
 
 function M:AddStretchSpacer(proportion)
-    return C.wxAuiToolBar_AddStretchSpacer(self._ptr, proportion)
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddStretchSpacer(self._ptr, proportion))
 end
 
 function M:Realize()
@@ -108,19 +116,19 @@ function M:Realize()
 end
 
 function M:FindControl(window_id)
-    return C.wxAuiToolBar_FindControl(self._ptr, window_id)
+    return _H.wrap("wxcontrol_gen", C.wxAuiToolBar_FindControl(self._ptr, window_id))
 end
 
 function M:FindToolByPosition(x, y)
-    return C.wxAuiToolBar_FindToolByPosition(self._ptr, x, y)
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_FindToolByPosition(self._ptr, x, y))
 end
 
 function M:FindToolByIndex(idx)
-    return C.wxAuiToolBar_FindToolByIndex(self._ptr, idx)
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_FindToolByIndex(self._ptr, idx))
 end
 
 function M:FindTool(tool_id)
-    return C.wxAuiToolBar_FindTool(self._ptr, tool_id)
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_FindTool(self._ptr, tool_id))
 end
 
 function M:ClearTools()
@@ -156,7 +164,7 @@ function M:GetToolFits(tool_id)
 end
 
 function M:GetToolRect(tool_id)
-    return C.wxAuiToolBar_GetToolRect(self._ptr, tool_id)
+    return _H.wrap("wxrect_gen", C.wxAuiToolBar_GetToolRect(self._ptr, tool_id))
 end
 
 function M:GetToolFitsByIndex(tool_id)
@@ -184,7 +192,7 @@ function M:SetToolBitmapSize(width, height)
 end
 
 function M:GetToolBitmapSize()
-    return C.wxAuiToolBar_GetToolBitmapSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxAuiToolBar_GetToolBitmapSize(self._ptr))
 end
 
 function M:GetOverflowVisible()
@@ -318,7 +326,7 @@ function M:SetCustomOverflowItems(prepend, append)
 end
 
 function M:GetHintSize(dock_direction)
-    return C.wxAuiToolBar_GetHintSize(self._ptr, dock_direction)
+    return _H.wrap("wxsize_gen", C.wxAuiToolBar_GetHintSize(self._ptr, dock_direction))
 end
 
 function M:IsPaneValid(pane)
@@ -327,7 +335,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxAuiToolBar_Delete(self._ptr)
         self._ptr = nil
     end

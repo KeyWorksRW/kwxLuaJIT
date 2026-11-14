@@ -7,6 +7,14 @@ local _parent = require("wxbitmap_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -26,8 +34,15 @@ function M.CreateLoad(name, type, width, height)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxIcon_CreateFromXPMData
+function M.CreateFromXPMData(xpm)
+    local ptr = C.wxIcon_CreateFromXPMData(_H.ptr(xpm))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:Assign(other)
-    C.wxIcon_Assign(self._ptr, other)
+    C.wxIcon_Assign(self._ptr, _H.ptr(other))
 end
 
 function M:CopyFromBitmap(bmp)
@@ -35,11 +50,11 @@ function M:CopyFromBitmap(bmp)
 end
 
 function M:FromRaw(width, height)
-    return C.wxIcon_FromRaw(self._ptr, width, height)
+    return _H.wrap("wxicon_gen", C.wxIcon_FromRaw(self._ptr, width, height))
 end
 
 function M:FromXPM()
-    return C.wxIcon_FromXPM(self._ptr)
+    return _H.wrap("wxicon_gen", C.wxIcon_FromXPM(self._ptr))
 end
 
 function M:GetDepth()
@@ -54,8 +69,8 @@ function M:GetWidth()
     return C.wxIcon_GetWidth(self._ptr)
 end
 
-function M:IsEqual()
-    return _H.to_bool(C.wxIcon_IsEqual(self._ptr))
+function M:IsEqual(other)
+    return _H.to_bool(C.wxIcon_IsEqual(self._ptr, _H.ptr(other)))
 end
 
 function M:Load(name, type, width, height)
@@ -71,7 +86,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxIcon_Delete(self._ptr)
         self._ptr = nil
     end

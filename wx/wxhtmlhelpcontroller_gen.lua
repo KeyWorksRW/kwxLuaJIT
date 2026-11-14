@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxhelpcontrollerbase_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -17,11 +26,15 @@ function M.Create(style, parentWindow)
 end
 
 function M:AddBook(book, show_wait_msg)
-    return _H.to_bool(C.wxHtmlHelpController_AddBook(self._ptr, book, show_wait_msg))
+    return _H.to_bool(C.wxHtmlHelpController_AddBook(self._ptr, _H.ptr(book), show_wait_msg))
+end
+
+function M:SetShouldPreventAppExit(enable)
+    C.wxHtmlHelpController_SetShouldPreventAppExit(self._ptr, _H.from_bool(enable))
 end
 
 function M:Display(x)
-    return C.wxHtmlHelpController_Display(self._ptr, x)
+    return C.wxHtmlHelpController_Display(self._ptr, _H.ptr(x))
 end
 
 function M:DisplayBlock(blockNo)
@@ -29,7 +42,7 @@ function M:DisplayBlock(blockNo)
 end
 
 function M:DisplayContents()
-    return C.wxHtmlHelpController_DisplayContents(self._ptr)
+    return _H.to_bool(C.wxHtmlHelpController_DisplayContents(self._ptr))
 end
 
 function M:DisplayIndex()
@@ -52,11 +65,11 @@ function M:DisplaySectionNumber(sectionNo)
 end
 
 function M:GetFrame()
-    return C.wxHtmlHelpController_GetFrame(self._ptr)
+    return _H.wrap("wxframe_gen", C.wxHtmlHelpController_GetFrame(self._ptr))
 end
 
 function M:GetFrameParameters(title, width, height, pos_x, pos_y, newFrameEachTime)
-    return C.wxHtmlHelpController_GetFrameParameters(self._ptr, title, width, height, pos_x, pos_y, newFrameEachTime)
+    return C.wxHtmlHelpController_GetFrameParameters(self._ptr, _H.ptr(title), width, height, pos_x, pos_y, newFrameEachTime)
 end
 
 function M:Initialize(file)
@@ -91,7 +104,7 @@ function M:ReadCustomization(cfg, path)
 end
 
 function M:SetFrameParameters(title, width, height, pos_x, pos_y, newFrameEachTime)
-    C.wxHtmlHelpController_SetFrameParameters(self._ptr, title, width, height, pos_x, pos_y, _H.from_bool(newFrameEachTime))
+    C.wxHtmlHelpController_SetFrameParameters(self._ptr, _H.ptr(title), width, height, pos_x, pos_y, _H.from_bool(newFrameEachTime))
 end
 
 function M:SetTempDir(path)
@@ -101,7 +114,7 @@ function M:SetTempDir(path)
 end
 
 function M:SetTitleFormat(format)
-    C.wxHtmlHelpController_SetTitleFormat(self._ptr, format)
+    C.wxHtmlHelpController_SetTitleFormat(self._ptr, _H.ptr(format))
 end
 
 function M:SetViewer(viewer, flags)
@@ -124,7 +137,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxHtmlHelpController_Delete(self._ptr)
         self._ptr = nil
     end

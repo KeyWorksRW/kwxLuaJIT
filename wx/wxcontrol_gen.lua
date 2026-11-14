@@ -7,8 +7,34 @@ local _parent = require("wxwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxControl_Create
+function M.Create(parent, id, pos_x, pos_y, width, height, style)
+    local ptr = C.wxControl_Create(_H.ptr(parent), id, pos_x, pos_y, width, height, style)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M.FindAccelIndex(label)
+    local _ws_label = _H.wxs(label)
+    local _result = C.wxControl_FindAccelIndex(_ws_label)
+    _H.wxs_free(_ws_label)
+    return _result
+end
+
+function M:ShouldInheritColours()
+    return _H.to_bool(C.wxControl_ShouldInheritColours(self._ptr))
+end
 
 function M:Command(event)
     C.wxControl_Command(self._ptr, _H.ptr(event))
@@ -45,26 +71,33 @@ function M:GetAlignment()
     return C.wxControl_GetAlignment(self._ptr)
 end
 
-function M:GetSizeFromText(text, w, h)
+function M:GetSizeFromText(text, width, height)
     local _ws_text = _H.wxs(text)
-    C.wxControl_GetSizeFromText(self._ptr, _ws_text, w, h)
+    C.wxControl_GetSizeFromText(self._ptr, _ws_text, width, height)
     _H.wxs_free(_ws_text)
 end
 
-function M:GetSizeFromTextSize(xlen, ylen, w, h)
-    C.wxControl_GetSizeFromTextSize(self._ptr, xlen, ylen, w, h)
+function M:GetSizeFromTextSize(xlen, ylen, width, height)
+    C.wxControl_GetSizeFromTextSize(self._ptr, xlen, ylen, width, height)
 end
 
-function M:RemoveMnemonics(str)
+function M.RemoveMnemonics(str)
     local _ws_str = _H.wxs(str)
-    local _result = _H.wxs_to_str(C.wxControl_RemoveMnemonics(self._ptr, _ws_str))
+    local _result = _H.wxs_to_str(C.wxControl_RemoveMnemonics(_ws_str))
     _H.wxs_free(_ws_str)
     return _result
 end
 
-function M:EscapeMnemonics(str)
+function M.Ellipsize(label, dc, mode, max_width, flags)
+    local _ws_label = _H.wxs(label)
+    local _result = _H.wxs_to_str(C.wxControl_Ellipsize(_ws_label, _H.ptr(dc), mode, max_width, flags))
+    _H.wxs_free(_ws_label)
+    return _result
+end
+
+function M.EscapeMnemonics(str)
     local _ws_str = _H.wxs(str)
-    local _result = _H.wxs_to_str(C.wxControl_EscapeMnemonics(self._ptr, _ws_str))
+    local _result = _H.wxs_to_str(C.wxControl_EscapeMnemonics(_ws_str))
     _H.wxs_free(_ws_str)
     return _result
 end

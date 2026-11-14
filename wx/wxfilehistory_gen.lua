@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -12,6 +21,13 @@ function M:Ptr() return self._ptr end
 --- Constructor: wxFileHistory_Create
 function M.Create(maxFiles)
     local ptr = C.wxFileHistory_Create(maxFiles)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxFileHistory_CreateEx
+function M.CreateEx(maxFiles, idBase)
+    local ptr = C.wxFileHistory_CreateEx(maxFiles, idBase)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -26,6 +42,10 @@ function M:AddFilesToMenu(menu)
     C.wxFileHistory_AddFilesToMenu(self._ptr, _H.ptr(menu))
 end
 
+function M:GetBaseId()
+    return C.wxFileHistory_GetBaseId(self._ptr)
+end
+
 function M:GetCount()
     return C.wxFileHistory_GetCount(self._ptr)
 end
@@ -36,6 +56,10 @@ end
 
 function M:GetMaxFiles()
     return C.wxFileHistory_GetMaxFiles(self._ptr)
+end
+
+function M:GetMenuPathStyle()
+    return C.wxFileHistory_GetMenuPathStyle(self._ptr)
 end
 
 function M:GetMenus(ref)
@@ -58,13 +82,21 @@ function M:Save(config)
     C.wxFileHistory_Save(self._ptr, _H.ptr(config))
 end
 
+function M:SetBaseId(baseId)
+    C.wxFileHistory_SetBaseId(self._ptr, baseId)
+end
+
+function M:SetMenuPathStyle(style)
+    C.wxFileHistory_SetMenuPathStyle(self._ptr, style)
+end
+
 function M:UseMenu(menu)
     C.wxFileHistory_UseMenu(self._ptr, _H.ptr(menu))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxFileHistory_Delete(self._ptr)
         self._ptr = nil
     end

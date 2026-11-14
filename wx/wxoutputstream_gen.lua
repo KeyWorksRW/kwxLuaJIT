@@ -7,8 +7,20 @@ local _parent = require("wxstreambase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:SeekO(pos, mode)
+    return C.wxOutputStream_SeekO(self._ptr, pos, mode)
+end
 
 function M:LastWrite()
     return C.wxOutputStream_LastWrite(self._ptr)
@@ -31,12 +43,12 @@ function M:Tell()
 end
 
 function M:Write(buffer, size)
-    C.wxOutputStream_Write(self._ptr, buffer, size)
+    C.wxOutputStream_Write(self._ptr, _H.ptr(buffer), size)
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxOutputStream_Delete(self._ptr)
         self._ptr = nil
     end

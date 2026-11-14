@@ -6,19 +6,44 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
---- Constructor: wxAcceleratorTable_Create
-function M.Create(count, entries)
-    local ptr = C.wxAcceleratorTable_Create(count, entries)
+--- Constructor: wxAcceleratorTable_CreateFromResource
+function M.CreateFromResource(resource)
+    local _ws_resource = _H.wxs(resource)
+    local ptr = C.wxAcceleratorTable_CreateFromResource(_ws_resource)
+    _H.wxs_free(_ws_resource)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxAcceleratorTable_Create
+function M.Create(count, entries)
+    local ptr = C.wxAcceleratorTable_Create(count, _H.ptr(entries))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:IsOk()
+    return _H.to_bool(C.wxAcceleratorTable_IsOk(self._ptr))
+end
+
+function M:GetEntry(event)
+    return _H.wrap("wxacceleratorentry_gen", C.wxAcceleratorTable_GetEntry(self._ptr, _H.ptr(event)))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxAcceleratorTable_Delete(self._ptr)
         self._ptr = nil
     end

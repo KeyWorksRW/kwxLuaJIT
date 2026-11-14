@@ -7,11 +7,39 @@ local _parent = require("wxevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:AltDown()
     return _H.to_bool(C.wxKeyEvent_AltDown(self._ptr))
+end
+
+function M:GetRawKeyCode()
+    return C.wxKeyEvent_GetRawKeyCode(self._ptr)
+end
+
+function M:GetRawKeyFlags()
+    return C.wxKeyEvent_GetRawKeyFlags(self._ptr)
+end
+
+function M:GetUnicodeChar()
+    return C.wxKeyEvent_GetUnicodeChar(self._ptr)
+end
+
+function M:IsAutoRepeat()
+    return _H.to_bool(C.wxKeyEvent_IsAutoRepeat(self._ptr))
+end
+
+function M:IsKeyInCategory(category)
+    return _H.to_bool(C.wxKeyEvent_IsKeyInCategory(self._ptr, category))
 end
 
 function M:ControlDown()
@@ -23,7 +51,7 @@ function M:GetKeyCode()
 end
 
 function M:GetPosition()
-    return C.wxKeyEvent_GetPosition(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxKeyEvent_GetPosition(self._ptr))
 end
 
 function M:GetX()

@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -20,11 +28,19 @@ function M.Create(parent, id, text, left, top, width, height, style)
 end
 
 function M:SetBackgroundColour(colour)
-    return C.wxButton_SetBackgroundColour(self._ptr, _H.ptr(colour))
+    return _H.to_bool(C.wxButton_SetBackgroundColour(self._ptr, _H.ptr(colour)))
 end
 
 function M:SetDefault()
     C.wxButton_SetDefault(self._ptr)
+end
+
+function M:SetAuthNeeded(show)
+    C.wxButton_SetAuthNeeded(self._ptr, _H.from_bool(show))
+end
+
+function M:GetAuthNeeded()
+    return _H.to_bool(C.wxButton_GetAuthNeeded(self._ptr))
 end
 
 return M

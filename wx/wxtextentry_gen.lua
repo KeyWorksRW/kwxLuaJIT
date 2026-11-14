@@ -6,8 +6,24 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+function M:ConvertToUpperCase()
+    C.wxTextEntry_ConvertToUpperCase(self._ptr)
+end
+
+function M:ForwardEnableTextChangedEvents(enable)
+    C.wxTextEntry_ForwardEnableTextChangedEvents(self._ptr, _H.from_bool(enable))
+end
 
 function M:SetValue(value)
     local _ws_value = _H.wxs(value)
@@ -179,7 +195,7 @@ function M:GetMargins(left, top)
 end
 
 function M:AutoComplete(count, items)
-    return _H.to_bool(C.wxTextEntry_AutoComplete(self._ptr, count, items))
+    return _H.to_bool(C.wxTextEntry_AutoComplete(self._ptr, count, _H.ptr(items)))
 end
 
 function M:AutoCompleteFileNames()
@@ -188,6 +204,10 @@ end
 
 function M:AutoCompleteDirectories()
     return _H.to_bool(C.wxTextEntry_AutoCompleteDirectories(self._ptr))
+end
+
+function M:AutoCompleteCompleter(completer)
+    return _H.to_bool(C.wxTextEntry_AutoCompleteCompleter(self._ptr, _H.ptr(completer)))
 end
 
 return M

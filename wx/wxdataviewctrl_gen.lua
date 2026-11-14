@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -14,6 +22,30 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxDataViewCtrl_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:SetHeaderAttr(attr)
+    return _H.to_bool(C.wxDataViewCtrl_SetHeaderAttr(self._ptr, _H.ptr(attr)))
+end
+
+function M:Enable(enable)
+    return _H.to_bool(C.wxDataViewCtrl_Enable(self._ptr, _H.from_bool(enable)))
+end
+
+function M:EnableDragSource(format)
+    return _H.to_bool(C.wxDataViewCtrl_EnableDragSource(self._ptr, _H.ptr(format)))
+end
+
+function M:SetBackgroundColour(colour)
+    return _H.to_bool(C.wxDataViewCtrl_SetBackgroundColour(self._ptr, _H.ptr(colour)))
+end
+
+function M:SetFocus()
+    C.wxDataViewCtrl_SetFocus(self._ptr)
+end
+
+function M:SetForegroundColour(colour)
+    return _H.to_bool(C.wxDataViewCtrl_SetForegroundColour(self._ptr, _H.ptr(colour)))
 end
 
 function M:AssociateModel(model)

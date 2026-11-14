@@ -7,6 +7,14 @@ local _parent = require("wxcombobox_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 local _mixin_wxTextEntry = require("wxtextentry_gen")
 for _k, _v in pairs(_mixin_wxTextEntry) do if M[_k] == nil then M[_k] = _v end end
 local _mixin_wxItemContainer = require("wxitemcontainer_gen")
@@ -32,7 +40,7 @@ end
 
 function M:AppendWithClientData(item, bitmap, data)
     local _ws_item = _H.wxs(item)
-    C.wxBitmapComboBox_AppendWithClientData(self._ptr, _ws_item, _H.ptr(bitmap), data)
+    C.wxBitmapComboBox_AppendWithClientData(self._ptr, _ws_item, _H.ptr(bitmap), _H.ptr(data))
     _H.wxs_free(_ws_item)
 end
 
@@ -44,12 +52,12 @@ end
 
 function M:InsertWithClientData(item, bitmap, pos, data)
     local _ws_item = _H.wxs(item)
-    C.wxBitmapComboBox_InsertWithClientData(self._ptr, _ws_item, _H.ptr(bitmap), pos, data)
+    C.wxBitmapComboBox_InsertWithClientData(self._ptr, _ws_item, _H.ptr(bitmap), pos, _H.ptr(data))
     _H.wxs_free(_ws_item)
 end
 
 function M:GetItemBitmap(index)
-    return C.wxBitmapComboBox_GetItemBitmap(self._ptr, index)
+    return _H.wrap("wxbitmap_gen", C.wxBitmapComboBox_GetItemBitmap(self._ptr, index))
 end
 
 function M:SetItemBitmap(index, bitmap)
@@ -57,7 +65,7 @@ function M:SetItemBitmap(index, bitmap)
 end
 
 function M:GetBitmapSize()
-    return C.wxBitmapComboBox_GetBitmapSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxBitmapComboBox_GetBitmapSize(self._ptr))
 end
 
 return M

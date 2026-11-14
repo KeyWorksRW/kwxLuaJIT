@@ -61,9 +61,19 @@ local ClosureFun_ct = ffi.typeof("void(*)(void*, void*, void*)")
 --
 -- Parameters:
 --   obj_ptr    — void* (the wxEvtHandler, e.g., window._ptr)
---   event_type — integer event type (e.g., expEVT_COMMAND_BUTTON_CLICKED())
+--   event_type — integer event type (e.g., exp_wxEVT_BUTTON())
 --   handler    — Lua function, called as handler(evt_ptr) where evt_ptr is void*
 --   id         — optional: window id for the event source (default -1 = wxID_ANY)
+--
+-- The handler receives the wxEvent* as a raw pointer.  When the handler needs
+-- methods from a concrete event class, wrap it with that class's generated
+-- non-owning constructor:
+--
+--   local wxcommandevent_gen = require("wxcommandevent_gen")
+--   local checked = wxcommandevent_gen.FromPtr(evt):IsChecked()
+--
+-- FromPtr() marks the wrapper borrowed, so Delete()/GC never free the event:
+-- wxWidgets owns it for the duration of the dispatch.
 --
 -- Returns: callback_id for later disconnection
 

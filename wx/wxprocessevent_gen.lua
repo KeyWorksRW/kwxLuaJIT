@@ -7,8 +7,23 @@ local _parent = require("wxevent_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxProcessEvent_Create
+function M.Create(id, pid, exitcode)
+    local ptr = C.wxProcessEvent_Create(id, pid, exitcode)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 function M:GetExitCode()
     return C.wxProcessEvent_GetExitCode(self._ptr)

@@ -7,6 +7,14 @@ local _parent = require("wxtoplevelwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,6 +25,70 @@ function M.Create(parent, id, text, left, top, width, height, style)
     _H.wxs_free(_ws_text)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:ShowWindowModal()
+    C.wxDialog_ShowWindowModal(self._ptr)
+end
+
+function M:Show(show)
+    return _H.to_bool(C.wxDialog_Show(self._ptr, _H.from_bool(show)))
+end
+
+function M:GetModality()
+    return C.wxDialog_GetModality(self._ptr)
+end
+
+function M:AddMainButtonId(id)
+    C.wxDialog_AddMainButtonId(self._ptr, id)
+end
+
+function M:IsMainButtonId(id)
+    return _H.to_bool(C.wxDialog_IsMainButtonId(self._ptr, id))
+end
+
+function M:SetLayoutAdaptationLevel(level)
+    C.wxDialog_SetLayoutAdaptationLevel(self._ptr, level)
+end
+
+function M:GetLayoutAdaptationLevel()
+    return C.wxDialog_GetLayoutAdaptationLevel(self._ptr)
+end
+
+function M:SetLayoutAdaptationMode(mode)
+    C.wxDialog_SetLayoutAdaptationMode(self._ptr, mode)
+end
+
+function M:GetLayoutAdaptationMode()
+    return C.wxDialog_GetLayoutAdaptationMode(self._ptr)
+end
+
+function M:SetLayoutAdaptationDone(adaptationDone)
+    C.wxDialog_SetLayoutAdaptationDone(self._ptr, _H.from_bool(adaptationDone))
+end
+
+function M:GetLayoutAdaptationDone()
+    return _H.to_bool(C.wxDialog_GetLayoutAdaptationDone(self._ptr))
+end
+
+function M.IsLayoutAdaptationEnabled()
+    return _H.to_bool(C.wxDialog_IsLayoutAdaptationEnabled())
+end
+
+function M.EnableLayoutAdaptation(enable)
+    C.wxDialog_EnableLayoutAdaptation(_H.from_bool(enable))
+end
+
+function M:CanDoLayoutAdaptation()
+    return _H.to_bool(C.wxDialog_CanDoLayoutAdaptation(self._ptr))
+end
+
+function M:DoLayoutAdaptation()
+    return _H.to_bool(C.wxDialog_DoLayoutAdaptation(self._ptr))
+end
+
+function M:GetContentWindow()
+    return _H.wrap("wxwindow_gen", C.wxDialog_GetContentWindow(self._ptr))
 end
 
 function M:EndModal(retCode)
@@ -56,15 +128,15 @@ function M:GetEscapeId()
 end
 
 function M:CreateButtonSizer(flags)
-    return C.wxDialog_CreateButtonSizer(self._ptr, flags)
+    return _H.wrap("wxsizer_gen", C.wxDialog_CreateButtonSizer(self._ptr, flags))
 end
 
 function M:CreateSeparatedButtonSizer(flags)
-    return C.wxDialog_CreateSeparatedButtonSizer(self._ptr, flags)
+    return _H.wrap("wxsizer_gen", C.wxDialog_CreateSeparatedButtonSizer(self._ptr, flags))
 end
 
 function M:CreateStdDialogButtonSizer(flags)
-    return C.wxDialog_CreateStdDialogButtonSizer(self._ptr, flags)
+    return _H.wrap("wxstddialogbuttonsizer_gen", C.wxDialog_CreateStdDialogButtonSizer(self._ptr, flags))
 end
 
 return M

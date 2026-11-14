@@ -7,8 +7,23 @@ local _parent = require("wxevthandler_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxProcess_CreateFlags
+function M.CreateFlags(flags)
+    local ptr = C.wxProcess_CreateFlags(flags)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxProcess_CreateDefault
 function M.CreateDefault(parent, id)
@@ -24,6 +39,49 @@ function M.CreateRedirect(parent, redirect)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:Activate()
+    return _H.to_bool(C.wxProcess_Activate(self._ptr))
+end
+
+function M:GetPid()
+    return C.wxProcess_GetPid(self._ptr)
+end
+
+function M:SetPriority(priority)
+    C.wxProcess_SetPriority(self._ptr, priority)
+end
+
+function M:GetPriority()
+    return C.wxProcess_GetPriority(self._ptr)
+end
+
+function M.Kill(pid, sig, flags, rc)
+    return C.wxProcess_Kill(pid, sig, flags, rc)
+end
+
+function M.Exists(pid)
+    return _H.to_bool(C.wxProcess_Exists(pid))
+end
+
+function M.Open(cmd, flags)
+    local _ws_cmd = _H.wxs(cmd)
+    local _result = _H.wrap("wxprocess_gen", C.wxProcess_Open(_ws_cmd, flags))
+    _H.wxs_free(_ws_cmd)
+    return _result
+end
+
+function M:IsInputAvailable()
+    return _H.to_bool(C.wxProcess_IsInputAvailable(self._ptr))
+end
+
+function M:IsErrorAvailable()
+    return _H.to_bool(C.wxProcess_IsErrorAvailable(self._ptr))
+end
+
+function M:IsInputOpened()
+    return _H.to_bool(C.wxProcess_IsInputOpened(self._ptr))
+end
+
 function M:CloseOutput()
     C.wxProcess_CloseOutput(self._ptr)
 end
@@ -33,15 +91,15 @@ function M:Detach()
 end
 
 function M:GetErrorStream()
-    return C.wxProcess_GetErrorStream(self._ptr)
+    return _H.wrap("wxinputstream_gen", C.wxProcess_GetErrorStream(self._ptr))
 end
 
 function M:GetInputStream()
-    return C.wxProcess_GetInputStream(self._ptr)
+    return _H.wrap("wxinputstream_gen", C.wxProcess_GetInputStream(self._ptr))
 end
 
 function M:GetOutputStream()
-    return C.wxProcess_GetOutputStream(self._ptr)
+    return _H.wrap("wxoutputstream_gen", C.wxProcess_GetOutputStream(self._ptr))
 end
 
 function M:IsRedirected()
@@ -54,7 +112,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxProcess_Delete(self._ptr)
         self._ptr = nil
     end

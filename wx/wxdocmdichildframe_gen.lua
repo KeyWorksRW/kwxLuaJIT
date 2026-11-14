@@ -7,6 +7,14 @@ local _parent = require("wxmdichildframe_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -20,11 +28,11 @@ function M.Create(doc, view, parent, id, title, x, y, width, height, style)
 end
 
 function M:GetDocument()
-    return C.wxDocMDIChildFrame_GetDocument(self._ptr)
+    return _H.wrap("wxdocument_gen", C.wxDocMDIChildFrame_GetDocument(self._ptr))
 end
 
 function M:GetView()
-    return C.wxDocMDIChildFrame_GetView(self._ptr)
+    return _H.wrap("wxview_gen", C.wxDocMDIChildFrame_GetView(self._ptr))
 end
 
 function M:SetDocument(doc)

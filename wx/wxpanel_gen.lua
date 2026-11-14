@@ -7,6 +7,14 @@ local _parent = require("wxwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,14 @@ function M.Create(parent, id, left, top, width, height, style)
     local ptr = C.wxPanel_Create(_H.ptr(parent), id, left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetDefaultItem()
+    return C.wxPanel_GetDefaultItem(self._ptr)
+end
+
+function M:SetDefaultItem(btn)
+    C.wxPanel_SetDefaultItem(self._ptr, _H.ptr(btn))
 end
 
 function M:InitDialog()
@@ -27,6 +43,22 @@ end
 
 function M:SetFocusIgnoringChildren()
     C.wxPanel_SetFocusIgnoringChildren(self._ptr)
+end
+
+function M:SetOnTransferDataFromWindow(pFunction)
+    C.wxPanel_SetOnTransferDataFromWindow(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnTransferDataToWindow(pFunction)
+    C.wxPanel_SetOnTransferDataToWindow(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnDoGetBestClientSize(pFunction)
+    C.wxPanel_SetOnDoGetBestClientSize(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnScrollWindow(pFunction)
+    C.wxPanel_SetOnScrollWindow(self._ptr, _H.ptr(pFunction))
 end
 
 return M

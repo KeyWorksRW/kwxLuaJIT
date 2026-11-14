@@ -6,11 +6,19 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:Window()
-    return C.wxAuiNotebookPage_Window(self._ptr)
+    return _H.wrap("wxwindow_gen", C.wxAuiNotebookPage_Window(self._ptr))
 end
 
 function M:Caption()
@@ -22,11 +30,11 @@ function M:Tooltip()
 end
 
 function M:Bitmap()
-    return C.wxAuiNotebookPage_Bitmap(self._ptr)
+    return _H.wrap("wxbitmapbundle_gen", C.wxAuiNotebookPage_Bitmap(self._ptr), true)
 end
 
 function M:Rect()
-    return C.wxAuiNotebookPage_Rect(self._ptr)
+    return _H.wrap("wxrect_gen", C.wxAuiNotebookPage_Rect(self._ptr))
 end
 
 function M:Active()

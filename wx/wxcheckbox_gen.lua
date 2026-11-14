@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -17,6 +25,20 @@ function M.Create(parent, id, text, left, top, width, height, style)
     _H.wxs_free(_ws_text)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxCheckBox_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxCheckBox_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:Create2(parent, id, text, left, top, width, height, style)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.to_bool(C.wxCheckBox_Create2(self._ptr, _H.ptr(parent), id, _ws_text, left, top, width, height, style))
+    _H.wxs_free(_ws_text)
+    return _result
 end
 
 function M:GetValue()
@@ -45,7 +67,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxCheckBox_Delete(self._ptr)
         self._ptr = nil
     end

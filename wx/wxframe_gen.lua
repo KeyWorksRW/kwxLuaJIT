@@ -7,6 +7,14 @@ local _parent = require("wxtoplevelwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -19,12 +27,90 @@ function M.Create(parent, id, text, left, top, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:CreateStatusBar(number, style)
-    return C.wxFrame_CreateStatusBar(self._ptr, number, style)
+function M:Centre(orientation)
+    C.wxFrame_Centre(self._ptr, orientation)
 end
 
-function M:CreateToolBar(style)
-    return C.wxFrame_CreateToolBar(self._ptr, style)
+function M:GetIcon()
+    return _H.wrap("wxicon_gen", C.wxFrame_GetIcon(self._ptr))
+end
+
+function M:GetTitle()
+    return _H.wxs_to_str(C.wxFrame_GetTitle(self._ptr))
+end
+
+function M:Iconize()
+    return _H.to_bool(C.wxFrame_Iconize(self._ptr))
+end
+
+function M:IsFullScreen()
+    return _H.to_bool(C.wxFrame_IsFullScreen(self._ptr))
+end
+
+function M:IsIconized()
+    return _H.to_bool(C.wxFrame_IsIconized(self._ptr))
+end
+
+function M:IsMaximized()
+    return _H.to_bool(C.wxFrame_IsMaximized(self._ptr))
+end
+
+function M:Maximize()
+    C.wxFrame_Maximize(self._ptr)
+end
+
+function M:SetIcon(icon)
+    C.wxFrame_SetIcon(self._ptr, _H.ptr(icon))
+end
+
+function M:SetShape(region)
+    return _H.to_bool(C.wxFrame_SetShape(self._ptr, _H.ptr(region)))
+end
+
+function M:SetTitle(text)
+    local _ws_text = _H.wxs(text)
+    C.wxFrame_SetTitle(self._ptr, _ws_text)
+    _H.wxs_free(_ws_text)
+end
+
+function M:ShowFullScreen(show, style)
+    return _H.to_bool(C.wxFrame_ShowFullScreen(self._ptr, _H.from_bool(show), style))
+end
+
+function M:GetClientAreaOriginPoint()
+    return _H.wrap("wxpoint_gen", C.wxFrame_GetClientAreaOriginPoint(self._ptr))
+end
+
+function M:SetWindowModality(modality)
+    C.wxFrame_SetWindowModality(self._ptr, modality)
+end
+
+function M:ProcessCommandItem(item)
+    return _H.to_bool(C.wxFrame_ProcessCommandItem(self._ptr, _H.ptr(item)))
+end
+
+function M:DoMenuUpdates(menu)
+    C.wxFrame_DoMenuUpdates(self._ptr, _H.ptr(menu))
+end
+
+function M:IsClientAreaChild(child)
+    return _H.to_bool(C.wxFrame_IsClientAreaChild(self._ptr, _H.ptr(child)))
+end
+
+function M:MSWGetTaskBarButton()
+    return C.wxFrame_MSWGetTaskBarButton(self._ptr)
+end
+
+function M:MSWGetSystemMenu()
+    return _H.wrap("wxmenu_gen", C.wxFrame_MSWGetSystemMenu(self._ptr))
+end
+
+function M:CreateStatusBar(number, style, id)
+    return _H.wrap("wxstatusbar_gen", C.wxFrame_CreateStatusBar(self._ptr, number, style, id))
+end
+
+function M:CreateToolBar(style, id)
+    return _H.wrap("wxtoolbar_gen", C.wxFrame_CreateToolBar(self._ptr, style, id))
 end
 
 function M:GetClientAreaOrigin_left()
@@ -36,15 +122,15 @@ function M:GetClientAreaOrigin_top()
 end
 
 function M:GetMenuBar()
-    return C.wxFrame_GetMenuBar(self._ptr)
+    return _H.wrap("wxmenubar_gen", C.wxFrame_GetMenuBar(self._ptr))
 end
 
 function M:GetStatusBar()
-    return C.wxFrame_GetStatusBar(self._ptr)
+    return _H.wrap("wxstatusbar_gen", C.wxFrame_GetStatusBar(self._ptr))
 end
 
 function M:GetToolBar()
-    return C.wxFrame_GetToolBar(self._ptr)
+    return _H.wrap("wxtoolbar_gen", C.wxFrame_GetToolBar(self._ptr))
 end
 
 function M:Restore()
@@ -66,7 +152,7 @@ function M:SetStatusText(text, number)
 end
 
 function M:SetStatusWidths(count, widths)
-    C.wxFrame_SetStatusWidths(self._ptr, count, widths)
+    C.wxFrame_SetStatusWidths(self._ptr, count, _H.ptr(widths))
 end
 
 function M:SetToolBar(toolbar)
@@ -74,7 +160,7 @@ function M:SetToolBar(toolbar)
 end
 
 function M:FindItemInMenuBar(menuId)
-    return C.wxFrame_FindItemInMenuBar(self._ptr, menuId)
+    return _H.wrap("wxmenuitem_gen", C.wxFrame_FindItemInMenuBar(self._ptr, menuId))
 end
 
 function M:ProcessCommand(id)

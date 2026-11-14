@@ -7,6 +7,17 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
+local _mixin_wxTextEntry = require("wxtextentry_gen")
+for _k, _v in pairs(_mixin_wxTextEntry) do if M[_k] == nil then M[_k] = _v end end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +26,473 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxRichTextCtrl_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:GetBuffer()
+    return _H.wrap("wxrichtextbuffer_gen", C.wxRichTextCtrl_GetBuffer(self._ptr))
+end
+
+function M:BeginSuppressUndo()
+    return _H.to_bool(C.wxRichTextCtrl_BeginSuppressUndo(self._ptr))
+end
+
+function M:EndSuppressUndo()
+    return _H.to_bool(C.wxRichTextCtrl_EndSuppressUndo(self._ptr))
+end
+
+function M:GetCommandProcessor()
+    return C.wxRichTextCtrl_GetCommandProcessor(self._ptr)
+end
+
+function M:WriteField(fieldType, properties, textAttr)
+    local _ws_fieldType = _H.wxs(fieldType)
+    local _result = _H.wrap("wxrichtextfield_gen", C.wxRichTextCtrl_WriteField(self._ptr, _ws_fieldType, _H.ptr(properties), _H.ptr(textAttr)))
+    _H.wxs_free(_ws_fieldType)
+    return _result
+end
+
+function M:WriteTable(rows, cols, tableAttr, cellAttr)
+    return _H.wrap("wxrichtexttable_gen", C.wxRichTextCtrl_WriteTable(self._ptr, rows, cols, _H.ptr(tableAttr), _H.ptr(cellAttr)))
+end
+
+function M:WriteTextBox(textAttr)
+    return _H.wrap("wxrichtextbox_gen", C.wxRichTextCtrl_WriteTextBox(self._ptr, _H.ptr(textAttr)))
+end
+
+function M:GetFocusObject()
+    return _H.wrap("wxrichtextparagraphlayoutbox_gen", C.wxRichTextCtrl_GetFocusObject(self._ptr))
+end
+
+function M:SetFocusObject(obj, setCaretPosition)
+    return _H.to_bool(C.wxRichTextCtrl_SetFocusObject(self._ptr, _H.ptr(obj), _H.from_bool(setCaretPosition)))
+end
+
+function M:IsSingleLine()
+    return _H.to_bool(C.wxRichTextCtrl_IsSingleLine(self._ptr))
+end
+
+function M:IsMultiLine()
+    return _H.to_bool(C.wxRichTextCtrl_IsMultiLine(self._ptr))
+end
+
+function M:HasSelection()
+    return _H.to_bool(C.wxRichTextCtrl_HasSelection(self._ptr))
+end
+
+function M:HasUnfocusedSelection()
+    return _H.to_bool(C.wxRichTextCtrl_HasUnfocusedSelection(self._ptr))
+end
+
+function M:GetSelectionRange(start, end_)
+    C.wxRichTextCtrl_GetSelectionRange(self._ptr, start, end_)
+end
+
+function M:SetSelectionRange(start, end_)
+    C.wxRichTextCtrl_SetSelectionRange(self._ptr, start, end_)
+end
+
+function M:GetInternalSelectionRange(start, end_)
+    C.wxRichTextCtrl_GetInternalSelectionRange(self._ptr, start, end_)
+end
+
+function M:SetInternalSelectionRange(start, end_)
+    C.wxRichTextCtrl_SetInternalSelectionRange(self._ptr, start, end_)
+end
+
+function M:SelectWord(position)
+    return _H.to_bool(C.wxRichTextCtrl_SelectWord(self._ptr, position))
+end
+
+function M:GetDelayedLayoutThreshold()
+    return C.wxRichTextCtrl_GetDelayedLayoutThreshold(self._ptr)
+end
+
+function M:SetDelayedLayoutThreshold(threshold)
+    C.wxRichTextCtrl_SetDelayedLayoutThreshold(self._ptr, threshold)
+end
+
+function M:GetFullLayoutRequired()
+    return _H.to_bool(C.wxRichTextCtrl_GetFullLayoutRequired(self._ptr))
+end
+
+function M:SetFullLayoutRequired(required)
+    C.wxRichTextCtrl_SetFullLayoutRequired(self._ptr, _H.from_bool(required))
+end
+
+function M:GetFullLayoutSavedPosition()
+    return C.wxRichTextCtrl_GetFullLayoutSavedPosition(self._ptr)
+end
+
+function M:SetFullLayoutSavedPosition(position)
+    C.wxRichTextCtrl_SetFullLayoutSavedPosition(self._ptr, position)
+end
+
+function M:GetCaretAtLineStart()
+    return _H.to_bool(C.wxRichTextCtrl_GetCaretAtLineStart(self._ptr))
+end
+
+function M:SetCaretAtLineStart(atStart)
+    C.wxRichTextCtrl_SetCaretAtLineStart(self._ptr, _H.from_bool(atStart))
+end
+
+function M:GetVerticalScrollbarEnabled()
+    return _H.to_bool(C.wxRichTextCtrl_GetVerticalScrollbarEnabled(self._ptr))
+end
+
+function M:EnableVerticalScrollbar(enable)
+    C.wxRichTextCtrl_EnableVerticalScrollbar(self._ptr, _H.from_bool(enable))
+end
+
+function M:GetVirtualAttributesEnabled()
+    return _H.to_bool(C.wxRichTextCtrl_GetVirtualAttributesEnabled(self._ptr))
+end
+
+function M:EnableVirtualAttributes(enable)
+    C.wxRichTextCtrl_EnableVirtualAttributes(self._ptr, _H.from_bool(enable))
+end
+
+function M:GetFontScale()
+    return C.wxRichTextCtrl_GetFontScale(self._ptr)
+end
+
+function M:SetFontScale(fontScale, refresh)
+    C.wxRichTextCtrl_SetFontScale(self._ptr, fontScale, _H.from_bool(refresh))
+end
+
+function M:GetDimensionScale()
+    return C.wxRichTextCtrl_GetDimensionScale(self._ptr)
+end
+
+function M:SetDimensionScale(dimScale, refresh)
+    C.wxRichTextCtrl_SetDimensionScale(self._ptr, dimScale, _H.from_bool(refresh))
+end
+
+function M:GetScale()
+    return C.wxRichTextCtrl_GetScale(self._ptr)
+end
+
+function M:SetScale(scale, refresh)
+    C.wxRichTextCtrl_SetScale(self._ptr, scale, _H.from_bool(refresh))
+end
+
+function M:GetBasicStyle(style)
+    C.wxRichTextCtrl_GetBasicStyle(self._ptr, _H.ptr(style))
+end
+
+function M:SetBasicStyle(style)
+    C.wxRichTextCtrl_SetBasicStyle(self._ptr, _H.ptr(style))
+end
+
+function M:GetDefaultStyleEx(style)
+    C.wxRichTextCtrl_GetDefaultStyleEx(self._ptr, _H.ptr(style))
+end
+
+function M:GetHandlerFlags()
+    return C.wxRichTextCtrl_GetHandlerFlags(self._ptr)
+end
+
+function M:SetHandlerFlags(flags)
+    C.wxRichTextCtrl_SetHandlerFlags(self._ptr, flags)
+end
+
+function M:GetStyleSheet()
+    return _H.wrap("wxrichtextstylesheet_gen", C.wxRichTextCtrl_GetStyleSheet(self._ptr))
+end
+
+function M:SetStyleSheet(styleSheet)
+    C.wxRichTextCtrl_SetStyleSheet(self._ptr, _H.ptr(styleSheet))
+end
+
+function M:PushStyleSheet(styleSheet)
+    return _H.to_bool(C.wxRichTextCtrl_PushStyleSheet(self._ptr, _H.ptr(styleSheet)))
+end
+
+function M:PopStyleSheet()
+    return _H.wrap("wxrichtextstylesheet_gen", C.wxRichTextCtrl_PopStyleSheet(self._ptr))
+end
+
+function M:ApplyStyleSheet(styleSheet)
+    return _H.to_bool(C.wxRichTextCtrl_ApplyStyleSheet(self._ptr, _H.ptr(styleSheet)))
+end
+
+function M:SetDefaultStyleToCursorStyle()
+    return _H.to_bool(C.wxRichTextCtrl_SetDefaultStyleToCursorStyle(self._ptr))
+end
+
+function M:AddParagraph(text, start, end_)
+    local _ws_text = _H.wxs(text)
+    C.wxRichTextCtrl_AddParagraph(self._ptr, _ws_text, start, end_)
+    _H.wxs_free(_ws_text)
+end
+
+function M:AddImage(image, start, end_)
+    C.wxRichTextCtrl_AddImage(self._ptr, _H.ptr(image), start, end_)
+end
+
+function M:WriteImageBitmap(bitmap, bitmapType, textAttr)
+    return _H.to_bool(C.wxRichTextCtrl_WriteImageBitmap(self._ptr, _H.ptr(bitmap), bitmapType, _H.ptr(textAttr)))
+end
+
+function M:WriteImageBlock(imageBlock, textAttr)
+    return _H.to_bool(C.wxRichTextCtrl_WriteImageBlock(self._ptr, _H.ptr(imageBlock), _H.ptr(textAttr)))
+end
+
+function M:DeleteRange(start, end_)
+    return _H.to_bool(C.wxRichTextCtrl_DeleteRange(self._ptr, start, end_))
+end
+
+function M:SetStyleEx(start, end_, style, flags)
+    return _H.to_bool(C.wxRichTextCtrl_SetStyleEx(self._ptr, start, end_, _H.ptr(style), flags))
+end
+
+function M:GetUncombinedStyle(position, style)
+    return _H.to_bool(C.wxRichTextCtrl_GetUncombinedStyle(self._ptr, position, _H.ptr(style)))
+end
+
+function M:GetStyleForRange(start, end_, style)
+    return _H.to_bool(C.wxRichTextCtrl_GetStyleForRange(self._ptr, start, end_, _H.ptr(style)))
+end
+
+function M:BeginStyle(style)
+    return _H.to_bool(C.wxRichTextCtrl_BeginStyle(self._ptr, _H.ptr(style)))
+end
+
+function M:EndStyle()
+    return _H.to_bool(C.wxRichTextCtrl_EndStyle(self._ptr))
+end
+
+function M:EndAllStyles()
+    return _H.to_bool(C.wxRichTextCtrl_EndAllStyles(self._ptr))
+end
+
+function M:BeginCharacterStyle(name)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.to_bool(C.wxRichTextCtrl_BeginCharacterStyle(self._ptr, _ws_name))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M:EndCharacterStyle()
+    return _H.to_bool(C.wxRichTextCtrl_EndCharacterStyle(self._ptr))
+end
+
+function M:BeginParagraphStyle(name)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.to_bool(C.wxRichTextCtrl_BeginParagraphStyle(self._ptr, _ws_name))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M:EndParagraphStyle()
+    return _H.to_bool(C.wxRichTextCtrl_EndParagraphStyle(self._ptr))
+end
+
+function M:BeginListStyle(name, level, number)
+    local _ws_name = _H.wxs(name)
+    local _result = _H.to_bool(C.wxRichTextCtrl_BeginListStyle(self._ptr, _ws_name, level, number))
+    _H.wxs_free(_ws_name)
+    return _result
+end
+
+function M:EndListStyle()
+    return _H.to_bool(C.wxRichTextCtrl_EndListStyle(self._ptr))
+end
+
+function M:SetListStyle(start, end_, defName, flags, startFrom, specifiedLevel)
+    local _ws_defName = _H.wxs(defName)
+    local _result = _H.to_bool(C.wxRichTextCtrl_SetListStyle(self._ptr, start, end_, _ws_defName, flags, startFrom, specifiedLevel))
+    _H.wxs_free(_ws_defName)
+    return _result
+end
+
+function M:ClearListStyle(start, end_, flags)
+    return _H.to_bool(C.wxRichTextCtrl_ClearListStyle(self._ptr, start, end_, flags))
+end
+
+function M:NumberList(start, end_, defName, flags, startFrom, specifiedLevel)
+    local _ws_defName = _H.wxs(defName)
+    local _result = _H.to_bool(C.wxRichTextCtrl_NumberList(self._ptr, start, end_, _ws_defName, flags, startFrom, specifiedLevel))
+    _H.wxs_free(_ws_defName)
+    return _result
+end
+
+function M:PromoteList(promoteBy, start, end_, defName, flags, specifiedLevel)
+    local _ws_defName = _H.wxs(defName)
+    local _result = _H.to_bool(C.wxRichTextCtrl_PromoteList(self._ptr, promoteBy, start, end_, _ws_defName, flags, specifiedLevel))
+    _H.wxs_free(_ws_defName)
+    return _result
+end
+
+function M:ApplyStyle(def)
+    return _H.to_bool(C.wxRichTextCtrl_ApplyStyle(self._ptr, _H.ptr(def)))
+end
+
+function M:MoveCaret(position, showAtLineStart)
+    return _H.to_bool(C.wxRichTextCtrl_MoveCaret(self._ptr, position, _H.from_bool(showAtLineStart)))
+end
+
+function M:MoveRight(noPositions, flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveRight(self._ptr, noPositions, flags))
+end
+
+function M:MoveLeft(noPositions, flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveLeft(self._ptr, noPositions, flags))
+end
+
+function M:MoveUp(noLines, flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveUp(self._ptr, noLines, flags))
+end
+
+function M:MoveDown(noLines, flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveDown(self._ptr, noLines, flags))
+end
+
+function M:MoveToLineEnd(flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveToLineEnd(self._ptr, flags))
+end
+
+function M:MoveToLineStart(flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveToLineStart(self._ptr, flags))
+end
+
+function M:MoveToParagraphEnd(flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveToParagraphEnd(self._ptr, flags))
+end
+
+function M:MoveToParagraphStart(flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveToParagraphStart(self._ptr, flags))
+end
+
+function M:MoveHome(flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveHome(self._ptr, flags))
+end
+
+function M:MoveEnd(flags)
+    return _H.to_bool(C.wxRichTextCtrl_MoveEnd(self._ptr, flags))
+end
+
+function M:PageUp(noPages, flags)
+    return _H.to_bool(C.wxRichTextCtrl_PageUp(self._ptr, noPages, flags))
+end
+
+function M:PageDown(noPages, flags)
+    return _H.to_bool(C.wxRichTextCtrl_PageDown(self._ptr, noPages, flags))
+end
+
+function M:WordLeft(noPages, flags)
+    return _H.to_bool(C.wxRichTextCtrl_WordLeft(self._ptr, noPages, flags))
+end
+
+function M:WordRight(noPages, flags)
+    return _H.to_bool(C.wxRichTextCtrl_WordRight(self._ptr, noPages, flags))
+end
+
+function M:IsSelectionBold()
+    return _H.to_bool(C.wxRichTextCtrl_IsSelectionBold(self._ptr))
+end
+
+function M:IsSelectionItalics()
+    return _H.to_bool(C.wxRichTextCtrl_IsSelectionItalics(self._ptr))
+end
+
+function M:IsSelectionUnderlined()
+    return _H.to_bool(C.wxRichTextCtrl_IsSelectionUnderlined(self._ptr))
+end
+
+function M:DoesSelectionHaveTextEffectFlag(flag)
+    return _H.to_bool(C.wxRichTextCtrl_DoesSelectionHaveTextEffectFlag(self._ptr, flag))
+end
+
+function M:IsSelectionAligned(alignment)
+    return _H.to_bool(C.wxRichTextCtrl_IsSelectionAligned(self._ptr, alignment))
+end
+
+function M:ApplyBoldToSelection()
+    return _H.to_bool(C.wxRichTextCtrl_ApplyBoldToSelection(self._ptr))
+end
+
+function M:ApplyItalicToSelection()
+    return _H.to_bool(C.wxRichTextCtrl_ApplyItalicToSelection(self._ptr))
+end
+
+function M:ApplyUnderlineToSelection()
+    return _H.to_bool(C.wxRichTextCtrl_ApplyUnderlineToSelection(self._ptr))
+end
+
+function M:ApplyTextEffectToSelection(flags)
+    return _H.to_bool(C.wxRichTextCtrl_ApplyTextEffectToSelection(self._ptr, flags))
+end
+
+function M:ApplyAlignmentToSelection(alignment)
+    return _H.to_bool(C.wxRichTextCtrl_ApplyAlignmentToSelection(self._ptr, alignment))
+end
+
+function M:ShowContextMenu(menu, x, y, addPropertyCommands)
+    return _H.to_bool(C.wxRichTextCtrl_ShowContextMenu(self._ptr, _H.ptr(menu), x, y, _H.from_bool(addPropertyCommands)))
+end
+
+function M:PrepareContextMenu(menu, x, y, addPropertyCommands)
+    return C.wxRichTextCtrl_PrepareContextMenu(self._ptr, _H.ptr(menu), x, y, _H.from_bool(addPropertyCommands))
+end
+
+function M:SetContextMenu(menu)
+    C.wxRichTextCtrl_SetContextMenu(self._ptr, _H.ptr(menu))
+end
+
+function M:GetContextMenu()
+    return _H.wrap("wxmenu_gen", C.wxRichTextCtrl_GetContextMenu(self._ptr))
+end
+
+function M:GetSelectionAnchor()
+    return C.wxRichTextCtrl_GetSelectionAnchor(self._ptr)
+end
+
+function M:SetSelectionAnchor(anchor)
+    C.wxRichTextCtrl_SetSelectionAnchor(self._ptr, anchor)
+end
+
+function M:GetSelectionAnchorObject()
+    return _H.wrap("wxrichtextobject_gen", C.wxRichTextCtrl_GetSelectionAnchorObject(self._ptr))
+end
+
+function M:Freeze()
+    C.wxRichTextCtrl_Freeze(self._ptr)
+end
+
+function M:Thaw()
+    C.wxRichTextCtrl_Thaw(self._ptr)
+end
+
+function M:IsFrozen()
+    return _H.to_bool(C.wxRichTextCtrl_IsFrozen(self._ptr))
+end
+
+function M:HitTest(x, y, position)
+    return C.wxRichTextCtrl_HitTest(self._ptr, x, y, position)
+end
+
+function M:SetCaretPosition(position, showAtLineStart)
+    C.wxRichTextCtrl_SetCaretPosition(self._ptr, position, _H.from_bool(showAtLineStart))
+end
+
+function M:GetAdjustedCaretPosition(caretPosition)
+    return C.wxRichTextCtrl_GetAdjustedCaretPosition(self._ptr, caretPosition)
+end
+
+function M:FindNextWordPosition(direction)
+    return C.wxRichTextCtrl_FindNextWordPosition(self._ptr, direction)
+end
+
+function M:IsPositionVisible(position)
+    return _H.to_bool(C.wxRichTextCtrl_IsPositionVisible(self._ptr, position))
+end
+
+function M:GetFirstVisiblePosition()
+    return C.wxRichTextCtrl_GetFirstVisiblePosition(self._ptr)
+end
+
+function M:GetFirstVisiblePoint(x, y)
+    C.wxRichTextCtrl_GetFirstVisiblePoint(self._ptr, x, y)
 end
 
 function M:GetValue()
@@ -210,7 +688,7 @@ function M:SetDefaultStyle(style)
 end
 
 function M:GetDefaultStyle()
-    return C.wxRichTextCtrl_GetDefaultStyle(self._ptr)
+    return _H.wrap("wxtextattr_gen", C.wxRichTextCtrl_GetDefaultStyle(self._ptr))
 end
 
 function M:SetFont(font)

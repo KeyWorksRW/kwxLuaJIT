@@ -3,9 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local _parent = require("wxwindow_gen")
+local _parent = require("wxpopuptransientwindow_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -28,7 +36,7 @@ function M:SetBoundingRect(x, y, width, height)
 end
 
 function M:SetTipWindowPtr(windowPtr)
-    C.wxTipWindow_SetTipWindowPtr(self._ptr, windowPtr)
+    C.wxTipWindow_SetTipWindowPtr(self._ptr, _H.ptr(windowPtr))
 end
 
 return M

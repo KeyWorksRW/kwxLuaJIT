@@ -6,6 +6,14 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -14,6 +22,27 @@ function M.Create(parent, id, x, y, width, height, style)
     local ptr = C.wxDataViewListCtrl_Create(_H.ptr(parent), id, x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:AppendColumn(column, variantType)
+    local _ws_variantType = _H.wxs(variantType)
+    local _result = _H.to_bool(C.wxDataViewListCtrl_AppendColumn(self._ptr, _H.ptr(column), _ws_variantType))
+    _H.wxs_free(_ws_variantType)
+    return _result
+end
+
+function M:PrependColumn(column, variantType)
+    local _ws_variantType = _H.wxs(variantType)
+    local _result = _H.to_bool(C.wxDataViewListCtrl_PrependColumn(self._ptr, _H.ptr(column), _ws_variantType))
+    _H.wxs_free(_ws_variantType)
+    return _result
+end
+
+function M:InsertColumn(pos, column, variantType)
+    local _ws_variantType = _H.wxs(variantType)
+    local _result = _H.to_bool(C.wxDataViewListCtrl_InsertColumn(self._ptr, pos, _H.ptr(column), _ws_variantType))
+    _H.wxs_free(_ws_variantType)
+    return _result
 end
 
 function M:GetStore()
@@ -69,15 +98,15 @@ function M:UnselectRow(row)
 end
 
 function M:AppendItem(values, data)
-    C.wxDataViewListCtrl_AppendItem(self._ptr, values, data)
+    C.wxDataViewListCtrl_AppendItem(self._ptr, _H.ptr(values), data)
 end
 
 function M:PrependItem(values, data)
-    C.wxDataViewListCtrl_PrependItem(self._ptr, values, data)
+    C.wxDataViewListCtrl_PrependItem(self._ptr, _H.ptr(values), data)
 end
 
 function M:InsertItem(row, values, data)
-    C.wxDataViewListCtrl_InsertItem(self._ptr, row, values, data)
+    C.wxDataViewListCtrl_InsertItem(self._ptr, row, _H.ptr(values), data)
 end
 
 function M:DeleteItem(row)

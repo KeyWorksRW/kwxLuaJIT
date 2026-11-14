@@ -6,8 +6,23 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
+
+--- Constructor: wxTreeItemId_CreateFromValue
+function M.CreateFromValue(value)
+    local ptr = C.wxTreeItemId_CreateFromValue(value)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
 
 --- Constructor: wxTreeItemId_Create
 function M.Create()
@@ -16,13 +31,25 @@ function M.Create()
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:Clone()
+    return _H.wrap("wxtreeitemid_gen", C.wxTreeItemId_Clone(self._ptr))
+end
+
+function M:GetValue()
+    return C.wxTreeItemId_GetValue(self._ptr)
+end
+
+function M:Unset()
+    C.wxTreeItemId_Unset(self._ptr)
+end
+
 function M:IsOk()
     return _H.to_bool(C.wxTreeItemId_IsOk(self._ptr))
 end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxTreeItemId_Delete(self._ptr)
         self._ptr = nil
     end

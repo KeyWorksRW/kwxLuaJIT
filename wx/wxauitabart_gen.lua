@@ -6,11 +6,19 @@ local _H = require("kwxffi_helpers_gen")
 local M = {}
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 function M:Clone()
-    return C.wxAuiTabArt_Clone(self._ptr)
+    return _H.wrap("wxauitabart_gen", C.wxAuiTabArt_Clone(self._ptr))
 end
 
 function M:DrawBackground(dc, window, rect)
@@ -35,7 +43,7 @@ end
 
 function M:GetTabSize(dc, window, caption, bitmap, active, close_button_state, x_extent)
     local _ws_caption = _H.wxs(caption)
-    local _result = C.wxAuiTabArt_GetTabSize(self._ptr, _H.ptr(dc), _H.ptr(window), _ws_caption, _H.ptr(bitmap), _H.from_bool(active), close_button_state, x_extent)
+    local _result = _H.wrap("wxsize_gen", C.wxAuiTabArt_GetTabSize(self._ptr, _H.ptr(dc), _H.ptr(window), _ws_caption, _H.ptr(bitmap), _H.from_bool(active), close_button_state, x_extent))
     _H.wxs_free(_ws_caption)
     return _result
 end

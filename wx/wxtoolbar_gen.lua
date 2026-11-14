@@ -3,9 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local _parent = require("wxcontrol_gen")
+local _parent = require("wxtoolbarbase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -17,22 +25,61 @@ function M.Create(parent, id, left, top, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:AddTool2(toolId, label, bmp, bmpDisabled, itemKind, shortHelp, longHelp)
+    local _ws_label = _H.wxs(label)
+    local _ws_shortHelp = _H.wxs(shortHelp)
+    local _ws_longHelp = _H.wxs(longHelp)
+    C.wxToolBar_AddTool2(self._ptr, toolId, _ws_label, _H.ptr(bmp), _H.ptr(bmpDisabled), itemKind, _ws_shortHelp, _ws_longHelp)
+    _H.wxs_free(_ws_label)
+    _H.wxs_free(_ws_shortHelp)
+    _H.wxs_free(_ws_longHelp)
+end
+
+function M:GetToolMargins()
+    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolMargins(self._ptr))
+end
+
+function M:SetMaxRowsCols(rows, cols)
+    C.wxToolBar_SetMaxRowsCols(self._ptr, rows, cols)
+end
+
+function M:GetMaxRows()
+    return C.wxToolBar_GetMaxRows(self._ptr)
+end
+
+function M:GetMaxCols()
+    return C.wxToolBar_GetMaxCols(self._ptr)
+end
+
+function M:GetDirection()
+    return C.wxToolBar_GetDirection(self._ptr)
+end
+
+function M:GetToolByPos(pos)
+    return C.wxToolBar_GetToolByPos(self._ptr, pos)
+end
+
+function M:SetRows(nRows)
+    C.wxToolBar_SetRows(self._ptr, nRows)
+end
+
 function M:AddControl(ctrl)
     return _H.to_bool(C.wxToolBar_AddControl(self._ptr, _H.ptr(ctrl)))
 end
 
 function M:AddSeparator()
-    C.wxToolBar_AddSeparator(self._ptr)
+    return C.wxToolBar_AddSeparator(self._ptr)
 end
 
 function M:AddTool(toolid, label, bitmap, bmpDisabled, kind, shortHelp, longHelp, data)
     local _ws_label = _H.wxs(label)
     local _ws_shortHelp = _H.wxs(shortHelp)
     local _ws_longHelp = _H.wxs(longHelp)
-    C.wxToolBar_AddTool(self._ptr, toolid, _ws_label, _H.ptr(bitmap), _H.ptr(bmpDisabled), kind, _ws_shortHelp, _ws_longHelp, _H.ptr(data))
+    local _result = C.wxToolBar_AddTool(self._ptr, toolid, _ws_label, _H.ptr(bitmap), _H.ptr(bmpDisabled), kind, _ws_shortHelp, _ws_longHelp, _H.ptr(data))
     _H.wxs_free(_ws_label)
     _H.wxs_free(_ws_shortHelp)
     _H.wxs_free(_ws_longHelp)
+    return _result
 end
 
 function M:DeleteTool(id)
@@ -48,15 +95,15 @@ function M:EnableTool(id, enable)
 end
 
 function M:GetMargins()
-    return C.wxToolBar_GetMargins(self._ptr)
+    return _H.wrap("wxpoint_gen", C.wxToolBar_GetMargins(self._ptr))
 end
 
 function M:GetToolBitmapSize()
-    return C.wxToolBar_GetToolBitmapSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolBitmapSize(self._ptr))
 end
 
 function M:GetToolClientData(id)
-    return C.wxToolBar_GetToolClientData(self._ptr, id)
+    return _H.wrap("wxobject_gen", C.wxToolBar_GetToolClientData(self._ptr, id))
 end
 
 function M:GetToolEnabled(id)
@@ -76,7 +123,7 @@ function M:GetToolShortHelp(id)
 end
 
 function M:GetToolSize()
-    return C.wxToolBar_GetToolSize(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolSize(self._ptr))
 end
 
 function M:GetToolState(id)
@@ -96,7 +143,7 @@ function M:Realize()
 end
 
 function M:RemoveTool(id)
-    C.wxToolBar_RemoveTool(self._ptr, id)
+    return C.wxToolBar_RemoveTool(self._ptr, id)
 end
 
 function M:SetMargins(x, y)
@@ -178,7 +225,7 @@ function M:ClearTools()
 end
 
 function M:FindControl(id)
-    return C.wxToolBar_FindControl(self._ptr, id)
+    return _H.wrap("wxcontrol_gen", C.wxToolBar_FindControl(self._ptr, id))
 end
 
 function M:FindToolForPosition(x, y)
@@ -214,7 +261,7 @@ function M:SetToolDisabledBitmap(id, bitmap)
 end
 
 function M:SetDropdownMenu(id, menu)
-    C.wxToolBar_SetDropdownMenu(self._ptr, id, _H.ptr(menu))
+    return _H.to_bool(C.wxToolBar_SetDropdownMenu(self._ptr, id, _H.ptr(menu)))
 end
 
 function M:SetToggle(id, toggle)
@@ -223,7 +270,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxToolBar_Delete(self._ptr)
         self._ptr = nil
     end

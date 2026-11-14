@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,109 @@ function M.Create(parent, id, left, top, width, height, style)
     local ptr = C.wxListCtrl_Create(_H.ptr(parent), id, left, top, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:AssignImageList(images, which)
+    C.wxListCtrl_AssignImageList(self._ptr, _H.ptr(images), which)
+end
+
+function M:GetColumn2(col, item)
+    C.wxListCtrl_GetColumn2(self._ptr, col, _H.ptr(item))
+end
+
+function M:GetItem2(info)
+    C.wxListCtrl_GetItem2(self._ptr, _H.ptr(info))
+end
+
+function M:GetItemPosition2(item)
+    return _H.wrap("wxpoint_gen", C.wxListCtrl_GetItemPosition2(self._ptr, item))
+end
+
+function M:RefreshItems(from, toPos)
+    C.wxListCtrl_RefreshItems(self._ptr, from, toPos)
+end
+
+function M:SortItems2(closure)
+    return _H.to_bool(C.wxListCtrl_SortItems2(self._ptr, _H.ptr(closure)))
+end
+
+function M:GetColumnOrder(col)
+    return C.wxListCtrl_GetColumnOrder(self._ptr, col)
+end
+
+function M:GetColumnIndexFromOrder(order)
+    return C.wxListCtrl_GetColumnIndexFromOrder(self._ptr, order)
+end
+
+function M:SetItemColumnImage(item, column, image)
+    return _H.to_bool(C.wxListCtrl_SetItemColumnImage(self._ptr, item, column, image))
+end
+
+function M:SetItemPtrData(item, data)
+    return _H.to_bool(C.wxListCtrl_SetItemPtrData(self._ptr, item, data))
+end
+
+function M:GetItemTextColour(item)
+    return _H.wrap("wxcolour_gen", C.wxListCtrl_GetItemTextColour(self._ptr, item))
+end
+
+function M:SetItemTextColour(item, col)
+    C.wxListCtrl_SetItemTextColour(self._ptr, item, _H.ptr(col))
+end
+
+function M:GetItemBackgroundColour(item)
+    return _H.wrap("wxcolour_gen", C.wxListCtrl_GetItemBackgroundColour(self._ptr, item))
+end
+
+function M:SetItemBackgroundColour(item, col)
+    C.wxListCtrl_SetItemBackgroundColour(self._ptr, item, _H.ptr(col))
+end
+
+function M:SetItemFont(item, font)
+    C.wxListCtrl_SetItemFont(self._ptr, item, _H.ptr(font))
+end
+
+function M:AppendColumn(heading, format, width)
+    local _ws_heading = _H.wxs(heading)
+    local _result = C.wxListCtrl_AppendColumn(self._ptr, _ws_heading, format, width)
+    _H.wxs_free(_ws_heading)
+    return _result
+end
+
+function M:IsEmpty()
+    return _H.to_bool(C.wxListCtrl_IsEmpty(self._ptr))
+end
+
+function M:InReportView()
+    return _H.to_bool(C.wxListCtrl_InReportView(self._ptr))
+end
+
+function M:EnableBellOnNoMatch(on)
+    C.wxListCtrl_EnableBellOnNoMatch(self._ptr, _H.from_bool(on))
+end
+
+function M:EnableAlternateRowColours(enable)
+    C.wxListCtrl_EnableAlternateRowColours(self._ptr, _H.from_bool(enable))
+end
+
+function M:SetAlternateRowColour(colour)
+    C.wxListCtrl_SetAlternateRowColour(self._ptr, _H.ptr(colour))
+end
+
+function M:GetAlternateRowColour()
+    return _H.wrap("wxcolour_gen", C.wxListCtrl_GetAlternateRowColour(self._ptr))
+end
+
+function M:ExtendRulesAndAlternateColour(extend)
+    C.wxListCtrl_ExtendRulesAndAlternateColour(self._ptr, _H.from_bool(extend))
+end
+
+function M:RemoveSortIndicator()
+    C.wxListCtrl_RemoveSortIndicator(self._ptr)
+end
+
+function M:GetUpdatedAscendingSortIndicator(col)
+    return _H.to_bool(C.wxListCtrl_GetUpdatedAscendingSortIndicator(self._ptr, col))
 end
 
 function M:Arrange(flag)
@@ -85,11 +196,11 @@ function M:GetCountPerPage()
 end
 
 function M:GetEditControl()
-    return C.wxListCtrl_GetEditControl(self._ptr)
+    return _H.wrap("wxtextctrl_gen", C.wxListCtrl_GetEditControl(self._ptr))
 end
 
 function M:GetImageList(which)
-    return C.wxListCtrl_GetImageList(self._ptr, which)
+    return _H.wrap("wximagelist_gen", C.wxListCtrl_GetImageList(self._ptr, which))
 end
 
 function M:GetItem(info)
@@ -105,19 +216,19 @@ function M:GetItemData(item)
 end
 
 function M:GetItemFont(item)
-    return C.wxListCtrl_GetItemFont(self._ptr, item)
+    return _H.wrap("wxfont_gen", C.wxListCtrl_GetItemFont(self._ptr, item))
 end
 
 function M:GetItemPosition(item)
-    return C.wxListCtrl_GetItemPosition(self._ptr, item)
+    return _H.wrap("wxpoint_gen", C.wxListCtrl_GetItemPosition(self._ptr, item))
 end
 
 function M:GetItemRect(item, code)
-    return C.wxListCtrl_GetItemRect(self._ptr, item, code)
+    return _H.wrap("wxrect_gen", C.wxListCtrl_GetItemRect(self._ptr, item, code))
 end
 
 function M:GetItemSpacing(isSmall)
-    return C.wxListCtrl_GetItemSpacing(self._ptr, _H.from_bool(isSmall))
+    return _H.wrap("wxsize_gen", C.wxListCtrl_GetItemSpacing(self._ptr, _H.from_bool(isSmall)))
 end
 
 function M:GetItemState(item, stateMask)
@@ -145,7 +256,7 @@ function M:GetTopItem()
 end
 
 function M:HitTest(x, y, flags, pSubItem)
-    return C.wxListCtrl_HitTest(self._ptr, x, y, flags, pSubItem)
+    return C.wxListCtrl_HitTest(self._ptr, x, y, _H.ptr(flags), pSubItem)
 end
 
 function M:InsertColumn(col, heading, format, width)
@@ -194,7 +305,7 @@ function M:ScrollList(dx, dy)
 end
 
 function M:SetBackgroundColour(col)
-    C.wxListCtrl_SetBackgroundColour(self._ptr, _H.ptr(col))
+    return _H.to_bool(C.wxListCtrl_SetBackgroundColour(self._ptr, _H.ptr(col)))
 end
 
 function M:SetColumn(col, item)
@@ -259,7 +370,7 @@ function M:SetWindowStyleFlag(style)
 end
 
 function M:SortItems(compareFunc, obj)
-    return _H.to_bool(C.wxListCtrl_SortItems(self._ptr, compareFunc, obj))
+    return _H.to_bool(C.wxListCtrl_SortItems(self._ptr, _H.ptr(compareFunc), _H.ptr(obj)))
 end
 
 function M:GetSubItemRect(item, subItem, x, y, width, height, code)

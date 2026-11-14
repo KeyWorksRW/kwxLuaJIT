@@ -3,9 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local _parent = require("wxcontrol_gen")
+local _parent = require("wxcalendarctrlbase_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -30,7 +38,11 @@ function M:GetAttr(day)
 end
 
 function M:GetDate(date)
-    C.wxCalendarCtrl_GetDate(self._ptr, date)
+    C.wxCalendarCtrl_GetDate(self._ptr, _H.ptr(date))
+end
+
+function M:GetDateRange(lowerdate, upperdate)
+    return _H.to_bool(C.wxCalendarCtrl_GetDateRange(self._ptr, _H.ptr(lowerdate), _H.ptr(upperdate)))
 end
 
 function M:GetHeaderColourBg(ref)
@@ -58,7 +70,11 @@ function M:GetHolidayColourFg(ref)
 end
 
 function M:HitTest(x, y, date, weekday)
-    return C.wxCalendarCtrl_HitTest(self._ptr, x, y, date, weekday)
+    return C.wxCalendarCtrl_HitTest(self._ptr, x, y, _H.ptr(date), weekday)
+end
+
+function M:Mark(day, mark)
+    C.wxCalendarCtrl_Mark(self._ptr, day, _H.from_bool(mark))
 end
 
 function M:ResetAttr(day)
@@ -66,19 +82,23 @@ function M:ResetAttr(day)
 end
 
 function M:SetAttr(day, attr)
-    C.wxCalendarCtrl_SetAttr(self._ptr, day, attr)
+    C.wxCalendarCtrl_SetAttr(self._ptr, day, _H.ptr(attr))
 end
 
 function M:SetDate(date)
-    C.wxCalendarCtrl_SetDate(self._ptr, date)
+    C.wxCalendarCtrl_SetDate(self._ptr, _H.ptr(date))
+end
+
+function M:SetDateRange(lowerdate, upperdate)
+    return _H.to_bool(C.wxCalendarCtrl_SetDateRange(self._ptr, _H.ptr(lowerdate), _H.ptr(upperdate)))
 end
 
 function M:SetHeaderColours(colFg, colBg)
-    C.wxCalendarCtrl_SetHeaderColours(self._ptr, colFg, colBg)
+    C.wxCalendarCtrl_SetHeaderColours(self._ptr, _H.ptr(colFg), _H.ptr(colBg))
 end
 
 function M:SetHighlightColours(colFg, colBg)
-    C.wxCalendarCtrl_SetHighlightColours(self._ptr, colFg, colBg)
+    C.wxCalendarCtrl_SetHighlightColours(self._ptr, _H.ptr(colFg), _H.ptr(colBg))
 end
 
 function M:SetHoliday(day)
@@ -86,7 +106,7 @@ function M:SetHoliday(day)
 end
 
 function M:SetHolidayColours(colFg, colBg)
-    C.wxCalendarCtrl_SetHolidayColours(self._ptr, colFg, colBg)
+    C.wxCalendarCtrl_SetHolidayColours(self._ptr, _H.ptr(colFg), _H.ptr(colBg))
 end
 
 return M

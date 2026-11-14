@@ -7,6 +7,14 @@ local _parent = require("wxgridsizer_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -15,6 +23,38 @@ function M.Create(rows, cols, vgap, hgap)
     local ptr = C.wxFlexGridSizer_Create(rows, cols, vgap, hgap)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:IsRowGrowable(idx)
+    return _H.to_bool(C.wxFlexGridSizer_IsRowGrowable(self._ptr, idx))
+end
+
+function M:IsColGrowable(idx)
+    return _H.to_bool(C.wxFlexGridSizer_IsColGrowable(self._ptr, idx))
+end
+
+function M:SetFlexibleDirection(direction)
+    C.wxFlexGridSizer_SetFlexibleDirection(self._ptr, direction)
+end
+
+function M:GetFlexibleDirection()
+    return C.wxFlexGridSizer_GetFlexibleDirection(self._ptr)
+end
+
+function M:SetNonFlexibleGrowMode(mode)
+    C.wxFlexGridSizer_SetNonFlexibleGrowMode(self._ptr, mode)
+end
+
+function M:GetNonFlexibleGrowMode()
+    return C.wxFlexGridSizer_GetNonFlexibleGrowMode(self._ptr)
+end
+
+function M:GetRowHeights(heights)
+    return C.wxFlexGridSizer_GetRowHeights(self._ptr, _H.ptr(heights))
+end
+
+function M:GetColWidths(widths)
+    return C.wxFlexGridSizer_GetColWidths(self._ptr, _H.ptr(widths))
 end
 
 function M:AddGrowableCol(idx, proportion)
@@ -26,7 +66,7 @@ function M:AddGrowableRow(idx, proportion)
 end
 
 function M:CalcMin()
-    return C.wxFlexGridSizer_CalcMin(self._ptr)
+    return _H.wrap("wxsize_gen", C.wxFlexGridSizer_CalcMin(self._ptr))
 end
 
 function M:RecalcSizes()

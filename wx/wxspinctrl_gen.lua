@@ -7,6 +7,14 @@ local _parent = require("wxcontrol_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -45,6 +53,16 @@ end
 
 function M:SetValue(val)
     C.wxSpinCtrl_SetValue(self._ptr, val)
+end
+
+function M:SetIncrement(inc)
+    C.wxSpinCtrl_SetIncrement(self._ptr, inc)
+end
+
+function M:SetValueString(value)
+    local _ws_value = _H.wxs(value)
+    C.wxSpinCtrl_SetValueString(self._ptr, _ws_value)
+    _H.wxs_free(_ws_value)
 end
 
 return M

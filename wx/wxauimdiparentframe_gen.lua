@@ -7,6 +7,14 @@ local _parent = require("wxframe_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -20,7 +28,7 @@ function M.Create(parent, id, title, x, y, width, height, style)
 end
 
 function M:GetActiveChild()
-    return C.wxAuiMDIParentFrame_GetActiveChild(self._ptr)
+    return _H.wrap("wxauimdichildframe_gen", C.wxAuiMDIParentFrame_GetActiveChild(self._ptr))
 end
 
 function M:SetActiveChild(child)
@@ -44,7 +52,7 @@ function M:Tile(orient)
 end
 
 function M:GetMenuBar()
-    return C.wxAuiMDIParentFrame_GetMenuBar(self._ptr)
+    return _H.wrap("wxmenubar_gen", C.wxAuiMDIParentFrame_GetMenuBar(self._ptr))
 end
 
 function M:SetMenuBar(menuBar)
@@ -52,23 +60,23 @@ function M:SetMenuBar(menuBar)
 end
 
 function M:GetStatusBar()
-    return C.wxAuiMDIParentFrame_GetStatusBar(self._ptr)
+    return _H.wrap("wxstatusbar_gen", C.wxAuiMDIParentFrame_GetStatusBar(self._ptr))
 end
 
 function M:CreateStatusBar(number, style, id)
-    return C.wxAuiMDIParentFrame_CreateStatusBar(self._ptr, number, style, id)
+    return _H.wrap("wxstatusbar_gen", C.wxAuiMDIParentFrame_CreateStatusBar(self._ptr, number, style, id))
 end
 
 function M:GetToolBar()
-    return C.wxAuiMDIParentFrame_GetToolBar(self._ptr)
+    return _H.wrap("wxtoolbar_gen", C.wxAuiMDIParentFrame_GetToolBar(self._ptr))
 end
 
 function M:CreateToolBar(style, id)
-    return C.wxAuiMDIParentFrame_CreateToolBar(self._ptr, style, id)
+    return _H.wrap("wxtoolbar_gen", C.wxAuiMDIParentFrame_CreateToolBar(self._ptr, style, id))
 end
 
 function M:GetNotebook()
-    return C.wxAuiMDIParentFrame_GetNotebook(self._ptr)
+    return _H.wrap("wxauinotebook_gen", C.wxAuiMDIParentFrame_GetNotebook(self._ptr))
 end
 
 return M

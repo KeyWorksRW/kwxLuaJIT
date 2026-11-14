@@ -3,15 +3,24 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxcontrol_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: wxTimePickerCtrl_Create
-function M.Create(parent, id, x, y, width, height, style)
-    local ptr = C.wxTimePickerCtrl_Create(_H.ptr(parent), id, x, y, width, height, style)
+function M.Create(parent, id, date, x, y, width, height, style)
+    local ptr = C.wxTimePickerCtrl_Create(_H.ptr(parent), id, _H.ptr(date), x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end

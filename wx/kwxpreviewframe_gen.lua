@@ -3,16 +3,24 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local _parent = require("wxframe_gen")
+local _parent = require("wxpreviewframe_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
 --- Constructor: kwxPreviewFrame_Create
 function M.Create(pObject, init, createCanvas, createToolbar, preview, parent, title, x, y, width, height, style)
-    local ptr = C.kwxPreviewFrame_Create(pObject, init, createCanvas, createToolbar, preview, _H.ptr(parent), title, x, y, width, height, style)
+    local ptr = C.kwxPreviewFrame_Create(_H.ptr(pObject), _H.ptr(init), _H.ptr(createCanvas), _H.ptr(createToolbar), _H.ptr(preview), _H.ptr(parent), _H.ptr(title), x, y, width, height, style)
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end
@@ -22,11 +30,11 @@ function M:GetControlBar()
 end
 
 function M:GetPreviewCanvas()
-    return C.kwxPreviewFrame_GetPreviewCanvas(self._ptr)
+    return _H.wrap("wxpreviewcanvas_gen", C.kwxPreviewFrame_GetPreviewCanvas(self._ptr))
 end
 
 function M:GetPrintPreview()
-    return C.kwxPreviewFrame_GetPrintPreview(self._ptr)
+    return _H.wrap("wxprintpreview_gen", C.kwxPreviewFrame_GetPrintPreview(self._ptr))
 end
 
 function M:Initialize()
@@ -34,7 +42,7 @@ function M:Initialize()
 end
 
 function M:SetControlBar(obj)
-    C.kwxPreviewFrame_SetControlBar(self._ptr, obj)
+    C.kwxPreviewFrame_SetControlBar(self._ptr, _H.ptr(obj))
 end
 
 function M:SetPreviewCanvas(obj)

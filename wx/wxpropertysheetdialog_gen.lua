@@ -7,6 +7,14 @@ local _parent = require("wxdialog_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -19,16 +27,30 @@ function M.Create(parent, id, title, x, y, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxPropertySheetDialog_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxPropertySheetDialog_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:CreateEx(parent, id, title, x, y, width, height, style)
+    local _ws_title = _H.wxs(title)
+    local _result = _H.to_bool(C.wxPropertySheetDialog_CreateEx(self._ptr, _H.ptr(parent), id, _ws_title, x, y, width, height, style))
+    _H.wxs_free(_ws_title)
+    return _result
+end
+
 function M:CreateButtons(flags)
     C.wxPropertySheetDialog_CreateButtons(self._ptr, flags)
 end
 
 function M:GetBookCtrl()
-    return C.wxPropertySheetDialog_GetBookCtrl(self._ptr)
+    return _H.wrap("wxbookctrlbase_gen", C.wxPropertySheetDialog_GetBookCtrl(self._ptr))
 end
 
 function M:GetInnerSizer()
-    return C.wxPropertySheetDialog_GetInnerSizer(self._ptr)
+    return _H.wrap("wxsizer_gen", C.wxPropertySheetDialog_GetInnerSizer(self._ptr))
 end
 
 function M:SetInnerSizer(sizer)

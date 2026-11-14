@@ -7,6 +7,14 @@ local _parent = require("wxauitabart_gen")
 local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
+
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
@@ -18,7 +26,7 @@ function M.Create()
 end
 
 function M:Clone()
-    return C.wxAuiDefaultTabArt_Clone(self._ptr)
+    return _H.wrap("wxauitabart_gen", C.wxAuiDefaultTabArt_Clone(self._ptr))
 end
 
 function M:SetFlags(flags)
@@ -67,7 +75,7 @@ end
 
 function M:GetTabSize(dc, window, caption, bitmap, active, closeButtonState, xExtent)
     local _ws_caption = _H.wxs(caption)
-    local _result = C.wxAuiDefaultTabArt_GetTabSize(self._ptr, _H.ptr(dc), _H.ptr(window), _ws_caption, _H.ptr(bitmap), _H.from_bool(active), closeButtonState, xExtent)
+    local _result = _H.wrap("wxsize_gen", C.wxAuiDefaultTabArt_GetTabSize(self._ptr, _H.ptr(dc), _H.ptr(window), _ws_caption, _H.ptr(bitmap), _H.from_bool(active), closeButtonState, xExtent))
     _H.wxs_free(_ws_caption)
     return _result
 end

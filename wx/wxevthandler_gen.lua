@@ -3,8 +3,17 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxobject_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
+
+--- Wrap an existing C pointer.  The wrapper does not own the native object unless
+--- `owned` is true, so Delete() is a no-op on a borrowed wrapper.
+function M.FromPtr(ptr, owned)
+    if ptr == nil then return nil end
+    if type(ptr) == "table" then return ptr end
+    return setmetatable({ _ptr = ptr, _borrowed = not owned }, MT)
+end
 
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
@@ -16,16 +25,56 @@ function M.Create()
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:GetClientClosure()
+    return _H.wrap("wxclosure_gen", C.wxEvtHandler_GetClientClosure(self._ptr))
+end
+
+function M:SetClientClosure(closure)
+    C.wxEvtHandler_SetClientClosure(self._ptr, _H.ptr(closure))
+end
+
+function M:SetOnProcessEvent(pFunction)
+    C.wxEvtHandler_SetOnProcessEvent(self._ptr, _H.ptr(pFunction))
+end
+
+function M.AddFilter(filter)
+    C.wxEvtHandler_AddFilter(_H.ptr(filter))
+end
+
+function M.RemoveFilter(filter)
+    C.wxEvtHandler_RemoveFilter(_H.ptr(filter))
+end
+
 function M:AddPendingEvent(event)
     C.wxEvtHandler_AddPendingEvent(self._ptr, _H.ptr(event))
 end
 
+function M:CallAfter(closure)
+    C.wxEvtHandler_CallAfter(self._ptr, _H.ptr(closure))
+end
+
+function M:GetClientData()
+    return _H.wrap("wxclientdata_gen", C.wxEvtHandler_GetClientData(self._ptr))
+end
+
+function M:Bind(first, last, type, closure)
+    return C.wxEvtHandler_Bind(self._ptr, first, last, type, _H.ptr(closure))
+end
+
 function M:Connect(first, last, type, data)
-    return C.wxEvtHandler_Connect(self._ptr, first, last, type, data)
+    return C.wxEvtHandler_Connect(self._ptr, first, last, type, _H.ptr(data))
 end
 
 function M:Disconnect(first, last, type, id)
     return C.wxEvtHandler_Disconnect(self._ptr, first, last, type, id)
+end
+
+function M:Unbind(first, last, type)
+    return C.wxEvtHandler_Unbind(self._ptr, first, last, type)
+end
+
+function M:UnbindClosure(first, last, type, closure)
+    return _H.to_bool(C.wxEvtHandler_UnbindClosure(self._ptr, first, last, type, _H.ptr(closure)))
 end
 
 function M:GetEvtHandlerEnabled()
@@ -33,11 +82,11 @@ function M:GetEvtHandlerEnabled()
 end
 
 function M:GetNextHandler()
-    return C.wxEvtHandler_GetNextHandler(self._ptr)
+    return _H.wrap("wxevthandler_gen", C.wxEvtHandler_GetNextHandler(self._ptr))
 end
 
 function M:GetPreviousHandler()
-    return C.wxEvtHandler_GetPreviousHandler(self._ptr)
+    return _H.wrap("wxevthandler_gen", C.wxEvtHandler_GetPreviousHandler(self._ptr))
 end
 
 function M:ProcessEvent(event)
@@ -62,7 +111,7 @@ end
 
 --- Delete the underlying C++ object.
 function M:Delete()
-    if self._ptr ~= nil then
+    if self._ptr ~= nil and not self._borrowed then
         C.wxEvtHandler_Delete(self._ptr)
         self._ptr = nil
     end
