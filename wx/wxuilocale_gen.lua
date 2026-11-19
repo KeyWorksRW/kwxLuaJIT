@@ -126,7 +126,7 @@ function M.GetLanguageCanonicalName(language)
 end
 
 function M.GetInfo(index, category)
-    return _H.wxs_to_str(C.wxUILocale_GetInfo(index, category))
+    return _H.cstr_to_str(C.wxUILocale_GetInfo(index, category))
 end
 
 function M.IsSet()

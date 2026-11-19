@@ -33,7 +33,7 @@ function M:GetColumnCount()
 end
 
 function M:GetGoodEditorDialogPosition(p, sz)
-    return _H.wrap("wxpoint_gen", C.wxPropertyGrid_GetGoodEditorDialogPosition(self._ptr, _H.ptr(p), _H.ptr(sz)))
+    return _H.wrap("wxpoint_gen", C.wxPropertyGrid_GetGoodEditorDialogPosition(self._ptr, _H.ptr(p), _H.ptr(sz)), true)
 end
 
 function M.RegisterEditorClass(editor, noDefCheck)
@@ -105,19 +105,19 @@ function M:GetValidationInfo()
 end
 
 function M:GetImageSize(property, item)
-    return _H.wrap("wxsize_gen", C.wxPropertyGrid_GetImageSize(self._ptr, _H.ptr(property), item))
+    return _H.wrap("wxsize_gen", C.wxPropertyGrid_GetImageSize(self._ptr, _H.ptr(property), item), true)
 end
 
 function M:GetImageRect(property, item)
-    return _H.wrap("wxrect_gen", C.wxPropertyGrid_GetImageRect(self._ptr, _H.ptr(property), item))
+    return _H.wrap("wxrect_gen", C.wxPropertyGrid_GetImageRect(self._ptr, _H.ptr(property), item), true)
 end
 
 function M:GetPropertyRect(first, last)
-    return _H.wrap("wxrect_gen", C.wxPropertyGrid_GetPropertyRect(self._ptr, _H.ptr(first), _H.ptr(last)))
+    return _H.wrap("wxrect_gen", C.wxPropertyGrid_GetPropertyRect(self._ptr, _H.ptr(first), _H.ptr(last)), true)
 end
 
 function M:FitColumns()
-    return _H.wrap("wxsize_gen", C.wxPropertyGrid_FitColumns(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxPropertyGrid_FitColumns(self._ptr), true)
 end
 
 function M:GetCaptionFont()

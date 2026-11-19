@@ -116,4 +116,24 @@ function M:SetOnCreateTraits(pFunction)
     C.wxApp_SetOnCreateTraits(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnOnFatalException(pFunction)
+    C.wxApp_SetOnOnFatalException(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnOnUnhandledException(pFunction)
+    C.wxApp_SetOnOnUnhandledException(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnStoreCurrentException(pFunction)
+    C.wxApp_SetOnStoreCurrentException(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnOnExceptionInMainLoop(pFunction)
+    C.wxApp_SetOnOnExceptionInMainLoop(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnRethrowStoredException(pFunction)
+    C.wxApp_SetOnRethrowStoredException(self._ptr, _H.ptr(pFunction))
+end
+
 return M

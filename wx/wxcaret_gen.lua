@@ -29,11 +29,11 @@ function M.GetBlinkTime()
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxCaret_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxCaret_GetPosition(self._ptr), true)
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxCaret_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxCaret_GetSize(self._ptr), true)
 end
 
 function M:GetWindow()
@@ -66,6 +66,14 @@ end
 
 function M:Show()
     C.wxCaret_Show(self._ptr)
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxCaret_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

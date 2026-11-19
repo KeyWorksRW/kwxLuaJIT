@@ -25,12 +25,23 @@ function M.Create(image, x, y)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxDragImage_CreateWithCursor
+function M.CreateWithCursor(image, cursor)
+    local ptr = C.wxDragImage_CreateWithCursor(_H.ptr(image), _H.ptr(cursor))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:BeginDrag(x, y, window, boundingWindow)
     return _H.to_bool(C.wxDragImage_BeginDrag(self._ptr, x, y, _H.ptr(window), _H.ptr(boundingWindow)))
 end
 
 function M:BeginDragFullScreen(x_pos, y_pos, window, fullScreen, rect)
     return _H.to_bool(C.wxDragImage_BeginDragFullScreen(self._ptr, x_pos, y_pos, _H.ptr(window), _H.from_bool(fullScreen), _H.ptr(rect)))
+end
+
+function M:BeginDragFullScreenDefault(x_pos, y_pos, window, fullScreen)
+    return _H.to_bool(C.wxDragImage_BeginDragFullScreenDefault(self._ptr, x_pos, y_pos, _H.ptr(window), _H.from_bool(fullScreen)))
 end
 
 function M:EndDrag()

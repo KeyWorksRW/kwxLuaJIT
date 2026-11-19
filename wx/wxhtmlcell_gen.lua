@@ -132,11 +132,11 @@ function M:FindCellByPos(x, y, flags)
 end
 
 function M:GetAbsPos(rootCell)
-    return _H.wrap("wxpoint_gen", C.wxHtmlCell_GetAbsPos(self._ptr, _H.ptr(rootCell)))
+    return _H.wrap("wxpoint_gen", C.wxHtmlCell_GetAbsPos(self._ptr, _H.ptr(rootCell)), true)
 end
 
 function M:GetRect(rootCell)
-    return _H.wrap("wxrect_gen", C.wxHtmlCell_GetRect(self._ptr, _H.ptr(rootCell)))
+    return _H.wrap("wxrect_gen", C.wxHtmlCell_GetRect(self._ptr, _H.ptr(rootCell)), true)
 end
 
 function M:GetRootCell()

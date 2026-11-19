@@ -32,7 +32,7 @@ function M.Create(source)
 end
 
 function M:Copy(source)
-    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBarItem_Copy(self._ptr, _H.ptr(source)))
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBarItem_Copy(self._ptr, _H.ptr(source)), true)
 end
 
 function M:Assign(source)
@@ -138,7 +138,7 @@ function M:SetMinSize(width, height)
 end
 
 function M:GetMinSize()
-    return _H.wrap("wxsize_gen", C.wxAuiToolBarItem_GetMinSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxAuiToolBarItem_GetMinSize(self._ptr), true)
 end
 
 function M:SetSpacerPixels(spacerPixels)
@@ -195,6 +195,14 @@ end
 
 function M:GetAlignment()
     return C.wxAuiToolBarItem_GetAlignment(self._ptr)
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxAuiToolBarItem_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

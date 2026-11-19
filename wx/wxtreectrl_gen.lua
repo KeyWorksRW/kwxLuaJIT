@@ -152,7 +152,7 @@ function M:Expand(item)
 end
 
 function M:GetBoundingRect(item, textOnly)
-    return _H.wrap("wxrect_gen", C.wxTreeCtrl_GetBoundingRect(self._ptr, _H.ptr(item), _H.from_bool(textOnly)))
+    return _H.wrap("wxrect_gen", C.wxTreeCtrl_GetBoundingRect(self._ptr, _H.ptr(item), _H.from_bool(textOnly)), true)
 end
 
 function M:GetChildrenCount(item, recursively)

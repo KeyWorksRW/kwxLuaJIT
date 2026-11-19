@@ -198,6 +198,10 @@ function M:AutoComplete(count, items)
     return _H.to_bool(C.wxTextEntry_AutoComplete(self._ptr, count, _H.ptr(items)))
 end
 
+function M:AutoCompleteStrings(items)
+    return _H.to_bool(C.wxTextEntry_AutoCompleteStrings(self._ptr, _H.ptr(items)))
+end
+
 function M:AutoCompleteFileNames()
     return _H.to_bool(C.wxTextEntry_AutoCompleteFileNames(self._ptr))
 end

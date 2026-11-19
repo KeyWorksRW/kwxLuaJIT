@@ -26,7 +26,7 @@ function M.Create(vgap, hgap)
 end
 
 function M:GetCellSize(row, col)
-    return _H.wrap("wxsize_gen", C.wxGridBagSizer_GetCellSize(self._ptr, row, col))
+    return _H.wrap("wxsize_gen", C.wxGridBagSizer_GetCellSize(self._ptr, row, col), true)
 end
 
 function M:FindItem(window)

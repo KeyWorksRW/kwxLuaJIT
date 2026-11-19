@@ -35,7 +35,7 @@ function M:GetContentProtection()
 end
 
 function M.GetDefaultSize()
-    return _H.wrap("wxsize_gen", C.wxTopLevelWindow_GetDefaultSize())
+    return _H.wrap("wxsize_gen", C.wxTopLevelWindow_GetDefaultSize(), true)
 end
 
 function M:EnableCloseButton(enable)

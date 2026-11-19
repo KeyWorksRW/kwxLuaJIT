@@ -26,7 +26,7 @@ function M.Create(id, edge)
 end
 
 function M:GetDragRect()
-    return _H.wrap("wxrect_gen", C.wxSashEvent_GetDragRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxSashEvent_GetDragRect(self._ptr), true)
 end
 
 function M:GetDragStatus()

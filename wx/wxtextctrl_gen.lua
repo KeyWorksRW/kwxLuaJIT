@@ -43,7 +43,7 @@ function M:GetStringSelection()
 end
 
 function M:PositionToCoords(pos)
-    return _H.wrap("wxpoint_gen", C.wxTextCtrl_PositionToCoords(self._ptr, pos))
+    return _H.wrap("wxpoint_gen", C.wxTextCtrl_PositionToCoords(self._ptr, pos), true)
 end
 
 function M:HitTest(x, y, pos)

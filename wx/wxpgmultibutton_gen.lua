@@ -48,7 +48,7 @@ function M:AddBitmap(bitmap, id)
 end
 
 function M:GetPrimarySize()
-    return _H.wrap("wxsize_gen", C.wxPGMultiButton_GetPrimarySize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxPGMultiButton_GetPrimarySize(self._ptr), true)
 end
 
 function M:Finalize(propgrid, x, y)

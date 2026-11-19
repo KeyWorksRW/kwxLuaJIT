@@ -78,6 +78,14 @@ function M:Skip(skip)
     C.wxEvent_Skip(self._ptr, _H.from_bool(skip))
 end
 
+function M:StopPropagation()
+    return C.wxEvent_StopPropagation(self._ptr)
+end
+
+function M:ResumePropagation(propagationLevel)
+    C.wxEvent_ResumePropagation(self._ptr, propagationLevel)
+end
+
 function M:SetOnClone(pFunction)
     C.wxEvent_SetOnClone(self._ptr, _H.ptr(pFunction))
 end

@@ -25,6 +25,13 @@ function M.Create(pObject)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: kwxDocument_CreateWithParent
+function M.CreateWithParent(pObject, parent)
+    local ptr = C.kwxDocument_CreateWithParent(_H.ptr(pObject), _H.ptr(parent))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:SetOnDoOpenDocument(pFunction)
     C.kwxDocument_SetOnDoOpenDocument(self._ptr, _H.ptr(pFunction))
 end
@@ -51,6 +58,72 @@ end
 
 function M:SetOnOnOpenDocument(pFunction)
     C.kwxDocument_SetOnOnOpenDocument(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnDoOpenDocumentWithData(pFunction, data)
+    C.kwxDocument_SetOnDoOpenDocumentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDoOpenDocumentResult(result)
+    C.kwxDocument_SetDoOpenDocumentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnDoSaveDocumentWithData(pFunction, data)
+    C.kwxDocument_SetOnDoSaveDocumentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDoSaveDocumentResult(result)
+    C.kwxDocument_SetDoSaveDocumentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnIsModifiedWithData(pFunction, data)
+    C.kwxDocument_SetOnIsModifiedWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetIsModifiedResult(result)
+    C.kwxDocument_SetIsModifiedResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnModifyWithData(pFunction, data)
+    C.kwxDocument_SetOnModifyWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnOnCreateWithData(pFunction, data)
+    C.kwxDocument_SetOnOnCreateWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCreateResult(result)
+    C.kwxDocument_SetOnCreateResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnOnOpenDocumentWithData(pFunction, data)
+    C.kwxDocument_SetOnOnOpenDocumentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnOpenDocumentResult(result)
+    C.kwxDocument_SetOnOpenDocumentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:OnCreateBase(path, flags)
+    local _ws_path = _H.wxs(path)
+    local _result = _H.to_bool(C.kwxDocument_OnCreateBase(self._ptr, _ws_path, flags))
+    _H.wxs_free(_ws_path)
+    return _result
+end
+
+function M:OnOpenDocumentBase(filename)
+    local _ws_filename = _H.wxs(filename)
+    local _result = _H.to_bool(C.kwxDocument_OnOpenDocumentBase(self._ptr, _ws_filename))
+    _H.wxs_free(_ws_filename)
+    return _result
+end
+
+function M:IsModifiedBase()
+    return _H.to_bool(C.kwxDocument_IsModifiedBase(self._ptr))
+end
+
+function M:ModifyBase(modified)
+    C.kwxDocument_ModifyBase(self._ptr, _H.from_bool(modified))
 end
 
 --- Delete the underlying C++ object.

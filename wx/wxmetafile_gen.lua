@@ -39,6 +39,18 @@ function M:SetClipboard(width, height)
     return _H.to_bool(C.wxMetafile_SetClipboard(self._ptr, width, height))
 end
 
+function M:GetWidth()
+    return C.wxMetafile_GetWidth(self._ptr)
+end
+
+function M:GetHeight()
+    return C.wxMetafile_GetHeight(self._ptr)
+end
+
+function M:GetSize()
+    return _H.wrap("wxsize_gen", C.wxMetafile_GetSize(self._ptr), true)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

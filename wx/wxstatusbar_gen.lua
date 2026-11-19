@@ -26,7 +26,7 @@ function M.Create(parent, id, left, top, width, height, style)
 end
 
 function M:GetBorders()
-    return _H.wrap("wxsize_gen", C.wxStatusBar_GetBorders(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxStatusBar_GetBorders(self._ptr), true)
 end
 
 function M:AddFieldControl(n, win)

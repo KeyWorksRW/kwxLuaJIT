@@ -127,7 +127,7 @@ end
 function M:GetString(szOrigString, szDomain)
     local _ws_szOrigString = _H.wxs(szOrigString)
     local _ws_szDomain = _H.wxs(szDomain)
-    local _result = _H.wxs_to_str(C.wxLocale_GetString(self._ptr, _ws_szOrigString, _ws_szDomain))
+    local _result = _H.cstr_to_str(C.wxLocale_GetString(self._ptr, _ws_szOrigString, _ws_szDomain))
     _H.wxs_free(_ws_szOrigString)
     _H.wxs_free(_ws_szDomain)
     return _result

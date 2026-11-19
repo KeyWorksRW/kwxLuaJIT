@@ -37,6 +37,10 @@ function M:GetURLEnd()
     return C.wxTextUrlEvent_GetURLEnd(self._ptr)
 end
 
+function M:GetString()
+    return _H.wxs_to_str(C.wxTextUrlEvent_GetString(self._ptr))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

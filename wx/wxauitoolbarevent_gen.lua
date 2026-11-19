@@ -23,11 +23,11 @@ function M:IsDropDownClicked()
 end
 
 function M:GetClickPoint()
-    return _H.wrap("wxpoint_gen", C.wxAuiToolBarEvent_GetClickPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxAuiToolBarEvent_GetClickPoint(self._ptr), true)
 end
 
 function M:GetItemRect()
-    return _H.wrap("wxrect_gen", C.wxAuiToolBarEvent_GetItemRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxAuiToolBarEvent_GetItemRect(self._ptr), true)
 end
 
 function M:GetToolId()

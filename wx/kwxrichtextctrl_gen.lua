@@ -37,12 +37,52 @@ function M:SetOnCanInsertContent(pFunction)
     C.kwxRichTextCtrl_SetOnCanInsertContent(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnPrepareContentWithData(pFunction, data)
+    C.kwxRichTextCtrl_SetOnPrepareContentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCanDeleteRangeWithData(pFunction, data)
+    C.kwxRichTextCtrl_SetOnCanDeleteRangeWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCanInsertContentWithData(pFunction, data)
+    C.kwxRichTextCtrl_SetOnCanInsertContentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
 function M:SetCanDeleteRangeResult(result)
     C.kwxRichTextCtrl_SetCanDeleteRangeResult(self._ptr, _H.from_bool(result))
 end
 
 function M:SetCanInsertContentResult(result)
     C.kwxRichTextCtrl_SetCanInsertContentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetCallbackObject(object)
+    C.kwxRichTextCtrl_SetCallbackObject(self._ptr, _H.ptr(object))
+end
+
+function M:GetCallbackObject()
+    return C.kwxRichTextCtrl_GetCallbackObject(self._ptr)
+end
+
+function M:SetLockId(id)
+    C.kwxRichTextCtrl_SetLockId(self._ptr, id)
+end
+
+function M:GetLockId()
+    return C.kwxRichTextCtrl_GetLockId(self._ptr)
+end
+
+function M:BeginLock()
+    C.kwxRichTextCtrl_BeginLock(self._ptr)
+end
+
+function M:EndLock()
+    C.kwxRichTextCtrl_EndLock(self._ptr)
+end
+
+function M:IsLocked()
+    return _H.to_bool(C.kwxRichTextCtrl_IsLocked(self._ptr))
 end
 
 --- Delete the underlying C++ object.

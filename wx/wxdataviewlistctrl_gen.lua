@@ -3,7 +3,8 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxdataviewctrl_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
 --- Wrap an existing C pointer.  The wrapper does not own the native object unless
@@ -46,33 +47,33 @@ function M:InsertColumn(pos, column, variantType)
 end
 
 function M:GetStore()
-    return C.wxDataViewListCtrl_GetStore(self._ptr)
+    return _H.wrap("wxdataviewliststore_gen", C.wxDataViewListCtrl_GetStore(self._ptr))
 end
 
 function M:AppendTextColumn(label, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewListCtrl_AppendTextColumn(self._ptr, _ws_label, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewListCtrl_AppendTextColumn(self._ptr, _ws_label, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendToggleColumn(label, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewListCtrl_AppendToggleColumn(self._ptr, _ws_label, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewListCtrl_AppendToggleColumn(self._ptr, _ws_label, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendProgressColumn(label, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewListCtrl_AppendProgressColumn(self._ptr, _ws_label, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewListCtrl_AppendProgressColumn(self._ptr, _ws_label, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendIconTextColumn(label, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewListCtrl_AppendIconTextColumn(self._ptr, _ws_label, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewListCtrl_AppendIconTextColumn(self._ptr, _ws_label, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end

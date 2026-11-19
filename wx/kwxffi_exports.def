@@ -7,10 +7,11 @@ EXPORTS
     BitmapDataObject_SetBitmap
     Cursor_CreateFromImage
     Cursor_CreateFromStock
+    Cursor_CreateFromXPMString
     Cursor_CreateLoad
     DropSource_Create
+    DropSource_CreateDefault
     DropSource_Delete
-    DropSource_DoDragDrop
     FileDataObject_AddFile
     FileDataObject_Create
     FileDataObject_Delete
@@ -268,9 +269,11 @@ EXPORTS
     exp_wxEVT_AUITOOLBAR_RIGHT_CLICK
     exp_wxEVT_AUITOOLBAR_TOOL_DROPDOWN
     exp_wxEVT_AUI_FIND_MANAGER
+    exp_wxEVT_AUI_PANE_ACTIVATED
     exp_wxEVT_AUI_PANE_BUTTON
     exp_wxEVT_AUI_PANE_CLOSE
     exp_wxEVT_AUI_PANE_MAXIMIZE
+    exp_wxEVT_AUI_PANE_MINIMIZE
     exp_wxEVT_AUI_PANE_RESTORE
     exp_wxEVT_AUI_RENDER
     exp_wxEVT_AUX1_DCLICK
@@ -768,12 +771,14 @@ EXPORTS
     expwxART_ADD_BOOKMARK
     expwxART_BUTTON
     expwxART_CDROM
+    expwxART_CLOSE
     expwxART_CMN_DIALOG
     expwxART_COPY
     expwxART_CROSS_MARK
     expwxART_CUT
     expwxART_DELETE
     expwxART_DEL_BOOKMARK
+    expwxART_EDIT
     expwxART_ERROR
     expwxART_EXECUTABLE_FILE
     expwxART_FILE_OPEN
@@ -786,6 +791,8 @@ EXPORTS
     expwxART_FOLDER_OPEN
     expwxART_FRAME_ICON
     expwxART_FULL_SCREEN
+    expwxART_GOTO_FIRST
+    expwxART_GOTO_LAST
     expwxART_GO_BACK
     expwxART_GO_DIR_UP
     expwxART_GO_DOWN
@@ -802,26 +809,51 @@ EXPORTS
     expwxART_HELP_SETTINGS
     expwxART_HELP_SIDE_PANEL
     expwxART_INFORMATION
+    expwxART_LIST
     expwxART_LIST_VIEW
     expwxART_MENU
     expwxART_MESSAGE_BOX
+    expwxART_MINUS
     expwxART_MISSING_IMAGE
     expwxART_NEW
     expwxART_NEW_DIR
     expwxART_NORMAL_FILE
     expwxART_OTHER
     expwxART_PASTE
+    expwxART_PLUS
     expwxART_PRINT
     expwxART_QUESTION
     expwxART_QUIT
     expwxART_REDO
+    expwxART_REFRESH
     expwxART_REMOVABLE
     expwxART_REPORT_VIEW
+    expwxART_STOP
     expwxART_TICK_MARK
     expwxART_TIP
     expwxART_TOOLBAR
     expwxART_UNDO
     expwxART_WARNING
+    expwxART_WX_LOGO
+    expwxAUI_BUTTON_CLOSE
+    expwxAUI_BUTTON_CUSTOM1
+    expwxAUI_BUTTON_CUSTOM2
+    expwxAUI_BUTTON_CUSTOM3
+    expwxAUI_BUTTON_DOWN
+    expwxAUI_BUTTON_LEFT
+    expwxAUI_BUTTON_MAXIMIZE_RESTORE
+    expwxAUI_BUTTON_MINIMIZE
+    expwxAUI_BUTTON_OPTIONS
+    expwxAUI_BUTTON_PIN
+    expwxAUI_BUTTON_RIGHT
+    expwxAUI_BUTTON_STATE_CHECKED
+    expwxAUI_BUTTON_STATE_DISABLED
+    expwxAUI_BUTTON_STATE_HIDDEN
+    expwxAUI_BUTTON_STATE_HOVER
+    expwxAUI_BUTTON_STATE_NORMAL
+    expwxAUI_BUTTON_STATE_PRESSED
+    expwxAUI_BUTTON_UP
+    expwxAUI_BUTTON_WINDOWLIST
     expwxAUI_DOCKART_ACTIVE_CAPTION_COLOUR
     expwxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR
     expwxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR
@@ -836,13 +868,25 @@ EXPORTS
     expwxAUI_DOCKART_PANE_BORDER_SIZE
     expwxAUI_DOCKART_SASH_COLOUR
     expwxAUI_DOCKART_SASH_SIZE
+    expwxAUI_DOCK_BOTTOM
+    expwxAUI_DOCK_CENTER
+    expwxAUI_DOCK_CENTRE
+    expwxAUI_DOCK_LEFT
+    expwxAUI_DOCK_NONE
+    expwxAUI_DOCK_RIGHT
+    expwxAUI_DOCK_TOP
     expwxAUI_GRADIENT_HORIZONTAL
     expwxAUI_GRADIENT_NONE
     expwxAUI_GRADIENT_VERTICAL
+    expwxAUI_INSERT_DOCK
+    expwxAUI_INSERT_PANE
+    expwxAUI_INSERT_ROW
     expwxAUI_MGR_ALLOW_ACTIVE_PANE
     expwxAUI_MGR_ALLOW_FLOATING
+    expwxAUI_MGR_DEFAULT
     expwxAUI_MGR_HINT_FADE
     expwxAUI_MGR_LIVE_RESIZE
+    expwxAUI_MGR_NO_VENETIAN_BLINDS_FADE
     expwxAUI_MGR_RECTANGLE_HINT
     expwxAUI_MGR_TRANSPARENT_DRAG
     expwxAUI_MGR_TRANSPARENT_HINT
@@ -856,6 +900,7 @@ EXPORTS
     expwxAUI_NB_CLOSE_ON_ACTIVE_TAB
     expwxAUI_NB_CLOSE_ON_ALL_TABS
     expwxAUI_NB_DEFAULT_STYLE
+    expwxAUI_NB_MIDDLE_CLICK_CLOSE
     expwxAUI_NB_MULTILINE
     expwxAUI_NB_PIN_ON_ACTIVE_TAB
     expwxAUI_NB_SCROLL_BUTTONS
@@ -866,10 +911,18 @@ EXPORTS
     expwxAUI_NB_TOP
     expwxAUI_NB_UNPIN_ON_ALL_PINNED
     expwxAUI_NB_WINDOWLIST_BUTTON
+    expwxAUI_TAB_LOCKED
+    expwxAUI_TAB_NORMAL
+    expwxAUI_TAB_PINNED
     expwxAUI_TB_DEFAULT_STYLE
+    expwxAUI_TB_GRIPPER
     expwxAUI_TB_HORIZONTAL
+    expwxAUI_TB_HORZ_LAYOUT
     expwxAUI_TB_HORZ_TEXT
+    expwxAUI_TB_NO_AUTORESIZE
+    expwxAUI_TB_NO_TOOLTIPS
     expwxAUI_TB_OVERFLOW
+    expwxAUI_TB_PLAIN_BACKGROUND
     expwxAUI_TB_TEXT
     expwxAUI_TB_VERTICAL
     expwxApp_AppearanceResult_CannotChange
@@ -950,6 +1003,7 @@ EXPORTS
     expwxBMP_8BPP_GREY
     expwxBMP_8BPP_PALETTE
     expwxBMP_8BPP_RED
+    expwxBORDER
     expwxBORDER_DEFAULT
     expwxBORDER_DOUBLE
     expwxBORDER_MASK
@@ -975,6 +1029,16 @@ EXPORTS
     expwxBRUSHSTYLE_STIPPLE_MASK_OPAQUE
     expwxBRUSHSTYLE_TRANSPARENT
     expwxBRUSHSTYLE_VERTICAL_HATCH
+    expwxBRUSH_STOCK_BLACK
+    expwxBRUSH_STOCK_BLUE
+    expwxBRUSH_STOCK_CYAN
+    expwxBRUSH_STOCK_GREEN
+    expwxBRUSH_STOCK_GREY
+    expwxBRUSH_STOCK_LIGHT_GREY
+    expwxBRUSH_STOCK_MEDIUM_GREY
+    expwxBRUSH_STOCK_RED
+    expwxBRUSH_STOCK_TRANSPARENT
+    expwxBRUSH_STOCK_WHITE
     expwxBU_AUTODRAW
     expwxBU_BOTTOM
     expwxBU_EXACTFIT
@@ -1044,6 +1108,13 @@ EXPORTS
     expwxCMD_LINE_VAL_STRING
     expwxCMD_SWITCH_ON
     expwxCOLOURED
+    expwxCOLOUR_STOCK_BLACK
+    expwxCOLOUR_STOCK_BLUE
+    expwxCOLOUR_STOCK_CYAN
+    expwxCOLOUR_STOCK_GREEN
+    expwxCOLOUR_STOCK_LIGHT_GREY
+    expwxCOLOUR_STOCK_RED
+    expwxCOLOUR_STOCK_WHITE
     expwxCOL_DEFAULT_FLAGS
     expwxCOL_HIDDEN
     expwxCOL_REORDERABLE
@@ -1124,6 +1195,7 @@ EXPORTS
     expwxDD_SHOW_HIDDEN
     expwxDEFAULT_DIALOG_STYLE
     expwxDEFAULT_FRAME_STYLE
+    expwxDEFAULT_TEMPLATE_FLAGS
     expwxDF_BITMAP
     expwxDF_DIB
     expwxDF_DIF
@@ -1165,6 +1237,7 @@ EXPORTS
     expwxDIR_IGNORE
     expwxDIR_NO_FOLLOW
     expwxDIR_STOP
+    expwxDOC_NEW
     expwxDOC_SILENT
     expwxDOUBLE_BORDER
     expwxDOWN
@@ -1176,6 +1249,14 @@ EXPORTS
     expwxDUPLEX_HORIZONTAL
     expwxDUPLEX_SIMPLEX
     expwxDUPLEX_VERTICAL
+    expwxDVR_DEFAULT_ALIGNMENT
+    expwxDV_HORIZ_RULES
+    expwxDV_MULTIPLE
+    expwxDV_NO_HEADER
+    expwxDV_ROW_LINES
+    expwxDV_SINGLE
+    expwxDV_VARIABLE_LINE_HEIGHT
+    expwxDV_VERT_RULES
     expwxDateTime_Apr
     expwxDateTime_Aug
     expwxDateTime_Country_Default
@@ -1204,6 +1285,8 @@ EXPORTS
     expwxDateTime_Thu
     expwxDateTime_Tue
     expwxDateTime_Wed
+    expwxDebugReport_Context_Current
+    expwxDebugReport_Context_Exception
     expwxDefaultCoord
     expwxDirDialogDefaultFolderStr
     expwxDragCancel
@@ -1355,6 +1438,10 @@ EXPORTS
     expwxFONTWEIGHT_NORMAL
     expwxFONTWEIGHT_SEMIBOLD
     expwxFONTWEIGHT_THIN
+    expwxFONT_STOCK_ITALIC
+    expwxFONT_STOCK_NORMAL
+    expwxFONT_STOCK_SMALL
+    expwxFONT_STOCK_SWISS
     expwxFORWARD
     expwxFRAME_EX_CONTEXTHELP
     expwxFRAME_FLOAT_ON_PARENT
@@ -1454,6 +1541,7 @@ EXPORTS
     expwxICONIZE
     expwxICON_AUTH_NEEDED
     expwxICON_ERROR
+    expwxICON_HAND
     expwxICON_INFORMATION
     expwxICON_NONE
     expwxICON_QUESTION
@@ -1970,6 +2058,7 @@ EXPORTS
     expwxNORMAL_FONT
     expwxNORTH
     expwxNOT_FOUND
+    expwxNO_BORDER
     expwxNO_DEFAULT
     expwxNO_FULL_REPAINT_ON_RESIZE
     expwxNO_OP
@@ -2106,6 +2195,16 @@ EXPORTS
     expwxPENSTYLE_TRANSPARENT
     expwxPENSTYLE_USER_DASH
     expwxPENSTYLE_VERTICAL_HATCH
+    expwxPEN_STOCK_BLACK
+    expwxPEN_STOCK_BLACK_DASHED
+    expwxPEN_STOCK_CYAN
+    expwxPEN_STOCK_GREEN
+    expwxPEN_STOCK_GREY
+    expwxPEN_STOCK_LIGHT_GREY
+    expwxPEN_STOCK_MEDIUM_GREY
+    expwxPEN_STOCK_RED
+    expwxPEN_STOCK_TRANSPARENT
+    expwxPEN_STOCK_WHITE
     expwxPG_ARRAY_DELIMITER
     expwxPG_ATTR_AUTOCOMPLETE
     expwxPG_ATTR_DEFAULT_VALUE
@@ -2210,6 +2309,7 @@ EXPORTS
     expwxPROPSHEET_BUTTONTOOLBOOK
     expwxPROPSHEET_SHRINKTOFIT
     expwxPROPSHEET_TOOLBOOK
+    expwxRAISED_BORDER
     expwxRA_SPECIFY_COLS
     expwxRA_SPECIFY_ROWS
     expwxRB_GROUP
@@ -2355,6 +2455,7 @@ EXPORTS
     expwxROLE_SYSTEM_TOOLTIP
     expwxROLE_SYSTEM_WHITESPACE
     expwxROLE_SYSTEM_WINDOW
+    expwxRichTextFormattingDialog_Option_AllowPixelFontSize
     expwxSASH_BOTTOM
     expwxSASH_DRAG_DRAGGING
     expwxSASH_DRAG_LEFT_DOWN
@@ -2403,6 +2504,7 @@ EXPORTS
     expwxSIGSYS
     expwxSIGTERM
     expwxSIGTRAP
+    expwxSIMPLE_BORDER
     expwxSIZE_ALLOW_MINUS_ONE
     expwxSIZE_AUTO
     expwxSIZE_AUTO_HEIGHT
@@ -2464,6 +2566,7 @@ EXPORTS
     expwxSP_WRAP
     expwxSRC_INVERT
     expwxSTANDARD_CURSOR
+    expwxSTATIC_BORDER
     expwxSTAY_ON_TOP
     expwxSTB_DEFAULT_STYLE
     expwxSTB_ELLIPSIZE_END
@@ -2484,6 +2587,7 @@ EXPORTS
     expwxST_NO_AUTORESIZE
     expwxST_SIZEGRIP
     expwxST_WRAP
+    expwxSUNKEN_BORDER
     expwxSWISS_FONT
     expwxSW_3D
     expwxSW_3DBORDER
@@ -2631,6 +2735,8 @@ EXPORTS
     expwxTC_MULTILINE
     expwxTC_OWNERDRAW
     expwxTC_RIGHTJUSTIFY
+    expwxTEMPLATE_INVISIBLE
+    expwxTEMPLATE_VISIBLE
     expwxTEXT_ALIGNMENT_CENTRE
     expwxTEXT_ALIGNMENT_JUSTIFIED
     expwxTEXT_ALIGNMENT_LEFT
@@ -2769,6 +2875,7 @@ EXPORTS
     expwxTOP
     expwxTOUCH_ALL_GESTURES
     expwxTOUCH_RAW_EVENTS
+    expwxTRACE_OleCalls
     expwxTRANSPARENT
     expwxTRANSPARENT_BRUSH
     expwxTRANSPARENT_PEN
@@ -2872,6 +2979,7 @@ EXPORTS
     expwxYES_DEFAULT
     expwxYES_NO
     expwxZIP_FORMAT_ZIP64
+    kwxAccString_SetValue
     kwxAddRemoveAdaptor_Create
     kwxAddRemoveAdaptor_Delete
     kwxAddRemoveAdaptor_SetCanAdd
@@ -2908,10 +3016,21 @@ EXPORTS
     kwxApp_SetOnGetClassInfo
     kwxApp_SetOnOnAssertFailure
     kwxApp_SetOnOnCmdLineParsed
+    kwxApp_SetOnOnExceptionInMainLoop
     kwxApp_SetOnOnExit
+    kwxApp_SetOnOnFatalException
     kwxApp_SetOnOnInitCmdLine
+    kwxApp_SetOnOnUnhandledException
+    kwxApp_SetOnRethrowStoredException
+    kwxApp_SetOnStoreCurrentException
     kwxArtProv_Create
+    kwxArtProv_GetRequestedHeight
+    kwxArtProv_GetRequestedWidth
+    kwxArtProv_Push
+    kwxArtProv_PushBack
     kwxArtProv_Release
+    kwxArtProv_SetCreateBitmapResult
+    kwxArtProv_SetOnCreateBitmapWithData
     kwxAuiCallbackResult_GetPointer
     kwxAuiCallbackResult_SetPointer
     kwxAuiDeserializer_AfterLoad
@@ -2994,10 +3113,14 @@ EXPORTS
     kwxConnection_SetOnStopAdvise
     kwxConnection_StartAdvise
     kwxConnection_StopAdvise
+    kwxConsoleCheckBuildOptions
     kwxConsoleExitMainLoop
     kwxConsoleGetApp
     kwxConsoleInitialize
+    kwxConsoleInitializeFromArgs
     kwxConsoleIsInitialized
+    kwxConsoleOnCmdLineParsedBase
+    kwxConsoleOnInitCmdLineBase
     kwxConsoleProcessPendingEvents
     kwxConsoleRun
     kwxConsoleShutdown
@@ -3005,24 +3128,68 @@ EXPORTS
     kwxConstants_IntCount
     kwxConstants_IntTable
     kwxConstants_NameTable
+    kwxDebugReportUpload_Create
+    kwxDebugReportUpload_Delete
+    kwxDebugReportUpload_SetOnOnServerReply
+    kwxDebugReportUpload_SetOnServerReplyResult
+    kwxDocAuiChildFrame_Create
+    kwxDocAuiChildFrame_GetDocument
+    kwxDocAuiChildFrame_GetView
+    kwxDocAuiParentFrame_Create
+    kwxDocAuiParentFrame_GetDocumentManager
+    kwxDocTemplate_Create
+    kwxDocTemplate_SetCreatedDocument
+    kwxDocTemplate_SetCreatedView
+    kwxDocTemplate_SetOnCreateDocument
+    kwxDocTemplate_SetOnCreateView
     kwxDocument_Create
+    kwxDocument_CreateWithParent
     kwxDocument_Delete
+    kwxDocument_IsModifiedBase
+    kwxDocument_ModifyBase
+    kwxDocument_OnCreateBase
+    kwxDocument_OnOpenDocumentBase
+    kwxDocument_SetDoOpenDocumentResult
+    kwxDocument_SetDoSaveDocumentResult
+    kwxDocument_SetIsModifiedResult
+    kwxDocument_SetOnCreateResult
     kwxDocument_SetOnDoOpenDocument
+    kwxDocument_SetOnDoOpenDocumentWithData
     kwxDocument_SetOnDoSaveDocument
+    kwxDocument_SetOnDoSaveDocumentWithData
     kwxDocument_SetOnGetClassInfo
     kwxDocument_SetOnIsModified
+    kwxDocument_SetOnIsModifiedWithData
     kwxDocument_SetOnModify
+    kwxDocument_SetOnModifyWithData
     kwxDocument_SetOnOnCreate
+    kwxDocument_SetOnOnCreateWithData
     kwxDocument_SetOnOnOpenDocument
+    kwxDocument_SetOnOnOpenDocumentWithData
+    kwxDocument_SetOnOpenDocumentResult
     kwxDragDataObject_Create
     kwxDragDataObject_Delete
     kwxDropTarget_Create
     kwxDropTarget_Delete
+    kwxDropTarget_GetDropResult
+    kwxDropTarget_SetDataResult
+    kwxDropTarget_SetDragOverResult
+    kwxDropTarget_SetDropResult
+    kwxDropTarget_SetEnterResult
     kwxDropTarget_SetOnData
+    kwxDropTarget_SetOnDataWithData
     kwxDropTarget_SetOnDragOver
+    kwxDropTarget_SetOnDragOverWithData
     kwxDropTarget_SetOnDrop
+    kwxDropTarget_SetOnDropWithData
     kwxDropTarget_SetOnEnter
+    kwxDropTarget_SetOnEnterWithData
     kwxDropTarget_SetOnLeave
+    kwxDropTarget_SetOnLeaveWithData
+    kwxDynamicLibraryList_Create
+    kwxDynamicLibraryList_Delete
+    kwxDynamicLibraryList_GetCount
+    kwxDynamicLibraryList_GetDetails
     kwxEndBusyCursor
     kwxEvent_Create
     kwxEvent_Delete
@@ -3032,15 +3199,38 @@ EXPORTS
     kwxEvtHandler_SetOnProcessEvent
     kwxFileDropTarget_Create
     kwxFileDropTarget_Delete
+    kwxFileDropTarget_GetDropFiles
+    kwxFileDropTarget_GetDropResult
+    kwxFileDropTarget_SetDataResult
+    kwxFileDropTarget_SetDragOverResult
+    kwxFileDropTarget_SetDropFilesResult
+    kwxFileDropTarget_SetDropResult
+    kwxFileDropTarget_SetEnterResult
     kwxFileDropTarget_SetOnData
+    kwxFileDropTarget_SetOnDataWithData
     kwxFileDropTarget_SetOnDragOver
+    kwxFileDropTarget_SetOnDragOverWithData
     kwxFileDropTarget_SetOnDrop
+    kwxFileDropTarget_SetOnDropFilesWithData
+    kwxFileDropTarget_SetOnDropWithData
     kwxFileDropTarget_SetOnEnter
+    kwxFileDropTarget_SetOnEnterWithData
     kwxFileDropTarget_SetOnLeave
+    kwxFileDropTarget_SetOnLeaveWithData
     kwxFileSystemHandler_Create
     kwxFileSystemHandler_Delete
     kwxFileSystemHandler_SetOnCanOpen
     kwxFileSystemHandler_SetOnOpenFile
+    kwxFrame_Create
+    kwxFrame_Delete
+    kwxFrame_GetCallbackObject
+    kwxFrame_SetCallbackObject
+    kwxFrame_SetOnProcessEvent
+    kwxFrame_SetOnProcessEventWithData
+    kwxFrame_SetOnTryBefore
+    kwxFrame_SetOnTryBeforeWithData
+    kwxFrame_SetProcessEventResult
+    kwxFrame_SetTryBeforeResult
     kwxFree
     kwxGetMousePosition
     kwxGetMousePositionPoint
@@ -3125,6 +3315,7 @@ EXPORTS
     kwxLogGui_Delete
     kwxLogGui_GetPendingStyle
     kwxLogGui_SetOnDoShowSingleLogMessage
+    kwxLogUseStderr
     kwxLog_AddTraceMask
     kwxLog_Create
     kwxLog_Delete
@@ -3147,6 +3338,21 @@ EXPORTS
     kwxLog_SetTimestamp
     kwxLog_SetVerbose
     kwxLog_Suspend
+    kwxMSAA_FromWindow
+    kwxMSAA_GetAccessibleChild
+    kwxMSAA_GetAccessibleChildCount
+    kwxMSAA_GetChild
+    kwxMSAA_GetChildCount
+    kwxMSAA_GetDescription
+    kwxMSAA_GetDescriptionWithStatus
+    kwxMSAA_GetName
+    kwxMSAA_GetNameWithStatus
+    kwxMSAA_GetRoleText
+    kwxMSAA_GetRoleTextWithStatus
+    kwxMSAA_GetState
+    kwxMSAA_GetValue
+    kwxMSAA_GetValueWithStatus
+    kwxMSAA_Release
     kwxMalloc
     kwxMessageBox
     kwxMessageOutputReset
@@ -3247,13 +3453,23 @@ EXPORTS
     kwxRendererNative_Delete
     kwxRendererNative_SetOnDrawHeaderButton
     kwxRendererNative_SetOnGetVersion
+    kwxRichTextCtrl_BeginLock
     kwxRichTextCtrl_Create
     kwxRichTextCtrl_Delete
+    kwxRichTextCtrl_EndLock
+    kwxRichTextCtrl_GetCallbackObject
+    kwxRichTextCtrl_GetLockId
+    kwxRichTextCtrl_IsLocked
+    kwxRichTextCtrl_SetCallbackObject
     kwxRichTextCtrl_SetCanDeleteRangeResult
     kwxRichTextCtrl_SetCanInsertContentResult
+    kwxRichTextCtrl_SetLockId
     kwxRichTextCtrl_SetOnCanDeleteRange
+    kwxRichTextCtrl_SetOnCanDeleteRangeWithData
     kwxRichTextCtrl_SetOnCanInsertContent
+    kwxRichTextCtrl_SetOnCanInsertContentWithData
     kwxRichTextCtrl_SetOnPrepareContent
+    kwxRichTextCtrl_SetOnPrepareContentWithData
     kwxRichTextDrawingHandler_Create
     kwxRichTextDrawingHandler_Delete
     kwxRichTextDrawingHandler_SetGetVirtualAttributesResult
@@ -3261,21 +3477,32 @@ EXPORTS
     kwxRichTextDrawingHandler_SetHasVirtualAttributesResult
     kwxRichTextDrawingHandler_SetHasVirtualTextResult
     kwxRichTextDrawingHandler_SetOnGetVirtualAttributes
+    kwxRichTextDrawingHandler_SetOnGetVirtualAttributesWithData
     kwxRichTextDrawingHandler_SetOnGetVirtualSubobjectAttributesCount
+    kwxRichTextDrawingHandler_SetOnGetVirtualSubobjectAttributesCountWithData
     kwxRichTextDrawingHandler_SetOnGetVirtualText
+    kwxRichTextDrawingHandler_SetOnGetVirtualTextWithData
     kwxRichTextDrawingHandler_SetOnHasVirtualAttributes
+    kwxRichTextDrawingHandler_SetOnHasVirtualAttributesWithData
     kwxRichTextDrawingHandler_SetOnHasVirtualText
+    kwxRichTextDrawingHandler_SetOnHasVirtualTextWithData
     kwxRichTextDrawingHandler_SetVirtualTextResult
     kwxRichTextFieldTypeStandard_Create
+    kwxRichTextFieldTypeStandard_CreateWithBitmap
     kwxRichTextFieldTypeStandard_Delete
     kwxRichTextFieldTypeStandard_SetCanEditPropertiesResult
     kwxRichTextFieldTypeStandard_SetEditPropertiesResult
     kwxRichTextFieldTypeStandard_SetIsTopLevelResult
     kwxRichTextFieldTypeStandard_SetOnCanEditProperties
+    kwxRichTextFieldTypeStandard_SetOnCanEditPropertiesWithData
     kwxRichTextFieldTypeStandard_SetOnEditProperties
+    kwxRichTextFieldTypeStandard_SetOnEditPropertiesWithData
     kwxRichTextFieldTypeStandard_SetOnGetPropertiesMenuLabel
+    kwxRichTextFieldTypeStandard_SetOnGetPropertiesMenuLabelWithData
     kwxRichTextFieldTypeStandard_SetOnIsTopLevel
+    kwxRichTextFieldTypeStandard_SetOnIsTopLevelWithData
     kwxRichTextFieldTypeStandard_SetOnUpdateField
+    kwxRichTextFieldTypeStandard_SetOnUpdateFieldWithData
     kwxRichTextFieldTypeStandard_SetPropertiesMenuLabelResult
     kwxRichTextFieldTypeStandard_SetUpdateFieldResult
     kwxServer_Create
@@ -3286,6 +3513,9 @@ EXPORTS
     kwxSetPixelRGBA
     kwxSetPixelRowRGB
     kwxSetPixelRowRGBA
+    kwxStderr
+    kwxStdin
+    kwxStdout
     kwxSvgStringFromBase64
     kwxSysErrorCode
     kwxSysErrorMsg
@@ -3295,11 +3525,24 @@ EXPORTS
     kwxTextCompleterSimple_SetOnGetCompletions
     kwxTextDropTarget_Create
     kwxTextDropTarget_Delete
+    kwxTextDropTarget_GetDropResult
+    kwxTextDropTarget_GetDropText
+    kwxTextDropTarget_SetDataResult
+    kwxTextDropTarget_SetDragOverResult
+    kwxTextDropTarget_SetDropResult
+    kwxTextDropTarget_SetDropTextResult
+    kwxTextDropTarget_SetEnterResult
     kwxTextDropTarget_SetOnData
+    kwxTextDropTarget_SetOnDataWithData
     kwxTextDropTarget_SetOnDragOver
+    kwxTextDropTarget_SetOnDragOverWithData
     kwxTextDropTarget_SetOnDrop
+    kwxTextDropTarget_SetOnDropTextWithData
+    kwxTextDropTarget_SetOnDropWithData
     kwxTextDropTarget_SetOnEnter
+    kwxTextDropTarget_SetOnEnterWithData
     kwxTextDropTarget_SetOnLeave
+    kwxTextDropTarget_SetOnLeaveWithData
     kwxTextValidator_Create
     kwxTimer_Create
     kwxTimer_Delete
@@ -3336,11 +3579,26 @@ EXPORTS
     kwxVariantData_SetOnGetType
     kwxView_Create
     kwxView_Delete
+    kwxView_OnCloseBase
+    kwxView_SetOnCloseResult
+    kwxView_SetOnCreateResult
     kwxView_SetOnOnClose
+    kwxView_SetOnOnCloseWithData
     kwxView_SetOnOnCreate
+    kwxView_SetOnOnCreateWithData
     kwxView_SetOnOnDraw
     kwxView_SetOnOnUpdate
     kwxWakeUpIdle
+    kwxWizardPageSimple_Create
+    kwxWizardPageSimple_Delete
+    kwxWizardPageSimple_SetOnGetNext
+    kwxWizardPageSimple_SetOnGetNextOut
+    kwxWizardPageSimple_SetOnGetPrev
+    kwxWizardPageSimple_SetOnGetPrevOut
+    kwxWizardPageSimple_SetOnTransferDataFromWindow
+    kwxWizardPageSimple_SetOnTransferDataFromWindowOut
+    kwxWizardPageSimple_SetOnTransferDataToWindow
+    kwxWizardPageSimple_SetOnTransferDataToWindowOut
     kwxWizardPage_Create
     kwxWizardPage_Create2
     kwxWizardPage_Delete
@@ -3406,23 +3664,52 @@ EXPORTS
     wxAccessible_Delete
     wxAccessible_GetWindow
     wxAccessible_NotifyEvent
+    wxAccessible_SetGetChildCountResult
+    wxAccessible_SetGetChildResult
+    wxAccessible_SetGetFocusResult
+    wxAccessible_SetGetLocationResult
+    wxAccessible_SetGetParentResult
+    wxAccessible_SetGetRoleResult
+    wxAccessible_SetGetStateResult
+    wxAccessible_SetHitTestResult
+    wxAccessible_SetHookResult
+    wxAccessible_SetNavigateResult
     wxAccessible_SetOnDoDefaultAction
+    wxAccessible_SetOnDoDefaultActionWithData
     wxAccessible_SetOnGetChild
     wxAccessible_SetOnGetChildCount
+    wxAccessible_SetOnGetChildCountWithData
+    wxAccessible_SetOnGetChildWithData
     wxAccessible_SetOnGetDefaultAction
+    wxAccessible_SetOnGetDefaultActionWithData
     wxAccessible_SetOnGetDescription
+    wxAccessible_SetOnGetDescriptionWithData
     wxAccessible_SetOnGetFocus
+    wxAccessible_SetOnGetFocusWithData
     wxAccessible_SetOnGetHelpText
+    wxAccessible_SetOnGetHelpTextWithData
     wxAccessible_SetOnGetKeyboardShortcut
+    wxAccessible_SetOnGetKeyboardShortcutWithData
     wxAccessible_SetOnGetLocation
+    wxAccessible_SetOnGetLocationWithData
     wxAccessible_SetOnGetName
+    wxAccessible_SetOnGetNameWithData
     wxAccessible_SetOnGetParent
+    wxAccessible_SetOnGetParentWithData
     wxAccessible_SetOnGetRole
+    wxAccessible_SetOnGetRoleWithData
+    wxAccessible_SetOnGetSelections
+    wxAccessible_SetOnGetSelectionsWithData
     wxAccessible_SetOnGetState
+    wxAccessible_SetOnGetStateWithData
     wxAccessible_SetOnGetValue
+    wxAccessible_SetOnGetValueWithData
     wxAccessible_SetOnHitTest
+    wxAccessible_SetOnHitTestWithData
     wxAccessible_SetOnNavigate
+    wxAccessible_SetOnNavigateWithData
     wxAccessible_SetOnSelect
+    wxAccessible_SetOnSelectWithData
     wxAccessible_SetWindow
     wxActivateEvent_GetActive
     wxActivityIndicator_Create
@@ -3549,8 +3836,13 @@ EXPORTS
     wxApp_SetOnGetClassInfo
     wxApp_SetOnOnAssertFailure
     wxApp_SetOnOnCmdLineParsed
+    wxApp_SetOnOnExceptionInMainLoop
     wxApp_SetOnOnExit
+    wxApp_SetOnOnFatalException
     wxApp_SetOnOnInitCmdLine
+    wxApp_SetOnOnUnhandledException
+    wxApp_SetOnRethrowStoredException
+    wxApp_SetOnStoreCurrentException
     wxApp_SetVendorName
     wxApp_Yield
     wxArchiveClassFactory_Find
@@ -3615,11 +3907,13 @@ EXPORTS
     wxArtProvider_DeleteProvider
     wxArtProvider_GetBitmap
     wxArtProvider_GetBitmapBundle
+    wxArtProvider_GetBitmapBundleDefault
     wxArtProvider_GetIcon
     wxArtProvider_GetIconBundle
     wxArtProvider_GetNativeSizeHint
     wxArtProvider_GetSizeHint
     wxArtProvider_HasNativeProvider
+    wxArtProvider_MakeClientId
     wxArtProvider_Pop
     wxArtProvider_Push
     wxArtProvider_PushBack
@@ -3740,9 +4034,14 @@ EXPORTS
     wxAuiManager_AddPaneByPaneInfoAndDropPosition
     wxAuiManager_AllowDocksForMinPanes
     wxAuiManager_AlwaysUsesLiveResize
+    wxAuiManager_CalculateHintRect
+    wxAuiManager_CalculateNewSplitSize
+    wxAuiManager_CanDockPanel
+    wxAuiManager_ClosePane
     wxAuiManager_Create
     wxAuiManager_Delete
     wxAuiManager_DetachPane
+    wxAuiManager_DrawHintRect
     wxAuiManager_GetAllPanes
     wxAuiManager_GetArtProvider
     wxAuiManager_GetDockSizeConstraint
@@ -3752,11 +4051,16 @@ EXPORTS
     wxAuiManager_GetPane
     wxAuiManager_GetPaneByName
     wxAuiManager_GetPaneByWindow
+    wxAuiManager_HasLiveResize
     wxAuiManager_HideHint
     wxAuiManager_InsertPane
     wxAuiManager_LoadLayout
     wxAuiManager_LoadPaneInfo
     wxAuiManager_LoadPerspective
+    wxAuiManager_MaximizePane
+    wxAuiManager_MinimizePane
+    wxAuiManager_RestoreMaximizedPane
+    wxAuiManager_RestorePane
     wxAuiManager_SaveLayout
     wxAuiManager_SavePaneInfo
     wxAuiManager_SavePerspective
@@ -3766,8 +4070,11 @@ EXPORTS
     wxAuiManager_SetFlags
     wxAuiManager_SetManagedWindow
     wxAuiManager_ShowHint
+    wxAuiManager_SplitPane
+    wxAuiManager_StartPaneDrag
     wxAuiManager_UnInit
     wxAuiManager_Update
+    wxAuiManager_UpdateHint
     wxAuiNativeTabArt_Clone
     wxAuiNativeTabArt_Create
     wxAuiNativeTabArt_SetActiveColour
@@ -3786,13 +4093,17 @@ EXPORTS
     wxAuiNotebookPage_Window
     wxAuiNotebook_AddPage
     wxAuiNotebook_AddPageWithBitmap
+    wxAuiNotebook_AddPageWithBundle
     wxAuiNotebook_AdvanceSelection
+    wxAuiNotebook_CalculateNewSplitSize
     wxAuiNotebook_ChangeSelection
     wxAuiNotebook_Create
     wxAuiNotebook_CreateDefault
     wxAuiNotebook_CreateFromDefault
     wxAuiNotebook_DeleteAllPages
     wxAuiNotebook_DeletePage
+    wxAuiNotebook_FindTabCtrl
+    wxAuiNotebook_FindTabIndex
     wxAuiNotebook_GetActiveTabCtrl
     wxAuiNotebook_GetAllTabCtrls
     wxAuiNotebook_GetArtProvider
@@ -3809,10 +4120,12 @@ EXPORTS
     wxAuiNotebook_GetPageToolTip
     wxAuiNotebook_GetPagesInDisplayOrder
     wxAuiNotebook_GetSelection
+    wxAuiNotebook_GetTabCtrlFromPoint
     wxAuiNotebook_GetTabCtrlHeight
     wxAuiNotebook_HitTest
     wxAuiNotebook_InsertPage
     wxAuiNotebook_InsertPageWithBitmap
+    wxAuiNotebook_InsertPageWithBundle
     wxAuiNotebook_LoadLayout
     wxAuiNotebook_RemovePage
     wxAuiNotebook_SaveLayout
@@ -3822,6 +4135,7 @@ EXPORTS
     wxAuiNotebook_SetMeasuringFont
     wxAuiNotebook_SetNormalFont
     wxAuiNotebook_SetPageBitmap
+    wxAuiNotebook_SetPageBitmapBundle
     wxAuiNotebook_SetPageImage
     wxAuiNotebook_SetPageKind
     wxAuiNotebook_SetPageText
@@ -3891,6 +4205,7 @@ EXPORTS
     wxAuiPaneInfo_HasPinButton
     wxAuiPaneInfo_Hide
     wxAuiPaneInfo_Icon
+    wxAuiPaneInfo_IconBundle
     wxAuiPaneInfo_IconMin
     wxAuiPaneInfo_IsBottomDockable
     wxAuiPaneInfo_IsDockable
@@ -4122,6 +4437,7 @@ EXPORTS
     wxAuiToolBarItem_Copy
     wxAuiToolBarItem_Create
     wxAuiToolBarItem_CreateDefault
+    wxAuiToolBarItem_Delete
     wxAuiToolBarItem_GetAlignment
     wxAuiToolBarItem_GetBitmap
     wxAuiToolBarItem_GetDisabledBitmap
@@ -4166,8 +4482,11 @@ EXPORTS
     wxAuiToolBar_AddSpacer
     wxAuiToolBar_AddStretchSpacer
     wxAuiToolBar_AddTool
+    wxAuiToolBar_AddToolBundle
     wxAuiToolBar_AddToolByBitmap
+    wxAuiToolBar_AddToolByBitmapBundle
     wxAuiToolBar_AddToolByLabel
+    wxAuiToolBar_AddToolByLabelBundle
     wxAuiToolBar_Clear
     wxAuiToolBar_ClearTools
     wxAuiToolBar_Create
@@ -4176,6 +4495,8 @@ EXPORTS
     wxAuiToolBar_Delete
     wxAuiToolBar_DeleteByIndex
     wxAuiToolBar_DeleteTool
+    wxAuiToolBar_DestroyTool
+    wxAuiToolBar_DestroyToolByIndex
     wxAuiToolBar_EnableTool
     wxAuiToolBar_FindControl
     wxAuiToolBar_FindTool
@@ -4189,6 +4510,7 @@ EXPORTS
     wxAuiToolBar_GetToolBitmap
     wxAuiToolBar_GetToolBitmapSize
     wxAuiToolBar_GetToolBorderPadding
+    wxAuiToolBar_GetToolClientData
     wxAuiToolBar_GetToolCount
     wxAuiToolBar_GetToolDropDown
     wxAuiToolBar_GetToolEnabled
@@ -4218,8 +4540,10 @@ EXPORTS
     wxAuiToolBar_SetMarginsXY
     wxAuiToolBar_SetOverflowVisible
     wxAuiToolBar_SetToolBitmap
+    wxAuiToolBar_SetToolBitmapBundle
     wxAuiToolBar_SetToolBitmapSize
     wxAuiToolBar_SetToolBorderPadding
+    wxAuiToolBar_SetToolClientData
     wxAuiToolBar_SetToolDropDown
     wxAuiToolBar_SetToolLabel
     wxAuiToolBar_SetToolLongHelp
@@ -4251,6 +4575,7 @@ EXPORTS
     wxBitmapBundleBuilder_AddData
     wxBitmapBundleBuilder_Build
     wxBitmapBundleBuilder_Create
+    wxBitmapBundle_CreateDefault
     wxBitmapBundle_CreateFromBase64
     wxBitmapBundle_CreateFromData
     wxBitmapBundle_CreateFromSVGBase64
@@ -4263,6 +4588,7 @@ EXPORTS
     wxBitmapBundle_GetIcon
     wxBitmapBundle_IsOk
     wxBitmapButton_Create
+    wxBitmapButton_CreateWithBundle
     wxBitmapButton_GetBitmapDisabled
     wxBitmapButton_GetBitmapFocus
     wxBitmapButton_GetBitmapLabel
@@ -4270,9 +4596,13 @@ EXPORTS
     wxBitmapButton_GetMarginX
     wxBitmapButton_GetMarginY
     wxBitmapButton_SetBitmapDisabled
+    wxBitmapButton_SetBitmapDisabledBundle
     wxBitmapButton_SetBitmapFocus
+    wxBitmapButton_SetBitmapFocusBundle
     wxBitmapButton_SetBitmapLabel
+    wxBitmapButton_SetBitmapLabelBundle
     wxBitmapButton_SetBitmapSelected
+    wxBitmapButton_SetBitmapSelectedBundle
     wxBitmapButton_SetMargins
     wxBitmapComboBox_Append
     wxBitmapComboBox_AppendWithClientData
@@ -4304,6 +4634,7 @@ EXPORTS
     wxBitmap_CreateFromData
     wxBitmap_CreateFromImage
     wxBitmap_CreateFromXPM
+    wxBitmap_CreateFromXPMString
     wxBitmap_CreateLoad
     wxBitmap_CreateScaled
     wxBitmap_CreateWithDIPSize
@@ -4496,6 +4827,7 @@ EXPORTS
     wxCaretSuspend_Create
     wxCaretSuspend_Delete
     wxCaret_Create
+    wxCaret_Delete
     wxCaret_GetBlinkTime
     wxCaret_GetPosition
     wxCaret_GetSize
@@ -4616,6 +4948,7 @@ EXPORTS
     wxCmdLineParser_GetUsageString
     wxCmdLineParser_Parse
     wxCmdLineParser_ParseArgs
+    wxCmdLineParser_ParseArgv
     wxCmdLineParser_ParseString
     wxCmdLineParser_ParseStringArgs
     wxCmdLineParser_SetDesc
@@ -4904,6 +5237,7 @@ EXPORTS
     wxControl_SetLabelText
     wxControl_ShouldInheritColours
     wxCreateFileTipProvider
+    wxCreateSVGBitmapEmbedHandler
     wxCredentialEntryDialog_Create
     wxCredentialEntryDialog_Delete
     wxCredentialEntryDialog_GetPassword
@@ -4926,14 +5260,32 @@ EXPORTS
     wxCustomDataObject_GetSize
     wxCustomDataObject_SetData
     wxCustomDataObject_TakeData
+    wxDCBrushChanger_Create
+    wxDCBrushChanger_Delete
+    wxDCBrushChanger_Set
     wxDCClipper_Create
     wxDCClipper_CreateFromRect
     wxDCClipper_CreateFromRegion
     wxDCClipper_Delete
+    wxDCFontChanger_Create
+    wxDCFontChanger_Delete
+    wxDCFontChanger_Set
     wxDCOverlay_Clear
     wxDCOverlay_Create
     wxDCOverlay_CreateFull
     wxDCOverlay_Delete
+    wxDCPenChanger_Create
+    wxDCPenChanger_Delete
+    wxDCPenChanger_Set
+    wxDCTextBgColourChanger_Create
+    wxDCTextBgColourChanger_Delete
+    wxDCTextBgColourChanger_Set
+    wxDCTextBgModeChanger_Create
+    wxDCTextBgModeChanger_Delete
+    wxDCTextBgModeChanger_Set
+    wxDCTextColourChanger_Create
+    wxDCTextColourChanger_Delete
+    wxDCTextColourChanger_Set
     wxDC_AreAutomaticBoundingBoxUpdatesEnabled
     wxDC_Blit
     wxDC_CalcBoundingBox
@@ -5079,6 +5431,7 @@ EXPORTS
     wxDataObjectComposite_Add
     wxDataObjectComposite_Create
     wxDataObjectComposite_Delete
+    wxDataObjectComposite_GetReceivedFormat
     wxDataObjectSimple_Create
     wxDataObjectSimple_Delete
     wxDataObjectSimple_GetDataHere
@@ -5095,6 +5448,51 @@ EXPORTS
     wxDataOutputStream_Write16
     wxDataOutputStream_WriteDouble
     wxDataOutputStream_WriteString
+    wxDataViewBitmapRenderer_Create
+    wxDataViewBitmapRenderer_CreateDefault
+    wxDataViewCheckIconTextRenderer_Allow3rdStateForUser
+    wxDataViewCheckIconTextRenderer_Create
+    wxDataViewCheckIconTextRenderer_CreateDefault
+    wxDataViewCheckIconText_Copy
+    wxDataViewCheckIconText_Create
+    wxDataViewCheckIconText_CreateDefault
+    wxDataViewCheckIconText_Delete
+    wxDataViewCheckIconText_GetCheckedState
+    wxDataViewCheckIconText_SetCheckedState
+    wxDataViewChoiceByIndexRenderer_Create
+    wxDataViewChoiceRenderer_Create
+    wxDataViewChoiceRenderer_GetChoice
+    wxDataViewChoiceRenderer_GetChoices
+    wxDataViewColumn_ChangeFlag
+    wxDataViewColumn_CreateWithRenderer
+    wxDataViewColumn_GetAlignment
+    wxDataViewColumn_GetBitmapBundle
+    wxDataViewColumn_GetFlags
+    wxDataViewColumn_GetMinWidth
+    wxDataViewColumn_GetModelColumn
+    wxDataViewColumn_GetRenderer
+    wxDataViewColumn_GetTitle
+    wxDataViewColumn_GetWidth
+    wxDataViewColumn_IsHidden
+    wxDataViewColumn_IsReorderable
+    wxDataViewColumn_IsResizeable
+    wxDataViewColumn_IsShown
+    wxDataViewColumn_IsSortKey
+    wxDataViewColumn_IsSortOrderAscending
+    wxDataViewColumn_IsSortable
+    wxDataViewColumn_SetAlignment
+    wxDataViewColumn_SetBitmap
+    wxDataViewColumn_SetFlag
+    wxDataViewColumn_SetFlags
+    wxDataViewColumn_SetHidden
+    wxDataViewColumn_SetMinWidth
+    wxDataViewColumn_SetReorderable
+    wxDataViewColumn_SetResizeable
+    wxDataViewColumn_SetSortOrder
+    wxDataViewColumn_SetSortable
+    wxDataViewColumn_SetTitle
+    wxDataViewColumn_SetWidth
+    wxDataViewColumn_UnsetAsSortKey
     wxDataViewCtrl_AllowMultiColumnSort
     wxDataViewCtrl_AppendBitmapColumn
     wxDataViewCtrl_AppendColumn
@@ -5111,10 +5509,12 @@ EXPORTS
     wxDataViewCtrl_EditItem
     wxDataViewCtrl_Enable
     wxDataViewCtrl_EnableDragSource
+    wxDataViewCtrl_EnableDropTarget
     wxDataViewCtrl_EnsureVisible
     wxDataViewCtrl_Expand
     wxDataViewCtrl_ExpandAncestors
     wxDataViewCtrl_ExpandChildren
+    wxDataViewCtrl_GenericGetHeader
     wxDataViewCtrl_GetColumn
     wxDataViewCtrl_GetColumnCount
     wxDataViewCtrl_GetColumnPosition
@@ -5129,9 +5529,12 @@ EXPORTS
     wxDataViewCtrl_GetSelection
     wxDataViewCtrl_GetSelections
     wxDataViewCtrl_GetSortingColumn
+    wxDataViewCtrl_GetSortingColumnAt
+    wxDataViewCtrl_GetSortingColumnCount
     wxDataViewCtrl_GetTopItem
     wxDataViewCtrl_HasSelection
     wxDataViewCtrl_HitTest
+    wxDataViewCtrl_HitTestColumnPosition
     wxDataViewCtrl_InsertColumn
     wxDataViewCtrl_IsExpanded
     wxDataViewCtrl_IsMultiColumnSortAllowed
@@ -5158,12 +5561,138 @@ EXPORTS
     wxDataViewCtrl_ToggleSortByColumn
     wxDataViewCtrl_Unselect
     wxDataViewCtrl_UnselectAll
+    wxDataViewCustomRenderer_Create
+    wxDataViewCustomRenderer_GetActivateCellMouseEvent
+    wxDataViewCustomRenderer_GetCurrentValue
+    wxDataViewCustomRenderer_GetEditorCtrl
+    wxDataViewCustomRenderer_GetEditorParent
+    wxDataViewCustomRenderer_GetEditorRect
+    wxDataViewCustomRenderer_GetPendingColumn
+    wxDataViewCustomRenderer_GetPendingCursorX
+    wxDataViewCustomRenderer_GetPendingCursorY
+    wxDataViewCustomRenderer_GetRenderDC
+    wxDataViewCustomRenderer_GetRenderRect
+    wxDataViewCustomRenderer_GetRenderState
+    wxDataViewCustomRenderer_GetTextExtent
+    wxDataViewCustomRenderer_RenderText
+    wxDataViewCustomRenderer_SetAccessibleDescription
+    wxDataViewCustomRenderer_SetActivateCellResult
+    wxDataViewCustomRenderer_SetActivateResult
+    wxDataViewCustomRenderer_SetCreateEditorCtrlResult
+    wxDataViewCustomRenderer_SetGetSizeResult
+    wxDataViewCustomRenderer_SetGetValueFromEditorCtrlResult
+    wxDataViewCustomRenderer_SetGetValueFromEditorCtrlValue
+    wxDataViewCustomRenderer_SetGetValueResult
+    wxDataViewCustomRenderer_SetHasEditorCtrlResult
+    wxDataViewCustomRenderer_SetLeftClickResult
+    wxDataViewCustomRenderer_SetOnActivateCellWithData
+    wxDataViewCustomRenderer_SetOnActivateWithData
+    wxDataViewCustomRenderer_SetOnCreateEditorCtrlWithData
+    wxDataViewCustomRenderer_SetOnGetAccessibleDescriptionWithData
+    wxDataViewCustomRenderer_SetOnGetSizeWithData
+    wxDataViewCustomRenderer_SetOnGetValueFromEditorCtrlWithData
+    wxDataViewCustomRenderer_SetOnGetValueWithData
+    wxDataViewCustomRenderer_SetOnHasEditorCtrlWithData
+    wxDataViewCustomRenderer_SetOnLeftClickWithData
+    wxDataViewCustomRenderer_SetOnRenderWithData
+    wxDataViewCustomRenderer_SetOnSetValueWithData
+    wxDataViewCustomRenderer_SetOnStartDragWithData
+    wxDataViewCustomRenderer_SetOnValidateWithData
+    wxDataViewCustomRenderer_SetRenderResult
+    wxDataViewCustomRenderer_SetSetValueResult
+    wxDataViewCustomRenderer_SetStartDragResult
+    wxDataViewCustomRenderer_SetValidateResult
+    wxDataViewDateRenderer_Create
+    wxDataViewEvent_GetColumn
+    wxDataViewEvent_GetDataBuffer
+    wxDataViewEvent_GetDataFormat
+    wxDataViewEvent_GetDataObject
+    wxDataViewEvent_GetDataSize
+    wxDataViewEvent_GetDataViewColumn
+    wxDataViewEvent_GetDragFlags
+    wxDataViewEvent_GetDropEffect
+    wxDataViewEvent_GetItem
+    wxDataViewEvent_GetModel
+    wxDataViewEvent_GetPosition
+    wxDataViewEvent_GetProposedDropIndex
+    wxDataViewEvent_GetValue
+    wxDataViewEvent_IsEditCancelled
+    wxDataViewEvent_SetDataBuffer
+    wxDataViewEvent_SetDataFormat
+    wxDataViewEvent_SetDataObject
+    wxDataViewEvent_SetDataSize
+    wxDataViewEvent_SetDragFlags
+    wxDataViewEvent_SetDropEffect
+    wxDataViewEvent_SetEditCancelled
+    wxDataViewEvent_SetPosition
+    wxDataViewEvent_SetProposedDropIndex
+    wxDataViewEvent_SetValue
+    wxDataViewIconTextRenderer_Create
+    wxDataViewIconTextRenderer_CreateDefault
+    wxDataViewIconText_Copy
+    wxDataViewIconText_Create
+    wxDataViewIconText_CreateDefault
+    wxDataViewIconText_Delete
+    wxDataViewIconText_GetBitmapBundle
+    wxDataViewIconText_GetIcon
+    wxDataViewIconText_GetText
+    wxDataViewIconText_SetBitmapBundle
+    wxDataViewIconText_SetIcon
+    wxDataViewIconText_SetText
+    wxDataViewIndexListModel_Create
+    wxDataViewIndexListModel_GetItem
+    wxDataViewIndexListModel_GetPendingAscending
+    wxDataViewIndexListModel_GetPendingColumn
+    wxDataViewIndexListModel_GetPendingRow
+    wxDataViewIndexListModel_Reset
+    wxDataViewIndexListModel_RowAppended
+    wxDataViewIndexListModel_RowChanged
+    wxDataViewIndexListModel_RowDeleted
+    wxDataViewIndexListModel_RowInserted
+    wxDataViewIndexListModel_RowPrepended
+    wxDataViewIndexListModel_RowValueChanged
+    wxDataViewIndexListModel_RowsDeleted
+    wxDataViewIndexListModel_SetCompareResult
+    wxDataViewIndexListModel_SetGetAttrByRowAttr
+    wxDataViewIndexListModel_SetGetAttrByRowResult
+    wxDataViewIndexListModel_SetGetCountResult
+    wxDataViewIndexListModel_SetGetRowResult
+    wxDataViewIndexListModel_SetGetValueByRowResult
+    wxDataViewIndexListModel_SetHasDefaultCompareResult
+    wxDataViewIndexListModel_SetIsEnabledByRowResult
+    wxDataViewIndexListModel_SetOnCompareWithData
+    wxDataViewIndexListModel_SetOnGetAttrByRowWithData
+    wxDataViewIndexListModel_SetOnGetCountWithData
+    wxDataViewIndexListModel_SetOnGetRowWithData
+    wxDataViewIndexListModel_SetOnGetValueByRowWithData
+    wxDataViewIndexListModel_SetOnHasDefaultCompareWithData
+    wxDataViewIndexListModel_SetOnIsEnabledByRowWithData
+    wxDataViewIndexListModel_SetOnSetValueByRowWithData
+    wxDataViewIndexListModel_SetSetValueByRowResult
     wxDataViewItemArray_Add
     wxDataViewItemArray_Clear
     wxDataViewItemArray_Create
     wxDataViewItemArray_Delete
     wxDataViewItemArray_GetCount
     wxDataViewItemArray_Item
+    wxDataViewItemAttr_Copy
+    wxDataViewItemAttr_Create
+    wxDataViewItemAttr_Delete
+    wxDataViewItemAttr_GetBackgroundColour
+    wxDataViewItemAttr_GetBold
+    wxDataViewItemAttr_GetColour
+    wxDataViewItemAttr_GetEffectiveFont
+    wxDataViewItemAttr_GetItalic
+    wxDataViewItemAttr_GetStrikethrough
+    wxDataViewItemAttr_HasBackgroundColour
+    wxDataViewItemAttr_HasColour
+    wxDataViewItemAttr_HasFont
+    wxDataViewItemAttr_IsDefault
+    wxDataViewItemAttr_SetBackgroundColour
+    wxDataViewItemAttr_SetBold
+    wxDataViewItemAttr_SetColour
+    wxDataViewItemAttr_SetItalic
+    wxDataViewItemAttr_SetStrikethrough
     wxDataViewItem_Create
     wxDataViewItem_Delete
     wxDataViewItem_GetID
@@ -5197,6 +5726,185 @@ EXPORTS
     wxDataViewListCtrl_SetToggleValue
     wxDataViewListCtrl_SetValue
     wxDataViewListCtrl_UnselectRow
+    wxDataViewListStore_AppendColumn
+    wxDataViewListStore_AppendItem
+    wxDataViewListStore_ClearColumns
+    wxDataViewListStore_Create
+    wxDataViewListStore_DeleteAllItems
+    wxDataViewListStore_DeleteItem
+    wxDataViewListStore_GetAttrByRow
+    wxDataViewListStore_GetItemCount
+    wxDataViewListStore_GetItemData
+    wxDataViewListStore_GetPendingColumn
+    wxDataViewListStore_GetPendingRow
+    wxDataViewListStore_GetValueByRow
+    wxDataViewListStore_InsertColumn
+    wxDataViewListStore_InsertItem
+    wxDataViewListStore_IsEnabledByRow
+    wxDataViewListStore_PrependColumn
+    wxDataViewListStore_PrependItem
+    wxDataViewListStore_SetGetAttrByRowAttr
+    wxDataViewListStore_SetGetAttrByRowResult
+    wxDataViewListStore_SetHasValueResult
+    wxDataViewListStore_SetIsEnabledByRowResult
+    wxDataViewListStore_SetItemData
+    wxDataViewListStore_SetOnGetAttrByRowWithData
+    wxDataViewListStore_SetOnHasValueWithData
+    wxDataViewListStore_SetOnIsEnabledByRowWithData
+    wxDataViewListStore_SetValueByRow
+    wxDataViewModel_AddChildResult
+    wxDataViewModel_AfterReset
+    wxDataViewModel_BeforeReset
+    wxDataViewModel_ChangeValue
+    wxDataViewModel_Cleared
+    wxDataViewModel_Compare
+    wxDataViewModel_CreateDefault
+    wxDataViewModel_DecRef
+    wxDataViewModel_GetAttr
+    wxDataViewModel_GetChildren
+    wxDataViewModel_GetParent
+    wxDataViewModel_GetPendingAscending
+    wxDataViewModel_GetPendingColumn
+    wxDataViewModel_GetValue
+    wxDataViewModel_HasContainerColumns
+    wxDataViewModel_HasDefaultCompare
+    wxDataViewModel_HasValue
+    wxDataViewModel_IncRef
+    wxDataViewModel_IsContainer
+    wxDataViewModel_IsEnabled
+    wxDataViewModel_ItemAdded
+    wxDataViewModel_ItemChanged
+    wxDataViewModel_ItemDeleted
+    wxDataViewModel_ItemsAdded
+    wxDataViewModel_ItemsChanged
+    wxDataViewModel_ItemsDeleted
+    wxDataViewModel_Resort
+    wxDataViewModel_SetCompareResult
+    wxDataViewModel_SetGetAttrResult
+    wxDataViewModel_SetGetChildrenCountResult
+    wxDataViewModel_SetGetParentResult
+    wxDataViewModel_SetGetValueResult
+    wxDataViewModel_SetHasContainerColumnsResult
+    wxDataViewModel_SetHasDefaultCompareResult
+    wxDataViewModel_SetHasValueResult
+    wxDataViewModel_SetIsContainerResult
+    wxDataViewModel_SetIsEnabledResult
+    wxDataViewModel_SetOnCompareWithData
+    wxDataViewModel_SetOnGetAttrWithData
+    wxDataViewModel_SetOnGetChildrenWithData
+    wxDataViewModel_SetOnGetParentWithData
+    wxDataViewModel_SetOnGetValueWithData
+    wxDataViewModel_SetOnHasContainerColumnsWithData
+    wxDataViewModel_SetOnHasDefaultCompareWithData
+    wxDataViewModel_SetOnHasValueWithData
+    wxDataViewModel_SetOnIsContainerWithData
+    wxDataViewModel_SetOnIsEnabledWithData
+    wxDataViewModel_SetOnResortWithData
+    wxDataViewModel_SetOnSetValueWithData
+    wxDataViewModel_SetSetValueResult
+    wxDataViewModel_SetValue
+    wxDataViewModel_ValueChanged
+    wxDataViewProgressRenderer_Create
+    wxDataViewRenderer_EnableEllipsize
+    wxDataViewRenderer_GetAccessibleDescription
+    wxDataViewRenderer_GetAlignment
+    wxDataViewRenderer_GetEllipsizeMode
+    wxDataViewRenderer_GetMode
+    wxDataViewRenderer_GetValue
+    wxDataViewRenderer_GetVariantType
+    wxDataViewRenderer_IsHighlighted
+    wxDataViewRenderer_SetAlignment
+    wxDataViewRenderer_SetEnabled
+    wxDataViewRenderer_SetMode
+    wxDataViewRenderer_SetValue
+    wxDataViewSpinRenderer_Create
+    wxDataViewTextRenderer_Create
+    wxDataViewTextRenderer_CreateDefault
+    wxDataViewTextRenderer_EnableMarkup
+    wxDataViewToggleRenderer_Create
+    wxDataViewToggleRenderer_CreateDefault
+    wxDataViewToggleRenderer_ShowAsRadio
+    wxDataViewTreeCtrl_AppendContainer
+    wxDataViewTreeCtrl_AppendItem
+    wxDataViewTreeCtrl_AssignImageList
+    wxDataViewTreeCtrl_Collapse
+    wxDataViewTreeCtrl_Create
+    wxDataViewTreeCtrl_DeleteAllItems
+    wxDataViewTreeCtrl_DeleteChildren
+    wxDataViewTreeCtrl_DeleteItem
+    wxDataViewTreeCtrl_Expand
+    wxDataViewTreeCtrl_GetChildCount
+    wxDataViewTreeCtrl_GetImageList
+    wxDataViewTreeCtrl_GetItemData
+    wxDataViewTreeCtrl_GetItemExpandedIcon
+    wxDataViewTreeCtrl_GetItemIcon
+    wxDataViewTreeCtrl_GetItemParent
+    wxDataViewTreeCtrl_GetItemText
+    wxDataViewTreeCtrl_GetNthChild
+    wxDataViewTreeCtrl_GetStore
+    wxDataViewTreeCtrl_InsertContainer
+    wxDataViewTreeCtrl_InsertItem
+    wxDataViewTreeCtrl_IsContainer
+    wxDataViewTreeCtrl_IsExpanded
+    wxDataViewTreeCtrl_PrependContainer
+    wxDataViewTreeCtrl_PrependItem
+    wxDataViewTreeCtrl_SetImageList
+    wxDataViewTreeCtrl_SetImages
+    wxDataViewTreeCtrl_SetItemData
+    wxDataViewTreeCtrl_SetItemExpandedIcon
+    wxDataViewTreeCtrl_SetItemIcon
+    wxDataViewTreeCtrl_SetItemText
+    wxDataViewTreeStore_AppendContainer
+    wxDataViewTreeStore_AppendItem
+    wxDataViewTreeStore_Create
+    wxDataViewTreeStore_Delete
+    wxDataViewTreeStore_DeleteAllItems
+    wxDataViewTreeStore_DeleteChildren
+    wxDataViewTreeStore_DeleteItem
+    wxDataViewTreeStore_GetChildCount
+    wxDataViewTreeStore_GetItemData
+    wxDataViewTreeStore_GetItemExpandedIcon
+    wxDataViewTreeStore_GetItemIcon
+    wxDataViewTreeStore_GetItemText
+    wxDataViewTreeStore_GetNthChild
+    wxDataViewTreeStore_InsertContainer
+    wxDataViewTreeStore_InsertItem
+    wxDataViewTreeStore_PrependContainer
+    wxDataViewTreeStore_PrependItem
+    wxDataViewTreeStore_SetItemData
+    wxDataViewTreeStore_SetItemExpandedIcon
+    wxDataViewTreeStore_SetItemIcon
+    wxDataViewTreeStore_SetItemText
+    wxDataViewVirtualListModel_Create
+    wxDataViewVirtualListModel_GetItem
+    wxDataViewVirtualListModel_GetPendingAscending
+    wxDataViewVirtualListModel_GetPendingColumn
+    wxDataViewVirtualListModel_GetPendingRow
+    wxDataViewVirtualListModel_Reset
+    wxDataViewVirtualListModel_RowAppended
+    wxDataViewVirtualListModel_RowChanged
+    wxDataViewVirtualListModel_RowDeleted
+    wxDataViewVirtualListModel_RowInserted
+    wxDataViewVirtualListModel_RowPrepended
+    wxDataViewVirtualListModel_RowValueChanged
+    wxDataViewVirtualListModel_RowsDeleted
+    wxDataViewVirtualListModel_SetCompareResult
+    wxDataViewVirtualListModel_SetGetAttrByRowAttr
+    wxDataViewVirtualListModel_SetGetAttrByRowResult
+    wxDataViewVirtualListModel_SetGetCountResult
+    wxDataViewVirtualListModel_SetGetRowResult
+    wxDataViewVirtualListModel_SetGetValueByRowResult
+    wxDataViewVirtualListModel_SetHasDefaultCompareResult
+    wxDataViewVirtualListModel_SetIsEnabledByRowResult
+    wxDataViewVirtualListModel_SetOnCompareWithData
+    wxDataViewVirtualListModel_SetOnGetAttrByRowWithData
+    wxDataViewVirtualListModel_SetOnGetCountWithData
+    wxDataViewVirtualListModel_SetOnGetRowWithData
+    wxDataViewVirtualListModel_SetOnGetValueByRowWithData
+    wxDataViewVirtualListModel_SetOnHasDefaultCompareWithData
+    wxDataViewVirtualListModel_SetOnIsEnabledByRowWithData
+    wxDataViewVirtualListModel_SetOnSetValueByRowWithData
+    wxDataViewVirtualListModel_SetSetValueByRowResult
     wxDateEvent_Create
     wxDateEvent_Delete
     wxDateEvent_GetDate
@@ -5353,6 +6061,37 @@ EXPORTS
     wxDateTime_Today
     wxDateTime_UNow
     wxDateTime_wxDateTime
+    wxDebugReportCompress_Create
+    wxDebugReportCompress_Delete
+    wxDebugReportCompress_GetCompressedFileName
+    wxDebugReportCompress_SetCompressedFileBaseName
+    wxDebugReportCompress_SetCompressedFileDirectory
+    wxDebugReportPreviewStd_Create
+    wxDebugReportPreviewStd_Delete
+    wxDebugReportPreviewStd_Show
+    wxDebugReportUpload_Create
+    wxDebugReportUpload_CreateDefault
+    wxDebugReportUpload_Delete
+    wxDebugReport_AddAll
+    wxDebugReport_AddContext
+    wxDebugReport_AddCurrentContext
+    wxDebugReport_AddCurrentDump
+    wxDebugReport_AddDump
+    wxDebugReport_AddExceptionContext
+    wxDebugReport_AddExceptionDump
+    wxDebugReport_AddFile
+    wxDebugReport_AddText
+    wxDebugReport_Create
+    wxDebugReport_Delete
+    wxDebugReport_GetDirectory
+    wxDebugReport_GetFileDescription
+    wxDebugReport_GetFileName
+    wxDebugReport_GetFilesCount
+    wxDebugReport_GetReportName
+    wxDebugReport_IsOk
+    wxDebugReport_Process
+    wxDebugReport_RemoveFile
+    wxDebugReport_Reset
     wxDecToHex
     wxDegToRad
     wxDialog_AddMainButtonId
@@ -5456,33 +6195,85 @@ EXPORTS
     wxDocMDIChildFrame_SetView
     wxDocMDIParentFrame_Create
     wxDocMDIParentFrame_GetDocumentManager
+    wxDocManager_AddDocument
+    wxDocManager_AssociateTemplate
+    wxDocManager_Clear
     wxDocManager_CloseDocuments
+    wxDocManager_Create
+    wxDocManager_CreateDefault
     wxDocManager_CreateDocument
     wxDocManager_CreateNewDocument
+    wxDocManager_Delete
+    wxDocManager_DisassociateTemplate
     wxDocManager_FileHistoryLoad
     wxDocManager_FileHistorySave
     wxDocManager_FileHistoryUseMenu
+    wxDocManager_GetCurrentDocument
+    wxDocManager_GetCurrentView
+    wxDocManager_GetDocumentAt
+    wxDocManager_GetDocumentCount
     wxDocManager_GetDocumentManager
+    wxDocManager_GetMaxDocsOpen
+    wxDocManager_GetTemplateAt
+    wxDocManager_GetTemplateCount
+    wxDocManager_RemoveDocument
     wxDocManager_SetMaxDocsOpen
     wxDocParentFrame_Create
     wxDocParentFrame_GetDocumentManager
+    wxDocTemplate_FileMatchesTemplate
+    wxDocTemplate_GetDefaultExtension
+    wxDocTemplate_GetDescription
+    wxDocTemplate_GetDirectory
+    wxDocTemplate_GetDocumentManager
+    wxDocTemplate_GetDocumentName
+    wxDocTemplate_GetFileFilter
+    wxDocTemplate_GetFlags
+    wxDocTemplate_GetViewName
+    wxDocTemplate_SetDirectory
+    wxDocTemplate_SetFileFilter
+    wxDocument_AlreadySaved
+    wxDocument_CanClose
+    wxDocument_Close
+    wxDocument_CreateWithParent
     wxDocument_DeleteContents
     wxDocument_GetCommandProcessor
     wxDocument_GetFilename
     wxDocument_GetFirstView
+    wxDocument_IsModified
+    wxDocument_IsModifiedBase
+    wxDocument_ModifyBase
+    wxDocument_OnCreateBase
+    wxDocument_OnOpenDocumentBase
+    wxDocument_Revert
+    wxDocument_Save
+    wxDocument_SaveAs
+    wxDocument_SetDoOpenDocumentResult
+    wxDocument_SetDoSaveDocumentResult
     wxDocument_SetFilename
+    wxDocument_SetIsModifiedResult
+    wxDocument_SetOnCreateResult
     wxDocument_SetOnDoOpenDocument
+    wxDocument_SetOnDoOpenDocumentWithData
     wxDocument_SetOnDoSaveDocument
+    wxDocument_SetOnDoSaveDocumentWithData
     wxDocument_SetOnGetClassInfo
     wxDocument_SetOnIsModified
+    wxDocument_SetOnIsModifiedWithData
     wxDocument_SetOnModify
+    wxDocument_SetOnModifyWithData
     wxDocument_SetOnOnCreate
+    wxDocument_SetOnOnCreateWithData
     wxDocument_SetOnOnOpenDocument
+    wxDocument_SetOnOnOpenDocumentWithData
+    wxDocument_SetOnOpenDocumentResult
     wxDocument_UpdateAllViews
     wxDragIcon
+    wxDragIconWithCursor
     wxDragImage_BeginDrag
     wxDragImage_BeginDragFullScreen
+    wxDragImage_BeginDragFullScreenDefault
     wxDragImage_Create
+    wxDragImage_CreateWithCursor
     wxDragImage_Delete
     wxDragImage_EndDrag
     wxDragImage_Hide
@@ -5490,6 +6281,7 @@ EXPORTS
     wxDragImage_Show
     wxDragListItem
     wxDragString
+    wxDragStringWithCursor
     wxDragTreeItem
     wxDrawControl_Create
     wxDrawWindow_Create
@@ -5498,7 +6290,13 @@ EXPORTS
     wxDropFilesEvent_GetPosition
     wxDropSource_DoDragDrop
     wxDropTarget_GetData
+    wxDropTarget_GetDataObject
     wxDropTarget_SetDataObject
+    wxDynamicLibraryDetails_GetAddress
+    wxDynamicLibraryDetails_GetLength
+    wxDynamicLibraryDetails_GetName
+    wxDynamicLibraryDetails_GetPath
+    wxDynamicLibraryDetails_GetVersion
     wxDynamicLibrary_Create
     wxDynamicLibrary_Delete
     wxDynamicLibrary_Detach
@@ -5549,6 +6347,7 @@ EXPORTS
     wxEvent_IsCommandEvent
     wxEvent_IsOfClass
     wxEvent_NewEventType
+    wxEvent_ResumePropagation
     wxEvent_SetCallbackUserData
     wxEvent_SetEventObject
     wxEvent_SetEventType
@@ -5556,6 +6355,7 @@ EXPORTS
     wxEvent_SetOnClone
     wxEvent_SetTimestamp
     wxEvent_Skip
+    wxEvent_StopPropagation
     wxEvtHandler_AddFilter
     wxEvtHandler_AddPendingEvent
     wxEvtHandler_Bind
@@ -5668,6 +6468,7 @@ EXPORTS
     wxFileCtrl_SetWildcard
     wxFileCtrl_ShowHidden
     wxFileDataObject_AddFile
+    wxFileDataObject_GetFilenamesArray
     wxFileDialogCustomControl_Disable
     wxFileDialogCustomControl_Enable
     wxFileDialogCustomControl_GetSelection
@@ -6056,6 +6857,7 @@ EXPORTS
     wxFont_Smaller
     wxFont_Strikethrough
     wxFont_Underlined
+    wxFputs
     wxFrame_Centre
     wxFrame_Create
     wxFrame_CreateStatusBar
@@ -6196,15 +6998,18 @@ EXPORTS
     wxGenericDirDialog_SetMessage
     wxGenericDirDialog_SetPath
     wxGenericDragIcon
+    wxGenericDragIconWithCursor
     wxGenericDragImage_Create
     wxGenericDragImage_DoDrawImage
     wxGenericDragImage_GetImageRect
     wxGenericDragImage_UpdateBackingFromWindow
     wxGenericDragListItem
     wxGenericDragString
+    wxGenericDragStringWithCursor
     wxGenericDragTreeItem
     wxGenericFileDialog_Create
     wxGenericFileDialog_Delete
+    wxGenericFileDialog_GetCurrentlySelectedFilename
     wxGenericFileDialog_GetDirectory
     wxGenericFileDialog_GetFilename
     wxGenericFileDialog_GetFilenames
@@ -6248,7 +7053,14 @@ EXPORTS
     wxGenericStaticBitmap_SetScaleMode
     wxGenericStaticText_Create
     wxGenericStaticText_Wrap
+    wxGenericValidator_CreateArrayInt
     wxGenericValidator_CreateBool
+    wxGenericValidator_CreateCheckBoxState
+    wxGenericValidator_CreateColour
+    wxGenericValidator_CreateDateTime
+    wxGenericValidator_CreateDouble
+    wxGenericValidator_CreateFileName
+    wxGenericValidator_CreateFloat
     wxGenericValidator_CreateInt
     wxGenericValidator_CreateString
     wxGenericValidator_Delete
@@ -6274,6 +7086,7 @@ EXPORTS
     wxGetEmailAddress
     wxGetEnv
     wxGetEnvMap
+    wxGetEnvValue
     wxGetFontFromUser
     wxGetFreeMemory
     wxGetFullHostName
@@ -6297,6 +7110,7 @@ EXPORTS
     wxGetSingleChoiceData
     wxGetSingleChoiceDataEx
     wxGetSingleChoiceIndex
+    wxGetSingleChoiceIndexArray
     wxGetSingleChoiceIndexEx
     wxGetStockAccelerator
     wxGetStockHelpString
@@ -6332,10 +7146,13 @@ EXPORTS
     wxGraphicsContext_CreateFromUnknownDC
     wxGraphicsContext_CreateFromWindow
     wxGraphicsContext_CreateLinearGradientBrush
+    wxGraphicsContext_CreateLinearGradientBrushFromStops
     wxGraphicsContext_CreateMatrix
     wxGraphicsContext_CreatePath
     wxGraphicsContext_CreatePen
+    wxGraphicsContext_CreatePenFromInfo
     wxGraphicsContext_CreateRadialGradientBrush
+    wxGraphicsContext_CreateRadialGradientBrushFromStops
     wxGraphicsContext_CreateSubBitmap
     wxGraphicsContext_Delete
     wxGraphicsContext_DrawBitmap
@@ -6374,6 +7191,14 @@ EXPORTS
     wxGraphicsContext_Translate
     wxGraphicsFont_Create
     wxGraphicsFont_Delete
+    wxGraphicsGradientStops_Add
+    wxGraphicsGradientStops_Create
+    wxGraphicsGradientStops_Delete
+    wxGraphicsGradientStops_GetCount
+    wxGraphicsGradientStops_GetEndColour
+    wxGraphicsGradientStops_GetStartColour
+    wxGraphicsGradientStops_SetEndColour
+    wxGraphicsGradientStops_SetStartColour
     wxGraphicsMatrix_Concat
     wxGraphicsMatrix_Create
     wxGraphicsMatrix_Delete
@@ -6411,6 +7236,13 @@ EXPORTS
     wxGraphicsPath_MoveToPoint
     wxGraphicsPath_Transform
     wxGraphicsPath_UnGetNativePath
+    wxGraphicsPenInfo_Create
+    wxGraphicsPenInfo_Delete
+    wxGraphicsPenInfo_SetLinearGradient
+    wxGraphicsPenInfo_SetLinearGradientStops
+    wxGraphicsPenInfo_SetRadialGradient
+    wxGraphicsPenInfo_SetRadialGradientStops
+    wxGraphicsPenInfo_SetWidth
     wxGraphicsPen_Create
     wxGraphicsPen_Delete
     wxGraphicsRenderer_CreateContext
@@ -7232,6 +8064,7 @@ EXPORTS
     wxIcon_CopyFromBitmap
     wxIcon_CreateDefault
     wxIcon_CreateFromXPMData
+    wxIcon_CreateFromXPMString
     wxIcon_CreateLoad
     wxIcon_Delete
     wxIcon_FromRaw
@@ -7447,6 +8280,19 @@ EXPORTS
     wxIsdigit
     wxIslower
     wxIsprint
+    wxItemAttr_Copy
+    wxItemAttr_Create
+    wxItemAttr_Delete
+    wxItemAttr_GetBackgroundColour
+    wxItemAttr_GetFont
+    wxItemAttr_GetTextColour
+    wxItemAttr_HasBackgroundColour
+    wxItemAttr_HasColours
+    wxItemAttr_HasFont
+    wxItemAttr_HasTextColour
+    wxItemAttr_SetBackgroundColour
+    wxItemAttr_SetFont
+    wxItemAttr_SetTextColour
     wxItemContainer_Append
     wxItemContainer_AppendItems
     wxItemContainer_AppendString
@@ -7623,6 +8469,7 @@ EXPORTS
     wxListCtrl_GetItemFont
     wxListCtrl_GetItemPosition
     wxListCtrl_GetItemPosition2
+    wxListCtrl_GetItemPtrData
     wxListCtrl_GetItemRect
     wxListCtrl_GetItemSpacing
     wxListCtrl_GetItemState
@@ -8000,6 +8847,7 @@ EXPORTS
     wxMenu_Break
     wxMenu_Check
     wxMenu_Create
+    wxMenu_CreateDefault
     wxMenu_DeleteById
     wxMenu_DeleteByItem
     wxMenu_DeletePointer
@@ -8065,9 +8913,18 @@ EXPORTS
     wxMessageDialog_ShowModal
     wxMetafileDC_Close
     wxMetafileDC_Create
+    wxMetafileDC_CreateWithExtent
     wxMetafileDC_Delete
+    wxMetafileDataObject_Create
+    wxMetafileDataObject_CreateDefault
+    wxMetafileDataObject_Delete
+    wxMetafileDataObject_GetMetafile
+    wxMetafileDataObject_SetMetafile
     wxMetafile_Create
     wxMetafile_Delete
+    wxMetafile_GetHeight
+    wxMetafile_GetSize
+    wxMetafile_GetWidth
     wxMetafile_IsOk
     wxMetafile_Play
     wxMetafile_SetClipboard
@@ -8267,6 +9124,7 @@ EXPORTS
     wxObject_GetClassInfo
     wxObject_GetClientClosure
     wxObject_IsKindOf
+    wxObject_IsOfClass
     wxObject_IsSameAs
     wxObject_IsScrolledWindow
     wxObject_SetClientClosure
@@ -8466,6 +9324,7 @@ EXPORTS
     wxPanel_SetOnScrollWindow
     wxPanel_SetOnTransferDataFromWindow
     wxPanel_SetOnTransferDataToWindow
+    wxPasswordEntryDialog_Create
     wxPathList_Add
     wxPathList_Create
     wxPathList_Delete
@@ -8759,6 +9618,7 @@ EXPORTS
     wxPrinter_ReportError
     wxPrinter_Setup
     wxPrintf
+    wxPrintfLen
     wxPrintout_FitThisSizeToPageMargins
     wxPrintout_GetDC
     wxPrintout_GetLogicalPageMarginsRect
@@ -9439,6 +10299,9 @@ EXPORTS
     wxRichTextAttr_Delete
     wxRichTextAttr_GetTextBoxAttr
     wxRichTextAttr_HasTextBoxAttr
+    wxRichTextAttr_SetBackgroundColour
+    wxRichTextAttr_SetLineSpacing
+    wxRichTextAttr_SetParagraphSpacingAfter
     wxRichTextAttr_SetTextBoxAttr
     wxRichTextBoxStyleDefinition_Copy
     wxRichTextBoxStyleDefinition_Create
@@ -9579,6 +10442,7 @@ EXPORTS
     wxRichTextCtrl_GetBasicStyle
     wxRichTextCtrl_GetBuffer
     wxRichTextCtrl_GetCaretAtLineStart
+    wxRichTextCtrl_GetCaretPosition
     wxRichTextCtrl_GetCommandProcessor
     wxRichTextCtrl_GetContextMenu
     wxRichTextCtrl_GetDefaultStyle
@@ -9681,6 +10545,7 @@ EXPORTS
     wxRichTextCtrl_SetInsertionPointEnd
     wxRichTextCtrl_SetInternalSelectionRange
     wxRichTextCtrl_SetListStyle
+    wxRichTextCtrl_SetMargins
     wxRichTextCtrl_SetReadOnly
     wxRichTextCtrl_SetScale
     wxRichTextCtrl_SetSelection
@@ -9908,6 +10773,10 @@ EXPORTS
     wxRichTextParagraphStyleDefinition_Delete
     wxRichTextParagraphStyleDefinition_GetNextStyle
     wxRichTextParagraphStyleDefinition_SetNextStyle
+    wxRichTextParagraph_Create
+    wxRichTextParagraph_Delete
+    wxRichTextPlainText_Create
+    wxRichTextPlainText_Delete
     wxRichTextPrinting_Create
     wxRichTextPrinting_Delete
     wxRichTextPrinting_GetFooterText
@@ -10096,12 +10965,55 @@ EXPORTS
     wxRotateGestureEvent_GetRotationAngle
     wxRotateGestureEvent_SetRotationAngle
     wxRound
+    wxSVGAttributes_Add
+    wxSVGAttributes_Create
+    wxSVGAttributes_Delete
+    wxSVGAttributes_GetAriaDescribedBy
+    wxSVGAttributes_GetAriaDetails
+    wxSVGAttributes_GetAriaLabel
+    wxSVGAttributes_GetAriaLabelledBy
+    wxSVGAttributes_GetAriaRoleDescription
+    wxSVGAttributes_GetAsString
+    wxSVGAttributes_GetAttribute
+    wxSVGAttributes_GetClass
+    wxSVGAttributes_GetId
+    wxSVGAttributes_GetRole
+    wxSVGAttributes_IsAriaHidden
+    wxSVGAttributes_IsEmpty
+    wxSVGAttributes_SetAriaDescribedBy
+    wxSVGAttributes_SetAriaDetails
+    wxSVGAttributes_SetAriaHidden
+    wxSVGAttributes_SetAriaLabel
+    wxSVGAttributes_SetAriaLabelledBy
+    wxSVGAttributes_SetAriaRoleDescription
+    wxSVGAttributes_SetClass
+    wxSVGAttributes_SetId
+    wxSVGAttributes_SetRole
+    wxSVGFileDC_BeginAccessibleGroup
+    wxSVGFileDC_BeginLayer
     wxSVGFileDC_Create
+    wxSVGFileDC_CreateFromSize
+    wxSVGFileDC_CreateFromSizeWithFileAndTitle
+    wxSVGFileDC_CreateFromSizeWithFileTitleAndResolution
     wxSVGFileDC_CreateWithSize
     wxSVGFileDC_CreateWithSizeAndResolution
+    wxSVGFileDC_CreateWithSizeAndTitle
+    wxSVGFileDC_CreateWithSizeResolutionAndTitle
+    wxSVGFileDC_CreateWithTitle
     wxSVGFileDC_Delete
     wxSVGFileDC_EndAccessibleGroup
+    wxSVGFileDC_EndLayer
+    wxSVGFileDC_GetSVGDocument
+    wxSVGFileDC_Save
     wxSVGFileDC_SetBitmapHandler
+    wxSVGFileDC_SetShapeRenderingMode
+    wxSVGGraphicsContext_Create
+    wxSVGGraphicsContext_CreateFromFile
+    wxSVGGraphicsContext_CreateFromSize
+    wxSVGGraphicsContext_Delete
+    wxSVGGraphicsContext_GetSVGDocument
+    wxSVGGraphicsContext_Save
+    wxSVGGraphicsContext_SetBitmapHandler
     wxSafeYield
     wxSashEvent_Create
     wxSashEvent_GetDragRect
@@ -10154,7 +11066,11 @@ EXPORTS
     wxScrolledWindow_CalcScrolledPosition
     wxScrolledWindow_CalcUnscrolledPosition
     wxScrolledWindow_Create
+    wxScrolledWindow_DisableAutoScrollOutside
+    wxScrolledWindow_DisableAutoscrollWithoutCapture
     wxScrolledWindow_DisableKeyboardScrolling
+    wxScrolledWindow_EnableAutoScrollInside
+    wxScrolledWindow_EnableAutoscrollWithoutCapture
     wxScrolledWindow_EnableScrolling
     wxScrolledWindow_GetScaleX
     wxScrolledWindow_GetScaleY
@@ -10296,6 +11212,7 @@ EXPORTS
     wxSizerFlags_FixedMinSize
     wxSizerFlags_Flag
     wxSizerFlags_GetBorderInPixels
+    wxSizerFlags_GetDefaultBorder
     wxSizerFlags_GetDefaultBorderFractional
     wxSizerFlags_GetFlags
     wxSizerFlags_GetProportion
@@ -10711,8 +11628,11 @@ EXPORTS
     wxStringClientData_Create
     wxStringClientData_CreateWithData
     wxStringClientData_Delete
+    wxStringClientData_FromClientData
     wxStringClientData_GetData
     wxStringClientData_SetData
+    wxStringInputStream_Create
+    wxStringInputStream_Delete
     wxStringOutputStream_Create
     wxStringOutputStream_Delete
     wxStringOutputStream_GetString
@@ -10737,7 +11657,11 @@ EXPORTS
     wxString_Delete
     wxString_GetString
     wxString_Length
+    wxString_ToDouble
+    wxString_ToLong
+    wxString_ToLongLong
     wxStripMenuCodes
+    wxStrlen
     wxStrtod
     wxStrtol
     wxStyledTextCtrl_AddRefDocument
@@ -11437,6 +12361,7 @@ EXPORTS
     wxTextEntry_AutoCompleteCompleter
     wxTextEntry_AutoCompleteDirectories
     wxTextEntry_AutoCompleteFileNames
+    wxTextEntry_AutoCompleteStrings
     wxTextEntry_CanCopy
     wxTextEntry_CanCut
     wxTextEntry_CanPaste
@@ -11516,6 +12441,7 @@ EXPORTS
     wxTextUrlEvent_Create
     wxTextUrlEvent_Delete
     wxTextUrlEvent_GetMouseEvent
+    wxTextUrlEvent_GetString
     wxTextUrlEvent_GetURLEnd
     wxTextUrlEvent_GetURLStart
     wxTextValidator_AddCharIncludes
@@ -12054,6 +12980,11 @@ EXPORTS
     wxURI_Resolve
     wxURI_SetUserAndPassword
     wxURI_Unescape
+    wxURLDataObject_Create
+    wxURLDataObject_CreateDefault
+    wxURLDataObject_Delete
+    wxURLDataObject_GetURL
+    wxURLDataObject_SetURL
     wxURL_Create
     wxURL_CreateFromString
     wxURL_Delete
@@ -12146,6 +13077,8 @@ EXPORTS
     wxVariant_CreateFromArrayString
     wxVariant_CreateFromBool
     wxVariant_CreateFromChar
+    wxVariant_CreateFromDataViewCheckIconText
+    wxVariant_CreateFromDataViewIconText
     wxVariant_CreateFromDateTime
     wxVariant_CreateFromDouble
     wxVariant_CreateFromLong
@@ -12158,6 +13091,8 @@ EXPORTS
     wxVariant_GetChar
     wxVariant_GetColourPropertyValue
     wxVariant_GetCount
+    wxVariant_GetDataViewCheckIconText
+    wxVariant_GetDataViewIconText
     wxVariant_GetDouble
     wxVariant_GetFont
     wxVariant_GetLong
@@ -12195,14 +13130,32 @@ EXPORTS
     wxVideoMode_IsOk
     wxVideoMode_Matches
     wxView_Activate
+    wxView_Close
+    wxView_CloseDefault
     wxView_GetDocument
     wxView_GetFrame
     wxView_SetDocument
     wxView_SetFrame
+    wxView_SetOnCloseResult
+    wxView_SetOnCreateResult
     wxView_SetOnOnClose
+    wxView_SetOnOnCloseWithData
     wxView_SetOnOnCreate
+    wxView_SetOnOnCreateWithData
     wxView_SetOnOnDraw
     wxView_SetOnOnUpdate
+    wxVirtualFileDataObject_Create
+    wxVirtualFileDataObject_Delete
+    wxVirtualFileDataObject_DeleteAllTempFiles
+    wxVirtualFileDataObject_GetCount
+    wxVirtualFileDataObject_GetModificationTime
+    wxVirtualFileDataObject_GetName
+    wxVirtualFileDataObject_GetSize
+    wxVirtualFileDataObject_IsDir
+    wxVirtualFileDataObject_OpenStream
+    wxVirtualFileDataObject_SaveAll
+    wxVirtualFileDataObject_SaveAllToTempDir
+    wxVirtualFileDataObject_SaveTo
     wxWakeUpIdle
     wxWebViewEvent_GetInt
     wxWebViewEvent_GetMessageHandler
@@ -12338,6 +13291,9 @@ EXPORTS
     wxWindow_FitInside
     wxWindow_Freeze
     wxWindow_FromDIP
+    wxWindow_FromDIPSize
+    wxWindow_FromDIPSizeDefault
+    wxWindow_FromDIPSizeForWindow
     wxWindow_FromPhys
     wxWindow_GetAcceleratorTable
     wxWindow_GetAccessible
@@ -12523,6 +13479,7 @@ EXPORTS
     wxWindow_SetScrollbar
     wxWindow_SetSize
     wxWindow_SetSizeHints
+    wxWindow_SetSizeWH
     wxWindow_SetSizer
     wxWindow_SetSizerAndFit
     wxWindow_SetThemeEnabled
@@ -12556,6 +13513,7 @@ EXPORTS
     wxWindow_WindowToClientSize
     wxWizardEvent_GetDirection
     wxWizardEvent_GetPage
+    wxWizardPageSimple_Chain
     wxWizardPageSimple_Create
     wxWizardPageSimple_CreateWithBundle
     wxWizardPageSimple_GetBitmap
@@ -12581,18 +13539,24 @@ EXPORTS
     wxWizard_CreateDefault
     wxWizard_FitToPage
     wxWizard_GetBitmap
+    wxWizard_GetBitmapBackgroundColour
     wxWizard_GetBitmapPlacement
     wxWizard_GetCurrentPage
+    wxWizard_GetMinimumBitmapWidth
     wxWizard_GetPageAreaSizer
     wxWizard_GetPageSize
     wxWizard_HasNextPage
     wxWizard_HasPrevPage
+    wxWizard_IsRunning
     wxWizard_RunWizard
     wxWizard_SetBitmap
+    wxWizard_SetBitmapBackgroundColour
     wxWizard_SetBitmapPlacement
     wxWizard_SetBorder
+    wxWizard_SetMinimumBitmapWidth
     wxWizard_SetPageSize
     wxWizard_ShowPage
+    wxWizard_TileBitmap
     wxWrapSizer_Create
     wxWrapSizer_GetOrientation
     wxWrapSizer_InformFirstDirection
@@ -12619,8 +13583,12 @@ EXPORTS
     wxXmlDocument_GetVersion
     wxXmlDocument_IsOk
     wxXmlDocument_Load
+    wxXmlDocument_LoadFile
     wxXmlDocument_LoadFromString
+    wxXmlDocument_LoadStream
     wxXmlDocument_Save
+    wxXmlDocument_SaveFile
+    wxXmlDocument_SaveStream
     wxXmlDocument_SaveToString
     wxXmlDocument_SetFileEncoding
     wxXmlDocument_SetFileType

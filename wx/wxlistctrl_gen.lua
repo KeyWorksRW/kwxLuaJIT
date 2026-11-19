@@ -38,7 +38,7 @@ function M:GetItem2(info)
 end
 
 function M:GetItemPosition2(item)
-    return _H.wrap("wxpoint_gen", C.wxListCtrl_GetItemPosition2(self._ptr, item))
+    return _H.wrap("wxpoint_gen", C.wxListCtrl_GetItemPosition2(self._ptr, item), true)
 end
 
 function M:RefreshItems(from, toPos)
@@ -63,6 +63,10 @@ end
 
 function M:SetItemPtrData(item, data)
     return _H.to_bool(C.wxListCtrl_SetItemPtrData(self._ptr, item, data))
+end
+
+function M:GetItemPtrData(item)
+    return C.wxListCtrl_GetItemPtrData(self._ptr, item)
 end
 
 function M:GetItemTextColour(item)
@@ -220,15 +224,15 @@ function M:GetItemFont(item)
 end
 
 function M:GetItemPosition(item)
-    return _H.wrap("wxpoint_gen", C.wxListCtrl_GetItemPosition(self._ptr, item))
+    return _H.wrap("wxpoint_gen", C.wxListCtrl_GetItemPosition(self._ptr, item), true)
 end
 
 function M:GetItemRect(item, code)
-    return _H.wrap("wxrect_gen", C.wxListCtrl_GetItemRect(self._ptr, item, code))
+    return _H.wrap("wxrect_gen", C.wxListCtrl_GetItemRect(self._ptr, item, code), true)
 end
 
 function M:GetItemSpacing(isSmall)
-    return _H.wrap("wxsize_gen", C.wxListCtrl_GetItemSpacing(self._ptr, _H.from_bool(isSmall)))
+    return _H.wrap("wxsize_gen", C.wxListCtrl_GetItemSpacing(self._ptr, _H.from_bool(isSmall)), true)
 end
 
 function M:GetItemState(item, stateMask)

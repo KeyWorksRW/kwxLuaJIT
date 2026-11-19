@@ -41,6 +41,10 @@ function M:GetFilenames(list, capacity)
     return C.FileDataObject_GetFilenames(self._ptr, list, capacity)
 end
 
+function M:GetFilenamesArray(filenames)
+    C.wxFileDataObject_GetFilenamesArray(self._ptr, _H.ptr(filenames))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

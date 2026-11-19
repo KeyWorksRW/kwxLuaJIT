@@ -34,7 +34,7 @@ function M:GetEffectiveRowsCount()
 end
 
 function M:CalcMin()
-    return _H.wrap("wxsize_gen", C.wxGridSizer_CalcMin(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxGridSizer_CalcMin(self._ptr), true)
 end
 
 function M:GetCols()

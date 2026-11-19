@@ -254,7 +254,7 @@ function M:SaveStreamMime(stream, mimetype)
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxImage_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxImage_GetSize(self._ptr), true)
 end
 
 function M:SetDataRGBA(data)

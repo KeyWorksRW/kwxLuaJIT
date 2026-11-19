@@ -3,5 +3,6 @@
     "headers_dir": "../kwxffi/include",
     "defs_file":   "../kwxffi/src/kwx_defs.cpp",
     "lang":        "lua",
-    "out_path":    "./wx/"
+    "out_path":    "./wx/",
+    "exports":     true
 }

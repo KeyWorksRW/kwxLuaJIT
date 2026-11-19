@@ -3,7 +3,8 @@ local ffi = require("ffi")
 local C = require("kwxffi_gen")
 local _H = require("kwxffi_helpers_gen")
 
-local M = {}
+local _parent = require("wxcontrol_gen")
+local M = setmetatable({}, { __index = _parent })
 local MT = { __index = M }
 
 --- Wrap an existing C pointer.  The wrapper does not own the native object unless
@@ -36,6 +37,10 @@ function M:EnableDragSource(format)
     return _H.to_bool(C.wxDataViewCtrl_EnableDragSource(self._ptr, _H.ptr(format)))
 end
 
+function M:EnableDropTarget(format)
+    return _H.to_bool(C.wxDataViewCtrl_EnableDropTarget(self._ptr, _H.ptr(format)))
+end
+
 function M:SetBackgroundColour(colour)
     return _H.to_bool(C.wxDataViewCtrl_SetBackgroundColour(self._ptr, _H.ptr(colour)))
 end
@@ -45,7 +50,23 @@ function M:SetFocus()
 end
 
 function M:SetForegroundColour(colour)
-    return _H.to_bool(C.wxDataViewCtrl_SetForegroundColour(self._ptr, _H.ptr(colour)))
+    return C.wxDataViewCtrl_SetForegroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:GetSortingColumnCount()
+    return C.wxDataViewCtrl_GetSortingColumnCount(self._ptr)
+end
+
+function M:GetSortingColumnAt(pos)
+    return _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_GetSortingColumnAt(self._ptr, pos))
+end
+
+function M:GenericGetHeader()
+    return _H.wrap("wxheaderctrl_gen", C.wxDataViewCtrl_GenericGetHeader(self._ptr))
+end
+
+function M:HitTestColumnPosition(x, y, item)
+    return C.wxDataViewCtrl_HitTestColumnPosition(self._ptr, x, y, _H.ptr(item))
 end
 
 function M:AssociateModel(model)
@@ -53,33 +74,33 @@ function M:AssociateModel(model)
 end
 
 function M:GetModel()
-    return C.wxDataViewCtrl_GetModel(self._ptr)
+    return _H.wrap("wxdataviewmodel_gen", C.wxDataViewCtrl_GetModel(self._ptr))
 end
 
 function M:AppendTextColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_AppendTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_AppendTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendToggleColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_AppendToggleColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_AppendToggleColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendProgressColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_AppendProgressColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_AppendProgressColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendBitmapColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_AppendBitmapColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_AppendBitmapColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
@@ -101,7 +122,7 @@ function M:GetColumnCount()
 end
 
 function M:GetColumn(pos)
-    return C.wxDataViewCtrl_GetColumn(self._ptr, pos)
+    return _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_GetColumn(self._ptr, pos))
 end
 
 function M:GetColumnPosition(column)
@@ -121,11 +142,11 @@ function M:SetExpanderColumn(col)
 end
 
 function M:GetExpanderColumn()
-    return C.wxDataViewCtrl_GetExpanderColumn(self._ptr)
+    return _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_GetExpanderColumn(self._ptr))
 end
 
 function M:GetSortingColumn()
-    return C.wxDataViewCtrl_GetSortingColumn(self._ptr)
+    return _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_GetSortingColumn(self._ptr))
 end
 
 function M:SetIndent(indent)
@@ -145,7 +166,7 @@ function M:SetCurrentItem(item)
 end
 
 function M:GetCurrentColumn()
-    return C.wxDataViewCtrl_GetCurrentColumn(self._ptr)
+    return _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_GetCurrentColumn(self._ptr))
 end
 
 function M:GetSelectedItemsCount()
@@ -254,56 +275,56 @@ end
 
 function M:AppendIconTextColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_AppendIconTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_AppendIconTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:AppendDateColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_AppendDateColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_AppendDateColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:PrependTextColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_PrependTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_PrependTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:PrependIconTextColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_PrependIconTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_PrependIconTextColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:PrependToggleColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_PrependToggleColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_PrependToggleColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:PrependProgressColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_PrependProgressColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_PrependProgressColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:PrependDateColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_PrependDateColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_PrependDateColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end
 
 function M:PrependBitmapColumn(label, model_column, mode, width, align, flags)
     local _ws_label = _H.wxs(label)
-    local _result = C.wxDataViewCtrl_PrependBitmapColumn(self._ptr, _ws_label, model_column, mode, width, align, flags)
+    local _result = _H.wrap("wxdataviewcolumn_gen", C.wxDataViewCtrl_PrependBitmapColumn(self._ptr, _ws_label, model_column, mode, width, align, flags))
     _H.wxs_free(_ws_label)
     return _result
 end

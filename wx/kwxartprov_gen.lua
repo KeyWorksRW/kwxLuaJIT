@@ -29,4 +29,28 @@ function M:Release()
     C.kwxArtProv_Release(self._ptr)
 end
 
+function M:Push()
+    C.kwxArtProv_Push(self._ptr)
+end
+
+function M:PushBack()
+    C.kwxArtProv_PushBack(self._ptr)
+end
+
+function M:SetOnCreateBitmapWithData(pFunction, data)
+    C.kwxArtProv_SetOnCreateBitmapWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:GetRequestedWidth()
+    return C.kwxArtProv_GetRequestedWidth(self._ptr)
+end
+
+function M:GetRequestedHeight()
+    return C.kwxArtProv_GetRequestedHeight(self._ptr)
+end
+
+function M:SetCreateBitmapResult(bitmap)
+    C.kwxArtProv_SetCreateBitmapResult(self._ptr, _H.ptr(bitmap))
+end
+
 return M

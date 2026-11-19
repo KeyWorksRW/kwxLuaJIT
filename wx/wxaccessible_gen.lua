@@ -104,6 +104,122 @@ function M:SetOnGetFocus(pFunction)
     C.wxAccessible_SetOnGetFocus(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnGetSelections(pFunction)
+    C.wxAccessible_SetOnGetSelections(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnHitTestWithData(pFunction, data)
+    C.wxAccessible_SetOnHitTestWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetLocationWithData(pFunction, data)
+    C.wxAccessible_SetOnGetLocationWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnNavigateWithData(pFunction, data)
+    C.wxAccessible_SetOnNavigateWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetNameWithData(pFunction, data)
+    C.wxAccessible_SetOnGetNameWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetChildCountWithData(pFunction, data)
+    C.wxAccessible_SetOnGetChildCountWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetChildWithData(pFunction, data)
+    C.wxAccessible_SetOnGetChildWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetParentWithData(pFunction, data)
+    C.wxAccessible_SetOnGetParentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnDoDefaultActionWithData(pFunction, data)
+    C.wxAccessible_SetOnDoDefaultActionWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetDefaultActionWithData(pFunction, data)
+    C.wxAccessible_SetOnGetDefaultActionWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetDescriptionWithData(pFunction, data)
+    C.wxAccessible_SetOnGetDescriptionWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetHelpTextWithData(pFunction, data)
+    C.wxAccessible_SetOnGetHelpTextWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetKeyboardShortcutWithData(pFunction, data)
+    C.wxAccessible_SetOnGetKeyboardShortcutWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetRoleWithData(pFunction, data)
+    C.wxAccessible_SetOnGetRoleWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetStateWithData(pFunction, data)
+    C.wxAccessible_SetOnGetStateWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetValueWithData(pFunction, data)
+    C.wxAccessible_SetOnGetValueWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnSelectWithData(pFunction, data)
+    C.wxAccessible_SetOnSelectWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetFocusWithData(pFunction, data)
+    C.wxAccessible_SetOnGetFocusWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetSelectionsWithData(pFunction, data)
+    C.wxAccessible_SetOnGetSelectionsWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetHookResult(result)
+    C.wxAccessible_SetHookResult(self._ptr, result)
+end
+
+function M:SetHitTestResult(childId, childObject)
+    C.wxAccessible_SetHitTestResult(self._ptr, childId, _H.ptr(childObject))
+end
+
+function M:SetGetLocationResult(x, y, width, height)
+    C.wxAccessible_SetGetLocationResult(self._ptr, x, y, width, height)
+end
+
+function M:SetNavigateResult(toId, toObject)
+    C.wxAccessible_SetNavigateResult(self._ptr, toId, _H.ptr(toObject))
+end
+
+function M:SetGetChildCountResult(childCount)
+    C.wxAccessible_SetGetChildCountResult(self._ptr, childCount)
+end
+
+function M:SetGetChildResult(child)
+    C.wxAccessible_SetGetChildResult(self._ptr, _H.ptr(child))
+end
+
+function M:SetGetParentResult(parent)
+    C.wxAccessible_SetGetParentResult(self._ptr, _H.ptr(parent))
+end
+
+function M:SetGetRoleResult(role)
+    C.wxAccessible_SetGetRoleResult(self._ptr, role)
+end
+
+function M:SetGetStateResult(state)
+    C.wxAccessible_SetGetStateResult(self._ptr, state)
+end
+
+function M:SetGetFocusResult(childId, child)
+    C.wxAccessible_SetGetFocusResult(self._ptr, childId, _H.ptr(child))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

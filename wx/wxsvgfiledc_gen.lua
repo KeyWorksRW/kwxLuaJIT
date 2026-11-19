@@ -45,8 +45,98 @@ function M.CreateWithSizeAndResolution(fileName, width, height, a_dpi)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxSVGFileDC_CreateWithTitle
+function M.CreateWithTitle(fileName, title)
+    local _ws_fileName = _H.wxs(fileName)
+    local _ws_title = _H.wxs(title)
+    local ptr = C.wxSVGFileDC_CreateWithTitle(_ws_fileName, _ws_title)
+    _H.wxs_free(_ws_fileName)
+    _H.wxs_free(_ws_title)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxSVGFileDC_CreateWithSizeAndTitle
+function M.CreateWithSizeAndTitle(fileName, width, height, title)
+    local _ws_fileName = _H.wxs(fileName)
+    local _ws_title = _H.wxs(title)
+    local ptr = C.wxSVGFileDC_CreateWithSizeAndTitle(_ws_fileName, width, height, _ws_title)
+    _H.wxs_free(_ws_fileName)
+    _H.wxs_free(_ws_title)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxSVGFileDC_CreateWithSizeResolutionAndTitle
+function M.CreateWithSizeResolutionAndTitle(fileName, width, height, a_dpi, title)
+    local _ws_fileName = _H.wxs(fileName)
+    local _ws_title = _H.wxs(title)
+    local ptr = C.wxSVGFileDC_CreateWithSizeResolutionAndTitle(_ws_fileName, width, height, a_dpi, _ws_title)
+    _H.wxs_free(_ws_fileName)
+    _H.wxs_free(_ws_title)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxSVGFileDC_CreateFromSize
+function M.CreateFromSize(width, height)
+    local ptr = C.wxSVGFileDC_CreateFromSize(width, height)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxSVGFileDC_CreateFromSizeWithFileAndTitle
+function M.CreateFromSizeWithFileAndTitle(width, height, fileName, title)
+    local _ws_fileName = _H.wxs(fileName)
+    local _ws_title = _H.wxs(title)
+    local ptr = C.wxSVGFileDC_CreateFromSizeWithFileAndTitle(width, height, _ws_fileName, _ws_title)
+    _H.wxs_free(_ws_fileName)
+    _H.wxs_free(_ws_title)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxSVGFileDC_CreateFromSizeWithFileTitleAndResolution
+function M.CreateFromSizeWithFileTitleAndResolution(width, height, fileName, title, a_dpi)
+    local _ws_fileName = _H.wxs(fileName)
+    local _ws_title = _H.wxs(title)
+    local ptr = C.wxSVGFileDC_CreateFromSizeWithFileTitleAndResolution(width, height, _ws_fileName, _ws_title, a_dpi)
+    _H.wxs_free(_ws_fileName)
+    _H.wxs_free(_ws_title)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:BeginAccessibleGroup(attributes, title, desc)
+    local _ws_title = _H.wxs(title)
+    local _ws_desc = _H.wxs(desc)
+    C.wxSVGFileDC_BeginAccessibleGroup(self._ptr, _H.ptr(attributes), _ws_title, _ws_desc)
+    _H.wxs_free(_ws_title)
+    _H.wxs_free(_ws_desc)
+end
+
 function M:EndAccessibleGroup()
     C.wxSVGFileDC_EndAccessibleGroup(self._ptr)
+end
+
+function M:BeginLayer(opacity)
+    C.wxSVGFileDC_BeginLayer(self._ptr, opacity)
+end
+
+function M:EndLayer()
+    C.wxSVGFileDC_EndLayer(self._ptr)
+end
+
+function M:Save()
+    return _H.to_bool(C.wxSVGFileDC_Save(self._ptr))
+end
+
+function M:GetSVGDocument()
+    return _H.wxs_to_str(C.wxSVGFileDC_GetSVGDocument(self._ptr))
+end
+
+function M:SetShapeRenderingMode(mode)
+    C.wxSVGFileDC_SetShapeRenderingMode(self._ptr, mode)
 end
 
 function M:SetBitmapHandler(handler)

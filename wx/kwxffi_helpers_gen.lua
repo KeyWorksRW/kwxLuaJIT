@@ -34,6 +34,25 @@ function M.wxs_to_str(ws_ptr)
     return str
 end
 
+--- Convert a strdup'ed UTF-8 C string to a Lua string, then free it with the
+--- library allocator.
+--- @param ptr cdata char pointer returned by a C wrapper
+--- @return string
+function M.cstr_to_str(ptr)
+    local s = (ptr ~= nil) and ffi.string(ptr) or ""
+    C.wxCFree(ptr)
+    return s
+end
+
+--- Read a borrowed UTF-8 C string without freeing it. The buffer belongs to
+--- another object (or is one of the call's own arguments), so wxCFree must not
+--- touch it.
+--- @param ptr cdata char pointer returned by a C wrapper
+--- @return string
+function M.borrow_cstr(ptr)
+    return (ptr ~= nil) and ffi.string(ptr) or ""
+end
+
 --- Extract the C pointer from a wrapper object (or pass through cdata/nil).
 --- @param obj table|cdata|nil
 --- @return cdata pointer (or nil)

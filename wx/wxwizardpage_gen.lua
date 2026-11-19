@@ -27,7 +27,7 @@ function M:GetNext()
 end
 
 function M:GetBitmap()
-    return _H.wrap("wxbitmap_gen", C.wxWizardPage_GetBitmap(self._ptr))
+    return _H.wrap("wxbitmap_gen", C.wxWizardPage_GetBitmap(self._ptr), true)
 end
 
 function M:SetOnGetNext(pFunction)

@@ -105,6 +105,10 @@ function M:ParseStringArgs(command_line)
     return _result
 end
 
+function M:ParseArgv(argc, argv)
+    return C.wxCmdLineParser_ParseArgv(self._ptr, argc, argv)
+end
+
 function M:Found(name)
     local _ws_name = _H.wxs(name)
     local _result = _H.to_bool(C.wxCmdLineParser_Found(self._ptr, _ws_name))

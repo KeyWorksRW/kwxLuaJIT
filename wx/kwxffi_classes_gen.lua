@@ -25,6 +25,40 @@ ffi.cdef[[
     void wxAccessible_SetOnGetValue(void* pObject, void* pFunction);
     void wxAccessible_SetOnSelect(void* pObject, void* pFunction);
     void wxAccessible_SetOnGetFocus(void* pObject, void* pFunction);
+    void wxAccessible_SetOnGetSelections(void* pObject, void* pFunction);
+    void wxAccessible_SetOnHitTestWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetLocationWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnNavigateWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetNameWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetChildCountWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetChildWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetParentWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnDoDefaultActionWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetDefaultActionWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetDescriptionWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetHelpTextWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetKeyboardShortcutWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetRoleWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetStateWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetValueWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnSelectWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetFocusWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetOnGetSelectionsWithData(void* pObject, void* pFunction, void* data);
+    void wxAccessible_SetHookResult(void* pObject, int result);
+    void wxAccessible_SetHitTestResult(void* pObject, int childId, void* childObject);
+    void wxAccessible_SetGetLocationResult(void* pObject, int x, int y, int width, int height);
+    void wxAccessible_SetNavigateResult(void* pObject, int toId, void* toObject);
+    void wxAccessible_SetGetChildCountResult(void* pObject, int childCount);
+    void wxAccessible_SetGetChildResult(void* pObject, void* child);
+    void wxAccessible_SetGetParentResult(void* pObject, void* parent);
+    void wxAccessible_SetGetRoleResult(void* pObject, int role);
+    void wxAccessible_SetGetStateResult(void* pObject, int state);
+    void wxAccessible_SetGetFocusResult(void* pObject, int childId, void* child);
+]]
+
+-- kwxAccString
+ffi.cdef[[
+    void kwxAccString_SetValue(void* name, const char* value);
 ]]
 
 -- wxWindow
@@ -56,6 +90,7 @@ ffi.cdef[[
     void wxWindow_GetClientAreaOrigin(void* pObject, int* x, int* y);
     void* wxWindow_GetClientRect(void* pObject);
     void wxWindow_ClientToWindowSize(void* pObject, int* width, int* height);
+    void wxWindow_SetSizeWH(void* pObject, int width, int height);
     void wxWindow_WindowToClientSize(void* pObject, int* width, int* height);
     int wxWindow_GetBestHeight(void* pObject, int width);
     int wxWindow_GetBestWidth(void* pObject, int height);
@@ -116,6 +151,9 @@ ffi.cdef[[
     void* wxWindow_GetDPI(void* pObject);
     int wxWindow_FromDIP(void* pObject, int value);
     int wxWindow_ToDIP(void* pObject, int value);
+    void* wxWindow_FromDIPSize(void* pObject, int width, int height);
+    void* wxWindow_FromDIPSizeForWindow(int width, int height, void* window);
+    void* wxWindow_FromDIPSizeDefault(int width, int height);
     int wxWindow_HasCapture(void* pObject);
     int wxWindow_EnableTouchEvents(void* pObject, int eventsMask);
     int wxWindow_IsFrozen(void* pObject);
@@ -529,6 +567,7 @@ ffi.cdef[[
     void* wxBitmap_CreateDefault();
     void* wxBitmap_CreateEmpty(int width, int height, int depth);
     void* wxBitmap_CreateFromXPM(void* data);
+    void* wxBitmap_CreateFromXPMString(const char* xpm);
     void* wxBitmap_CreateLoad(void* name, int type);
     void* wxBitmap_CreateFromData(void* data, size_t size, int bitmap_type);
     void* wxBitmap_CreateFromBase64(void* base64, size_t len, int bitmap_type);
@@ -744,6 +783,7 @@ ffi.cdef[[
     void* Cursor_CreateFromStock(int id);
     void* Cursor_CreateFromImage(void* image);
     void* Cursor_CreateLoad(void* name, long type, int width, int height);
+    void* Cursor_CreateFromXPMString(const char* xpm);
 ]]
 
 -- wxDateTime
@@ -1033,7 +1073,9 @@ ffi.cdef[[
 ffi.cdef[[
     int wxDragImage_BeginDrag(void* pObject, int x, int y, void* window, void* boundingWindow);
     int wxDragImage_BeginDragFullScreen(void* pObject, int x_pos, int y_pos, void* window, int fullScreen, void* rect);
+    int wxDragImage_BeginDragFullScreenDefault(void* pObject, int x_pos, int y_pos, void* window, int fullScreen);
     void* wxDragImage_Create(void* image, int x, int y);
+    void* wxDragImage_CreateWithCursor(void* image, void* cursor);
     void wxDragImage_Delete(void* pObject);
     int wxDragImage_EndDrag(void* pObject);
     int wxDragImage_Hide(void* pObject);
@@ -1058,6 +1100,8 @@ ffi.cdef[[
     void wxEvent_SetId(void* pObject, int Id);
     void wxEvent_SetTimestamp(void* pObject, int timestamp);
     void wxEvent_Skip(void* pObject, int skip);
+    int wxEvent_StopPropagation(void* pObject);
+    void wxEvent_ResumePropagation(void* pObject, int propagationLevel);
     void wxEvent_SetOnClone(void* pObject, void* pFunction);
 ]]
 
@@ -1120,6 +1164,12 @@ ffi.cdef[[
     void* wxStringOutputStream_Create();
     void wxStringOutputStream_Delete(void* self);
     void* wxStringOutputStream_GetString(void* self);
+]]
+
+-- wxStringInputStream
+ffi.cdef[[
+    void* wxStringInputStream_Create(void* str);
+    void wxStringInputStream_Delete(void* self);
 ]]
 
 -- wxFrame
@@ -1243,6 +1293,9 @@ ffi.cdef[[
     void* wxGraphicsContext_CreateFromUnknownDC(void* dc);
     void* wxGraphicsContext_CreateLinearGradientBrush(void* pObject, double x1, double y1, double x2, double y2, void* c1, void* c2, void* matrix);
     void* wxGraphicsContext_CreatePen(void* pObject, void* pen);
+    void* wxGraphicsContext_CreatePenFromInfo(void* pObject, void* info);
+    void* wxGraphicsContext_CreateLinearGradientBrushFromStops(void* pObject, double x1, double y1, double x2, double y2, void* stops, void* matrix);
+    void* wxGraphicsContext_CreateRadialGradientBrushFromStops(void* pObject, double startX, double startY, double endX, double endY, double radius, void* stops, void* matrix);
     void* wxGraphicsContext_CreateRadialGradientBrush(void* pObject, double startX, double startY, double endX, double endY, double radius, void* oColor, void* cColor, void* matrix);
     void* wxGraphicsContext_CreateSubBitmap(void* pObject, void* bitmap, double x, double y, double w, double h);
     void wxGraphicsContext_EndLayer(void* pObject);
@@ -1352,6 +1405,29 @@ ffi.cdef[[
 ffi.cdef[[
     void* wxGraphicsPen_Create();
     void wxGraphicsPen_Delete(void* pObject);
+]]
+
+-- wxGraphicsGradientStops
+ffi.cdef[[
+    void* wxGraphicsGradientStops_Create(void* startColour, void* endColour);
+    void wxGraphicsGradientStops_Add(void* pObject, void* colour, float pos);
+    size_t wxGraphicsGradientStops_GetCount(void* pObject);
+    void* wxGraphicsGradientStops_GetStartColour(void* pObject);
+    void wxGraphicsGradientStops_SetStartColour(void* pObject, void* colour);
+    void* wxGraphicsGradientStops_GetEndColour(void* pObject);
+    void wxGraphicsGradientStops_SetEndColour(void* pObject, void* colour);
+    void wxGraphicsGradientStops_Delete(void* pObject);
+]]
+
+-- wxGraphicsPenInfo
+ffi.cdef[[
+    void* wxGraphicsPenInfo_Create(void* colour, double width, int style);
+    void wxGraphicsPenInfo_Delete(void* pObject);
+    void wxGraphicsPenInfo_SetWidth(void* pObject, double width);
+    void wxGraphicsPenInfo_SetLinearGradient(void* pObject, double x1, double y1, double x2, double y2, void* c1, void* c2);
+    void wxGraphicsPenInfo_SetLinearGradientStops(void* pObject, double x1, double y1, double x2, double y2, void* stops);
+    void wxGraphicsPenInfo_SetRadialGradient(void* pObject, double startX, double startY, double endX, double endY, double radius, void* oColor, void* cColor);
+    void wxGraphicsPenInfo_SetRadialGradientStops(void* pObject, double startX, double startY, double endX, double endY, double radius, void* stops);
 ]]
 
 -- wxGraphicsRenderer
@@ -1678,6 +1754,7 @@ ffi.cdef[[
     int wxListCtrl_GetColumnIndexFromOrder(void* pObject, int order);
     int wxListCtrl_SetItemColumnImage(void* pObject, long item, long column, int image);
     int wxListCtrl_SetItemPtrData(void* pObject, long item, uintptr_t data);
+    uintptr_t wxListCtrl_GetItemPtrData(void* pObject, long item);
     void* wxListCtrl_GetItemTextColour(void* pObject, long item);
     void wxListCtrl_SetItemTextColour(void* pObject, long item, void* col);
     void* wxListCtrl_GetItemBackgroundColour(void* pObject, long item);
@@ -1774,7 +1851,7 @@ ffi.cdef[[
     int wxListEvent_IsEditCancelled(void* pObject);
     int wxListEvent_GetCode(void* pObject);
     int wxListEvent_GetColumn(void* pObject);
-    int wxListEvent_GetData(void* pObject);
+    uintptr_t wxListEvent_GetData(void* pObject);
     int wxListEvent_GetImage(void* pObject);
     int wxListEvent_GetIndex(void* pObject);
     void wxListEvent_GetItem(void* pObject, void* ref);
@@ -1832,6 +1909,7 @@ ffi.cdef[[
     void wxMenu_Break(void* pObject);
     void wxMenu_Check(void* pObject, int id, int check);
     void* wxMenu_Create(void* title, long style);
+    void* wxMenu_CreateDefault();
     void wxMenu_DeleteById(void* pObject, int id);
     void wxMenu_DeleteByItem(void* pObject, void* item);
     void wxMenu_DeletePointer(void* pObject);
@@ -2074,6 +2152,7 @@ ffi.cdef[[
     void* wxObject_GetClientClosure(void* pObject);
     int wxObject_IsKindOf(void* pObject, void* classInfo);
     int wxObject_IsScrolledWindow(void* pObject);
+    int wxObject_IsOfClass(void* pObject, const char* className);
     void wxObject_SetClientClosure(void* pObject, void* closure);
     void wxObject_SetOnGetClassInfo(void* pObject, void* pFunction);
 ]]
@@ -2242,6 +2321,10 @@ ffi.cdef[[
     int wxScrolledWindow_IsScrollbarShown(void* pObject, int orient);
     void wxScrolledWindow_DisableKeyboardScrolling(void* pObject);
     void wxScrolledWindow_GetViewStartPixels(void* pObject, int* x, int* y);
+    void wxScrolledWindow_EnableAutoScrollInside(void* pObject, int insideWidth);
+    void wxScrolledWindow_DisableAutoScrollOutside(void* pObject);
+    void wxScrolledWindow_EnableAutoscrollWithoutCapture(void* pObject);
+    void wxScrolledWindow_DisableAutoscrollWithoutCapture(void* pObject);
 ]]
 
 -- wxSockAddress
@@ -3406,6 +3489,35 @@ ffi.cdef[[
     void wxXmlNode_SetNoConversion(void* pObject, int no_conversion);
 ]]
 
+-- wxXmlDocument
+ffi.cdef[[
+    int wxXmlDocument_LoadFile(void* pObject, void* filename, int flags);
+    int wxXmlDocument_LoadStream(void* pObject, void* stream, int flags);
+    int wxXmlDocument_SaveFile(void* pObject, void* filename, int indentstep);
+    int wxXmlDocument_SaveStream(void* pObject, void* stream, int indentstep);
+    void* wxXmlDocument_Create();
+    void* wxXmlDocument_GetDocumentNode(void* pObject);
+    void* wxXmlDocument_CreateFromFile(void* file_name, int flags);
+    void* wxXmlDocument_CreateFromString(void* text, int flags);
+    void wxXmlDocument_Delete(void* pObject);
+    int wxXmlDocument_Load(void* pObject, void* file_name, int flags);
+    int wxXmlDocument_LoadFromString(void* pObject, void* text, int flags);
+    int wxXmlDocument_Save(void* pObject, void* file_name, int indent_step);
+    void* wxXmlDocument_SaveToString(void* pObject, int indent_step);
+    void* wxXmlDocument_GetRoot(void* pObject);
+    void wxXmlDocument_SetRoot(void* pObject, void* root);
+    void* wxXmlDocument_DetachRoot(void* pObject);
+    void* wxXmlDocument_GetVersion(void* pObject);
+    void wxXmlDocument_SetVersion(void* pObject, void* version);
+    void* wxXmlDocument_GetFileEncoding(void* pObject);
+    void wxXmlDocument_SetFileEncoding(void* pObject, void* encoding);
+    int wxXmlDocument_GetFileType(void* pObject);
+    void wxXmlDocument_SetFileType(void* pObject, int file_type);
+    void wxXmlDocument_AppendToProlog(void* pObject, void* node);
+    int wxXmlDocument_AppendChild(void* pObject, void* child);
+    int wxXmlDocument_IsOk(void* pObject);
+]]
+
 -- wxFSFile
 ffi.cdef[[
     void wxFSFile_Delete(void* pObject);
@@ -3812,6 +3924,7 @@ ffi.cdef[[
     int wxCmdLineParser_ParseString(void* pObject, void* command_line);
     int wxCmdLineParser_ParseArgs(void* pObject, int argc, void* argv);
     int wxCmdLineParser_ParseStringArgs(void* pObject, void* command_line);
+    int wxCmdLineParser_ParseArgv(void* pObject, int argc, void* argv);
     int wxCmdLineParser_Found(void* pObject, void* name);
     int wxCmdLineParser_GetParamCount(void* pObject);
     void* wxCmdLineParser_GetParam(void* pObject, int index);
@@ -3840,6 +3953,10 @@ ffi.cdef[[
     void* wxVariant_CreateFromVoidPtr(void* value, void* name);
     void* wxVariant_CreateFromObject(void* value, void* name);
     void* wxVariant_CreateFromArrayString(void* value, void* name);
+    void* wxVariant_CreateFromDataViewIconText(void* text, void* icon, void* name);
+    void* wxVariant_CreateFromDataViewCheckIconText(void* text, void* icon, int checkedState, void* name);
+    int wxVariant_GetDataViewIconText(void* pObject, void* result);
+    int wxVariant_GetDataViewCheckIconText(void* pObject, void* result);
     void wxVariant_SetName(void* pObject, void* name);
     void* wxVariant_GetName(void* pObject);
     int wxVariant_IsNull(void* pObject);
@@ -3878,6 +3995,53 @@ ffi.cdef[[
     int wxVariant_GetBool(void* pObject);
     long wxVariant_GetLong(void* pObject);
     double wxVariant_GetDouble(void* pObject);
+]]
+
+-- wxDebugReport
+ffi.cdef[[
+    void* wxDebugReport_Create();
+    void wxDebugReport_Delete(void* pObject);
+    void* wxDebugReport_GetDirectory(void* pObject);
+    int wxDebugReport_IsOk(void* pObject);
+    void wxDebugReport_Reset(void* pObject);
+    void wxDebugReport_AddFile(void* pObject, void* filename, void* description);
+    int wxDebugReport_AddText(void* pObject, void* filename, void* text, void* description);
+    int wxDebugReport_AddContext(void* pObject, int ctx);
+    int wxDebugReport_AddCurrentContext(void* pObject);
+    int wxDebugReport_AddExceptionContext(void* pObject);
+    int wxDebugReport_AddDump(void* pObject, int ctx);
+    int wxDebugReport_AddCurrentDump(void* pObject);
+    int wxDebugReport_AddExceptionDump(void* pObject);
+    void wxDebugReport_AddAll(void* pObject, int context);
+    int wxDebugReport_Process(void* pObject);
+    void* wxDebugReport_GetReportName(void* pObject);
+    size_t wxDebugReport_GetFilesCount(void* pObject);
+    void* wxDebugReport_GetFileName(void* pObject, size_t index);
+    void* wxDebugReport_GetFileDescription(void* pObject, size_t index);
+    void wxDebugReport_RemoveFile(void* pObject, void* name);
+]]
+
+-- wxDebugReportCompress
+ffi.cdef[[
+    void* wxDebugReportCompress_Create();
+    void wxDebugReportCompress_Delete(void* pObject);
+    void wxDebugReportCompress_SetCompressedFileDirectory(void* pObject, void* dir);
+    void wxDebugReportCompress_SetCompressedFileBaseName(void* pObject, void* name);
+    void* wxDebugReportCompress_GetCompressedFileName(void* pObject);
+]]
+
+-- wxDebugReportUpload
+ffi.cdef[[
+    void* wxDebugReportUpload_Create(void* url, void* input, void* action, void* curl);
+    void* wxDebugReportUpload_CreateDefault(void* url, void* input, void* action);
+    void wxDebugReportUpload_Delete(void* pObject);
+]]
+
+-- wxDebugReportPreviewStd
+ffi.cdef[[
+    void* wxDebugReportPreviewStd_Create();
+    void wxDebugReportPreviewStd_Delete(void* pObject);
+    int wxDebugReportPreviewStd_Show(void* pObject, void* report);
 ]]
 
 -- wxCredentialEntryDialog
@@ -3986,6 +4150,7 @@ ffi.cdef[[
     int wxGenericFileDialog_GetFilterIndex(void* pObject);
     void wxGenericFileDialog_SetFilterIndex(void* pObject, int filterIndex);
     int wxGenericFileDialog_SetCustomizeHook(void* pObject, void* customizeHook);
+    void* wxGenericFileDialog_GetCurrentlySelectedFilename(void* pObject);
     void wxGenericFileDialog_Delete(void* pObject);
 ]]
 
@@ -4726,6 +4891,19 @@ ffi.cdef[[
     void kwxApp_SetOnGetClassInfo(void* pObject, void* pFunction);
     void kwxApp_SetOnOnAssertFailure(void* pObject, void* pFunction);
     void kwxApp_SetOnCreateTraits(void* pObject, void* pFunction);
+    void kwxApp_SetOnOnFatalException(void* pObject, void* pFunction);
+    void kwxApp_SetOnOnUnhandledException(void* pObject, void* pFunction);
+    void kwxApp_SetOnStoreCurrentException(void* pObject, void* pFunction);
+    void kwxApp_SetOnOnExceptionInMainLoop(void* pObject, void* pFunction);
+    void kwxApp_SetOnRethrowStoredException(void* pObject, void* pFunction);
+]]
+
+-- kwxDebugReportUpload
+ffi.cdef[[
+    void* kwxDebugReportUpload_Create(void* pObject, void* url, void* input, void* action);
+    void kwxDebugReportUpload_Delete(void* pObject);
+    void kwxDebugReportUpload_SetOnOnServerReply(void* pObject, void* pFunction);
+    void kwxDebugReportUpload_SetOnServerReplyResult(void* pObject, int result);
 ]]
 
 -- kwxObject
@@ -4757,6 +4935,20 @@ ffi.cdef[[
     void* kwxEvtHandler_Create(void* pObject);
     void kwxEvtHandler_Delete(void* pObject);
     void kwxEvtHandler_SetOnProcessEvent(void* pObject, void* pFunction);
+]]
+
+-- kwxFrame
+ffi.cdef[[
+    void* kwxFrame_Create(void* parent, int id, void* title, int x, int y, int width, int height, long style);
+    void kwxFrame_Delete(void* pObject);
+    void kwxFrame_SetCallbackObject(void* pObject, void* object);
+    void* kwxFrame_GetCallbackObject(void* pObject);
+    void kwxFrame_SetOnProcessEvent(void* pObject, void* pFunction);
+    void kwxFrame_SetOnProcessEventWithData(void* pObject, void* pFunction, void* data);
+    void kwxFrame_SetProcessEventResult(void* pObject, int result);
+    void kwxFrame_SetOnTryBefore(void* pObject, void* pFunction);
+    void kwxFrame_SetOnTryBeforeWithData(void* pObject, void* pFunction, void* data);
+    void kwxFrame_SetTryBeforeResult(void* pObject, int result);
 ]]
 
 -- kwxVarHScrollHelper
@@ -4960,6 +5152,22 @@ ffi.cdef[[
     void kwxDocument_SetOnModify(void* pObject, void* pFunction);
     void kwxDocument_SetOnOnCreate(void* pObject, void* pFunction);
     void kwxDocument_SetOnOnOpenDocument(void* pObject, void* pFunction);
+    void kwxDocument_SetOnDoOpenDocumentWithData(void* pObject, void* pFunction, void* data);
+    void kwxDocument_SetDoOpenDocumentResult(void* pObject, int result);
+    void kwxDocument_SetOnDoSaveDocumentWithData(void* pObject, void* pFunction, void* data);
+    void kwxDocument_SetDoSaveDocumentResult(void* pObject, int result);
+    void kwxDocument_SetOnIsModifiedWithData(void* pObject, void* pFunction, void* data);
+    void kwxDocument_SetIsModifiedResult(void* pObject, int result);
+    void kwxDocument_SetOnModifyWithData(void* pObject, void* pFunction, void* data);
+    void kwxDocument_SetOnOnCreateWithData(void* pObject, void* pFunction, void* data);
+    void kwxDocument_SetOnCreateResult(void* pObject, int result);
+    void kwxDocument_SetOnOnOpenDocumentWithData(void* pObject, void* pFunction, void* data);
+    void kwxDocument_SetOnOpenDocumentResult(void* pObject, int result);
+    int kwxDocument_OnCreateBase(void* pObject, void* path, long flags);
+    int kwxDocument_OnOpenDocumentBase(void* pObject, void* filename);
+    int kwxDocument_IsModifiedBase(void* pObject);
+    void kwxDocument_ModifyBase(void* pObject, int modified);
+    void* kwxDocument_CreateWithParent(void* pObject, void* parent);
 ]]
 
 -- kwxView
@@ -4970,6 +5178,33 @@ ffi.cdef[[
     void kwxView_SetOnOnClose(void* pObject, void* pFunction);
     void kwxView_SetOnOnCreate(void* pObject, void* pFunction);
     void kwxView_SetOnOnUpdate(void* pObject, void* pFunction);
+    void kwxView_SetOnOnCreateWithData(void* pObject, void* pFunction, void* data);
+    void kwxView_SetOnCreateResult(void* pObject, int result);
+    void kwxView_SetOnOnCloseWithData(void* pObject, void* pFunction, void* data);
+    void kwxView_SetOnCloseResult(void* pObject, int result);
+    int kwxView_OnCloseBase(void* pObject, int deleteWindow);
+]]
+
+-- kwxDocTemplate
+ffi.cdef[[
+    void* kwxDocTemplate_Create(void* pObject, void* manager, void* descr, void* filter, void* dir, void* ext, void* docTypeName, void* viewTypeName, long flags);
+    void kwxDocTemplate_SetOnCreateDocument(void* pObject, void* pFunction);
+    void kwxDocTemplate_SetOnCreateView(void* pObject, void* pFunction);
+    void kwxDocTemplate_SetCreatedDocument(void* pObject, void* doc);
+    void kwxDocTemplate_SetCreatedView(void* pObject, void* view);
+]]
+
+-- kwxDocAuiParentFrame
+ffi.cdef[[
+    void* kwxDocAuiParentFrame_Create(void* manager, void* parent, int id, void* title, int x, int y, int width, int height, int style);
+    void* kwxDocAuiParentFrame_GetDocumentManager(void* self);
+]]
+
+-- kwxDocAuiChildFrame
+ffi.cdef[[
+    void* kwxDocAuiChildFrame_Create(void* doc, void* view, void* parent, int id, void* title, int x, int y, int width, int height, int style);
+    void* kwxDocAuiChildFrame_GetDocument(void* self);
+    void* kwxDocAuiChildFrame_GetView(void* self);
 ]]
 
 -- kwxFileSystemHandler
@@ -5018,6 +5253,20 @@ ffi.cdef[[
     void kwxWizardPage_SetOnTransferDataToWindowOut(void* pObject, void* pFunction);
 ]]
 
+-- kwxWizardPageSimple
+ffi.cdef[[
+    void* kwxWizardPageSimple_Create(void* pObject, void* parent, void* prev, void* next, void* bitmap);
+    void kwxWizardPageSimple_Delete(void* pObject);
+    void kwxWizardPageSimple_SetOnGetNext(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnGetPrev(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnTransferDataFromWindow(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnTransferDataToWindow(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnGetNextOut(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnGetPrevOut(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnTransferDataFromWindowOut(void* pObject, void* pFunction);
+    void kwxWizardPageSimple_SetOnTransferDataToWindowOut(void* pObject, void* pFunction);
+]]
+
 -- kwxPopupTransientWindow
 ffi.cdef[[
     void* kwxPopupTransientWindow_Create(void* pObject, void* parent, int style);
@@ -5030,6 +5279,315 @@ ffi.cdef[[
     int kwxPopupTransientWindow_CallBaseShow(void* pObject, int show);
     int kwxPopupTransientWindow_CallBaseProcessLeftDown(void* pObject, void* event);
     void kwxPopupTransientWindow_CallBaseOnDismiss(void* pObject);
+]]
+
+-- wxDataViewModel
+ffi.cdef[[
+    void* wxDataViewModel_CreateDefault(void* pObject);
+    void wxDataViewModel_SetOnGetValueWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnSetValueWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnGetParentWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnIsContainerWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnGetChildrenWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnHasValueWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnIsEnabledWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnHasContainerColumnsWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnCompareWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnHasDefaultCompareWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnResortWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewModel_SetOnGetAttrWithData(void* pObject, void* pFunction, void* data);
+    unsigned int wxDataViewModel_GetPendingColumn(void* pObject);
+    int wxDataViewModel_GetPendingAscending(void* pObject);
+    void wxDataViewModel_SetGetValueResult(void* pObject, void* value);
+    void wxDataViewModel_SetSetValueResult(void* pObject, int result);
+    void wxDataViewModel_SetGetParentResult(void* pObject, void* parent);
+    void wxDataViewModel_SetIsContainerResult(void* pObject, int result);
+    void wxDataViewModel_SetGetChildrenCountResult(void* pObject, unsigned int count);
+    void wxDataViewModel_AddChildResult(void* pObject, void* item);
+    void wxDataViewModel_SetHasValueResult(void* pObject, int result);
+    void wxDataViewModel_SetIsEnabledResult(void* pObject, int result);
+    void wxDataViewModel_SetHasContainerColumnsResult(void* pObject, int result);
+    void wxDataViewModel_SetCompareResult(void* pObject, int result);
+    void wxDataViewModel_SetHasDefaultCompareResult(void* pObject, int result);
+    void wxDataViewModel_SetGetAttrResult(void* pObject, void* attr);
+    void wxDataViewModel_GetValue(void* pObject, void* variant, void* item, unsigned int col);
+    int wxDataViewModel_SetValue(void* pObject, void* variant, void* item, unsigned int col);
+    int wxDataViewModel_ChangeValue(void* pObject, void* variant, void* item, unsigned int col);
+    int wxDataViewModel_HasValue(void* pObject, void* item, unsigned int col);
+    int wxDataViewModel_IsEnabled(void* pObject, void* item, unsigned int col);
+    int wxDataViewModel_GetAttr(void* pObject, void* item, unsigned int col, void* attr);
+    void wxDataViewModel_GetParent(void* pObject, void* item, void* parent);
+    int wxDataViewModel_IsContainer(void* pObject, void* item);
+    int wxDataViewModel_HasContainerColumns(void* pObject, void* item);
+    unsigned int wxDataViewModel_GetChildren(void* pObject, void* item, void* children);
+    int wxDataViewModel_ItemAdded(void* pObject, void* parent, void* item);
+    int wxDataViewModel_ItemsAdded(void* pObject, void* parent, void* items);
+    int wxDataViewModel_ItemDeleted(void* pObject, void* parent, void* item);
+    int wxDataViewModel_ItemsDeleted(void* pObject, void* parent, void* items);
+    int wxDataViewModel_ItemChanged(void* pObject, void* item);
+    int wxDataViewModel_ItemsChanged(void* pObject, void* items);
+    int wxDataViewModel_ValueChanged(void* pObject, void* item, unsigned int col);
+    int wxDataViewModel_Cleared(void* pObject);
+    int wxDataViewModel_BeforeReset(void* pObject);
+    int wxDataViewModel_AfterReset(void* pObject);
+    int wxDataViewModel_Compare(void* pObject, void* item1, void* item2, unsigned int column, int ascending);
+    int wxDataViewModel_HasDefaultCompare(void* pObject);
+    void wxDataViewModel_Resort(void* pObject);
+    void wxDataViewModel_IncRef(void* pObject);
+    void wxDataViewModel_DecRef(void* pObject);
+]]
+
+-- wxDataViewVirtualListModel
+ffi.cdef[[
+    void* wxDataViewVirtualListModel_Create(void* pObject, unsigned int initialSize);
+    void wxDataViewVirtualListModel_SetOnGetValueByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnSetValueByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnGetRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnGetCountWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnGetAttrByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnIsEnabledByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnCompareWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewVirtualListModel_SetOnHasDefaultCompareWithData(void* pObject, void* pFunction, void* data);
+    unsigned int wxDataViewVirtualListModel_GetPendingColumn(void* pObject);
+    unsigned int wxDataViewVirtualListModel_GetPendingRow(void* pObject);
+    int wxDataViewVirtualListModel_GetPendingAscending(void* pObject);
+    void wxDataViewVirtualListModel_SetGetValueByRowResult(void* pObject, void* value);
+    void wxDataViewVirtualListModel_SetSetValueByRowResult(void* pObject, int result);
+    void wxDataViewVirtualListModel_SetGetRowResult(void* pObject, unsigned int row);
+    void wxDataViewVirtualListModel_SetGetCountResult(void* pObject, unsigned int count);
+    void wxDataViewVirtualListModel_SetGetAttrByRowResult(void* pObject, int result);
+    void wxDataViewVirtualListModel_SetGetAttrByRowAttr(void* pObject, void* attr);
+    void wxDataViewVirtualListModel_SetIsEnabledByRowResult(void* pObject, int result);
+    void wxDataViewVirtualListModel_SetCompareResult(void* pObject, int result);
+    void wxDataViewVirtualListModel_SetHasDefaultCompareResult(void* pObject, int result);
+    void wxDataViewVirtualListModel_RowPrepended(void* pObject);
+    void wxDataViewVirtualListModel_RowInserted(void* pObject, unsigned int before);
+    void wxDataViewVirtualListModel_RowAppended(void* pObject);
+    void wxDataViewVirtualListModel_RowDeleted(void* pObject, unsigned int row);
+    void wxDataViewVirtualListModel_RowsDeleted(void* pObject, void* rows);
+    void wxDataViewVirtualListModel_RowChanged(void* pObject, unsigned int row);
+    void wxDataViewVirtualListModel_RowValueChanged(void* pObject, unsigned int row, unsigned int col);
+    void wxDataViewVirtualListModel_Reset(void* pObject, unsigned int newSize);
+    void wxDataViewVirtualListModel_GetItem(void* pObject, unsigned int row, void* result);
+]]
+
+-- wxDataViewIndexListModel
+ffi.cdef[[
+    void* wxDataViewIndexListModel_Create(void* pObject, unsigned int initialSize);
+    void wxDataViewIndexListModel_SetOnGetValueByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnSetValueByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnGetRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnGetCountWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnGetAttrByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnIsEnabledByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnCompareWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewIndexListModel_SetOnHasDefaultCompareWithData(void* pObject, void* pFunction, void* data);
+    unsigned int wxDataViewIndexListModel_GetPendingColumn(void* pObject);
+    unsigned int wxDataViewIndexListModel_GetPendingRow(void* pObject);
+    int wxDataViewIndexListModel_GetPendingAscending(void* pObject);
+    void wxDataViewIndexListModel_SetGetValueByRowResult(void* pObject, void* value);
+    void wxDataViewIndexListModel_SetSetValueByRowResult(void* pObject, int result);
+    void wxDataViewIndexListModel_SetGetRowResult(void* pObject, unsigned int row);
+    void wxDataViewIndexListModel_SetGetCountResult(void* pObject, unsigned int count);
+    void wxDataViewIndexListModel_SetGetAttrByRowResult(void* pObject, int result);
+    void wxDataViewIndexListModel_SetGetAttrByRowAttr(void* pObject, void* attr);
+    void wxDataViewIndexListModel_SetIsEnabledByRowResult(void* pObject, int result);
+    void wxDataViewIndexListModel_SetCompareResult(void* pObject, int result);
+    void wxDataViewIndexListModel_SetHasDefaultCompareResult(void* pObject, int result);
+    void wxDataViewIndexListModel_RowPrepended(void* pObject);
+    void wxDataViewIndexListModel_RowInserted(void* pObject, unsigned int before);
+    void wxDataViewIndexListModel_RowAppended(void* pObject);
+    void wxDataViewIndexListModel_RowDeleted(void* pObject, unsigned int row);
+    void wxDataViewIndexListModel_RowsDeleted(void* pObject, void* rows);
+    void wxDataViewIndexListModel_RowChanged(void* pObject, unsigned int row);
+    void wxDataViewIndexListModel_RowValueChanged(void* pObject, unsigned int row, unsigned int col);
+    void wxDataViewIndexListModel_Reset(void* pObject, unsigned int newSize);
+    void wxDataViewIndexListModel_GetItem(void* pObject, unsigned int row, void* result);
+]]
+
+-- wxDataViewListStore
+ffi.cdef[[
+    void wxDataViewListStore_SetOnHasValueWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewListStore_SetOnIsEnabledByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewListStore_SetOnGetAttrByRowWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewListStore_SetHasValueResult(void* pObject, int result);
+    void wxDataViewListStore_SetIsEnabledByRowResult(void* pObject, int result);
+    void wxDataViewListStore_SetGetAttrByRowResult(void* pObject, int result);
+    void wxDataViewListStore_SetGetAttrByRowAttr(void* pObject, void* attr);
+    unsigned int wxDataViewListStore_GetPendingRow(void* pObject);
+    unsigned int wxDataViewListStore_GetPendingColumn(void* pObject);
+    void wxDataViewListStore_PrependColumn(void* pObject, void* variant_type);
+    void wxDataViewListStore_AppendColumn(void* pObject, void* variant_type);
+    void wxDataViewListStore_InsertColumn(void* pObject, unsigned int pos, void* variant_type);
+    void wxDataViewListStore_AppendItem(void* pObject, void* values, uintptr_t data);
+    void wxDataViewListStore_PrependItem(void* pObject, void* values, uintptr_t data);
+    void wxDataViewListStore_InsertItem(void* pObject, unsigned int row, void* values, uintptr_t data);
+    void wxDataViewListStore_DeleteItem(void* pObject, unsigned int pos);
+    void wxDataViewListStore_DeleteAllItems(void* pObject);
+    void wxDataViewListStore_ClearColumns(void* pObject);
+    unsigned int wxDataViewListStore_GetItemCount(void* pObject);
+    void wxDataViewListStore_SetItemData(void* pObject, void* item, uintptr_t data);
+    uintptr_t wxDataViewListStore_GetItemData(void* pObject, void* item);
+    void wxDataViewListStore_GetValueByRow(void* pObject, void* value, unsigned int row, unsigned int col);
+    int wxDataViewListStore_SetValueByRow(void* pObject, void* value, unsigned int row, unsigned int col);
+    void* wxDataViewListStore_Create(void* pObject);
+    int wxDataViewListStore_IsEnabledByRow(void* pObject, unsigned int row, unsigned int col);
+    int wxDataViewListStore_GetAttrByRow(void* pObject, unsigned int row, unsigned int col, void* attr);
+]]
+
+-- wxDataViewRenderer
+ffi.cdef[[
+    void wxDataViewRenderer_SetMode(void* pObject, int mode);
+    int wxDataViewRenderer_GetMode(void* pObject);
+    void wxDataViewRenderer_SetAlignment(void* pObject, int align);
+    int wxDataViewRenderer_GetAlignment(void* pObject);
+    void wxDataViewRenderer_EnableEllipsize(void* pObject, int mode);
+    int wxDataViewRenderer_GetEllipsizeMode(void* pObject);
+    void* wxDataViewRenderer_GetVariantType(void* pObject);
+    int wxDataViewRenderer_GetValue(void* pObject, void* value);
+    int wxDataViewRenderer_SetValue(void* pObject, void* value);
+    void wxDataViewRenderer_SetEnabled(void* pObject, int enabled);
+    int wxDataViewRenderer_IsHighlighted(void* pObject);
+    void* wxDataViewRenderer_GetAccessibleDescription(void* pObject);
+]]
+
+-- wxDataViewCustomRenderer
+ffi.cdef[[
+    void* wxDataViewCustomRenderer_Create(const char* variantType, int mode, int align);
+    void wxDataViewCustomRenderer_SetOnRenderWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnGetSizeWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnSetValueWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnGetValueWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnActivateCellWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnActivateWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnLeftClickWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnStartDragWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnCreateEditorCtrlWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnGetValueFromEditorCtrlWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnValidateWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnHasEditorCtrlWithData(void* pObject, void* pFunction, void* data);
+    void wxDataViewCustomRenderer_SetOnGetAccessibleDescriptionWithData(void* pObject, void* pFunction, void* data);
+    void* wxDataViewCustomRenderer_GetRenderDC(void* pObject);
+    void wxDataViewCustomRenderer_GetRenderRect(void* pObject, int* x, int* y, int* width, int* height);
+    int wxDataViewCustomRenderer_GetRenderState(void* pObject);
+    void* wxDataViewCustomRenderer_GetCurrentValue(void* pObject);
+    void* wxDataViewCustomRenderer_GetEditorRect(void* pObject);
+    void* wxDataViewCustomRenderer_GetEditorParent(void* pObject);
+    void* wxDataViewCustomRenderer_GetEditorCtrl(void* pObject);
+    unsigned int wxDataViewCustomRenderer_GetPendingColumn(void* pObject);
+    void* wxDataViewCustomRenderer_GetActivateCellMouseEvent(void* pObject);
+    int wxDataViewCustomRenderer_GetPendingCursorX(void* pObject);
+    int wxDataViewCustomRenderer_GetPendingCursorY(void* pObject);
+    void wxDataViewCustomRenderer_RenderText(void* pObject, const char* text, int xoffset, int cell_x, int cell_y, int cell_width, int cell_height, void* dc, int state);
+    void wxDataViewCustomRenderer_GetTextExtent(void* pObject, const char* text, int* width, int* height);
+    void wxDataViewCustomRenderer_SetRenderResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetGetSizeResult(void* pObject, int width, int height);
+    void wxDataViewCustomRenderer_SetGetValueResult(void* pObject, void* value);
+    void wxDataViewCustomRenderer_SetSetValueResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetActivateCellResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetActivateResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetLeftClickResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetStartDragResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetCreateEditorCtrlResult(void* pObject, void* editor);
+    void wxDataViewCustomRenderer_SetGetValueFromEditorCtrlResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetGetValueFromEditorCtrlValue(void* pObject, void* value);
+    void wxDataViewCustomRenderer_SetValidateResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetHasEditorCtrlResult(void* pObject, int result);
+    void wxDataViewCustomRenderer_SetAccessibleDescription(void* pObject, void* description);
+]]
+
+-- wxDataViewTextRenderer
+ffi.cdef[[
+    void* wxDataViewTextRenderer_CreateDefault();
+    void* wxDataViewTextRenderer_Create(const char* variantType, int mode, int align);
+    void wxDataViewTextRenderer_EnableMarkup(void* pObject, int enable);
+]]
+
+-- wxDataViewToggleRenderer
+ffi.cdef[[
+    void* wxDataViewToggleRenderer_CreateDefault();
+    void* wxDataViewToggleRenderer_Create(const char* variantType, int mode, int align);
+    void wxDataViewToggleRenderer_ShowAsRadio(void* pObject, int radio);
+]]
+
+-- wxDataViewBitmapRenderer
+ffi.cdef[[
+    void* wxDataViewBitmapRenderer_CreateDefault();
+    void* wxDataViewBitmapRenderer_Create(const char* variantType, int mode, int align);
+]]
+
+-- wxDataViewProgressRenderer
+ffi.cdef[[
+    void* wxDataViewProgressRenderer_Create(void* label, const char* variantType, int mode, int align);
+]]
+
+-- wxDataViewIconTextRenderer
+ffi.cdef[[
+    void* wxDataViewIconTextRenderer_CreateDefault();
+    void* wxDataViewIconTextRenderer_Create(const char* variantType, int mode, int align);
+]]
+
+-- wxDataViewSpinRenderer
+ffi.cdef[[
+    void* wxDataViewSpinRenderer_Create(int min, int max, int mode, int align);
+]]
+
+-- wxDataViewChoiceRenderer
+ffi.cdef[[
+    void* wxDataViewChoiceRenderer_Create(void* choices, int mode, int align);
+    void* wxDataViewChoiceRenderer_GetChoice(void* pObject, int index);
+    void* wxDataViewChoiceRenderer_GetChoices(void* pObject);
+]]
+
+-- wxDataViewChoiceByIndexRenderer
+ffi.cdef[[
+    void* wxDataViewChoiceByIndexRenderer_Create(void* choices, int mode, int align);
+]]
+
+-- wxDataViewDateRenderer
+ffi.cdef[[
+    void* wxDataViewDateRenderer_Create(const char* variantType, int mode, int align);
+]]
+
+-- wxDataViewCheckIconTextRenderer
+ffi.cdef[[
+    void* wxDataViewCheckIconTextRenderer_CreateDefault();
+    void* wxDataViewCheckIconTextRenderer_Create(int mode, int align);
+    void wxDataViewCheckIconTextRenderer_Allow3rdStateForUser(void* pObject, int allow);
+]]
+
+-- wxDataViewColumn
+ffi.cdef[[
+    void* wxDataViewColumn_CreateWithRenderer(void* title, void* renderer, unsigned int modelColumn, int width, int align, int flags);
+    void* wxDataViewColumn_GetTitle(void* pObject);
+    void wxDataViewColumn_SetTitle(void* pObject, void* title);
+    void* wxDataViewColumn_GetBitmapBundle(void* pObject);
+    void wxDataViewColumn_SetBitmap(void* pObject, void* bitmap);
+    int wxDataViewColumn_GetWidth(void* pObject);
+    void wxDataViewColumn_SetWidth(void* pObject, int width);
+    int wxDataViewColumn_GetMinWidth(void* pObject);
+    void wxDataViewColumn_SetMinWidth(void* pObject, int min_width);
+    int wxDataViewColumn_GetAlignment(void* pObject);
+    void wxDataViewColumn_SetAlignment(void* pObject, int alignment);
+    int wxDataViewColumn_GetFlags(void* pObject);
+    void wxDataViewColumn_SetFlags(void* pObject, int flags);
+    void wxDataViewColumn_SetFlag(void* pObject, int flag);
+    void wxDataViewColumn_ChangeFlag(void* pObject, int flag, int set);
+    int wxDataViewColumn_IsResizeable(void* pObject);
+    void wxDataViewColumn_SetResizeable(void* pObject, int resizeable);
+    int wxDataViewColumn_IsSortable(void* pObject);
+    void wxDataViewColumn_SetSortable(void* pObject, int sortable);
+    int wxDataViewColumn_IsReorderable(void* pObject);
+    void wxDataViewColumn_SetReorderable(void* pObject, int reorderable);
+    int wxDataViewColumn_IsHidden(void* pObject);
+    void wxDataViewColumn_SetHidden(void* pObject, int hidden);
+    int wxDataViewColumn_IsShown(void* pObject);
+    int wxDataViewColumn_IsSortKey(void* pObject);
+    void wxDataViewColumn_SetSortOrder(void* pObject, int ascending);
+    int wxDataViewColumn_IsSortOrderAscending(void* pObject);
+    void wxDataViewColumn_UnsetAsSortKey(void* pObject);
+    unsigned int wxDataViewColumn_GetModelColumn(void* pObject);
+    void* wxDataViewColumn_GetRenderer(void* pObject);
 ]]
 
 -- wxHtmlCell
@@ -5534,14 +6092,83 @@ ffi.cdef[[
     void wxAcceleratorTable_Delete(void* pObject);
 ]]
 
+-- wxDCPenChanger
+ffi.cdef[[
+    void* wxDCPenChanger_Create(void* dc, void* pen);
+    void wxDCPenChanger_Set(void* pObject, void* pen);
+    void wxDCPenChanger_Delete(void* pObject);
+]]
+
+-- wxDCBrushChanger
+ffi.cdef[[
+    void* wxDCBrushChanger_Create(void* dc, void* brush);
+    void wxDCBrushChanger_Set(void* pObject, void* brush);
+    void wxDCBrushChanger_Delete(void* pObject);
+]]
+
+-- wxDCFontChanger
+ffi.cdef[[
+    void* wxDCFontChanger_Create(void* dc, void* font);
+    void wxDCFontChanger_Set(void* pObject, void* font);
+    void wxDCFontChanger_Delete(void* pObject);
+]]
+
+-- wxDCTextColourChanger
+ffi.cdef[[
+    void* wxDCTextColourChanger_Create(void* dc, void* colour);
+    void wxDCTextColourChanger_Set(void* pObject, void* colour);
+    void wxDCTextColourChanger_Delete(void* pObject);
+]]
+
+-- wxDCTextBgColourChanger
+ffi.cdef[[
+    void* wxDCTextBgColourChanger_Create(void* dc, void* colour);
+    void wxDCTextBgColourChanger_Set(void* pObject, void* colour);
+    void wxDCTextBgColourChanger_Delete(void* pObject);
+]]
+
+-- wxDCTextBgModeChanger
+ffi.cdef[[
+    void* wxDCTextBgModeChanger_Create(void* dc, int mode);
+    void wxDCTextBgModeChanger_Set(void* pObject, int mode);
+    void wxDCTextBgModeChanger_Delete(void* pObject);
+]]
+
+-- wxDataViewItemAttr
+ffi.cdef[[
+    void* wxDataViewItemAttr_Create();
+    void wxDataViewItemAttr_Copy(void* pObject, void* other);
+    void wxDataViewItemAttr_Delete(void* pObject);
+    void wxDataViewItemAttr_SetColour(void* pObject, void* colour);
+    void wxDataViewItemAttr_SetBackgroundColour(void* pObject, void* colour);
+    void wxDataViewItemAttr_SetBold(void* pObject, int set);
+    void wxDataViewItemAttr_SetItalic(void* pObject, int set);
+    void wxDataViewItemAttr_SetStrikethrough(void* pObject, int set);
+    int wxDataViewItemAttr_HasColour(void* pObject);
+    int wxDataViewItemAttr_HasFont(void* pObject);
+    int wxDataViewItemAttr_HasBackgroundColour(void* pObject);
+    int wxDataViewItemAttr_GetBold(void* pObject);
+    int wxDataViewItemAttr_GetItalic(void* pObject);
+    int wxDataViewItemAttr_GetStrikethrough(void* pObject);
+    int wxDataViewItemAttr_IsDefault(void* pObject);
+    void* wxDataViewItemAttr_GetColour(void* pObject);
+    void* wxDataViewItemAttr_GetBackgroundColour(void* pObject);
+    void* wxDataViewItemAttr_GetEffectiveFont(void* pObject, void* font);
+]]
+
 -- wxDataViewCtrl
 ffi.cdef[[
     int wxDataViewCtrl_SetHeaderAttr(void* pObject, void* attr);
     int wxDataViewCtrl_Enable(void* pObject, int enable);
     int wxDataViewCtrl_EnableDragSource(void* pObject, void* format);
+    int wxDataViewCtrl_EnableDropTarget(void* pObject, void* format);
     int wxDataViewCtrl_SetBackgroundColour(void* pObject, void* colour);
     void wxDataViewCtrl_SetFocus(void* pObject);
     int wxDataViewCtrl_SetForegroundColour(void* pObject, void* colour);
+    int wxDataViewCtrl_GetSortingColumnCount(void* pObject);
+    void* wxDataViewCtrl_GetSortingColumnAt(void* pObject, int pos);
+    void* wxDataViewCtrl_GenericGetHeader(void* pObject);
+    int wxDataViewCtrl_HitTestColumnPosition(void* pObject, int x, int y, void* item);
     void* wxDataViewCtrl_Create(void* parent, int id, int x, int y, int width, int height, int style);
     int wxDataViewCtrl_AssociateModel(void* pObject, void* model);
     void* wxDataViewCtrl_GetModel(void* pObject);
@@ -5634,6 +6261,93 @@ ffi.cdef[[
     int wxDataViewListCtrl_IsRowSelected(void* pObject, unsigned int row);
 ]]
 
+-- wxDataViewTreeStore
+ffi.cdef[[
+    void* wxDataViewTreeStore_Create();
+    void wxDataViewTreeStore_Delete(void* pObject);
+    void wxDataViewTreeStore_AppendContainer(void* pObject, void* parent, void* text, void* icon, void* expanded, void* data, void* result);
+    void wxDataViewTreeStore_AppendItem(void* pObject, void* parent, void* text, void* icon, void* data, void* result);
+    void wxDataViewTreeStore_PrependContainer(void* pObject, void* parent, void* text, void* icon, void* expanded, void* data, void* result);
+    void wxDataViewTreeStore_PrependItem(void* pObject, void* parent, void* text, void* icon, void* data, void* result);
+    void wxDataViewTreeStore_InsertContainer(void* pObject, void* parent, void* previous, void* text, void* icon, void* expanded, void* data, void* result);
+    void wxDataViewTreeStore_InsertItem(void* pObject, void* parent, void* previous, void* text, void* icon, void* data, void* result);
+    void wxDataViewTreeStore_GetNthChild(void* pObject, void* parent, unsigned int pos, void* result);
+    int wxDataViewTreeStore_GetChildCount(void* pObject, void* parent);
+    void wxDataViewTreeStore_SetItemText(void* pObject, void* item, void* text);
+    void* wxDataViewTreeStore_GetItemText(void* pObject, void* item);
+    void wxDataViewTreeStore_SetItemIcon(void* pObject, void* item, void* icon);
+    void* wxDataViewTreeStore_GetItemIcon(void* pObject, void* item);
+    void wxDataViewTreeStore_SetItemExpandedIcon(void* pObject, void* item, void* icon);
+    void* wxDataViewTreeStore_GetItemExpandedIcon(void* pObject, void* item);
+    void wxDataViewTreeStore_SetItemData(void* pObject, void* item, void* data);
+    void* wxDataViewTreeStore_GetItemData(void* pObject, void* item);
+    void wxDataViewTreeStore_DeleteItem(void* pObject, void* item);
+    void wxDataViewTreeStore_DeleteChildren(void* pObject, void* item);
+    void wxDataViewTreeStore_DeleteAllItems(void* pObject);
+]]
+
+-- wxDataViewTreeCtrl
+ffi.cdef[[
+    void* wxDataViewTreeCtrl_Create(void* parent, int id, int x, int y, int width, int height, int style);
+    void* wxDataViewTreeCtrl_GetStore(void* pObject);
+    void wxDataViewTreeCtrl_AppendContainer(void* pObject, void* parent, void* text, int icon, int expanded, void* data, void* result);
+    void wxDataViewTreeCtrl_AppendItem(void* pObject, void* parent, void* text, int icon, void* data, void* result);
+    void wxDataViewTreeCtrl_PrependContainer(void* pObject, void* parent, void* text, int icon, int expanded, void* data, void* result);
+    void wxDataViewTreeCtrl_PrependItem(void* pObject, void* parent, void* text, int icon, void* data, void* result);
+    void wxDataViewTreeCtrl_InsertContainer(void* pObject, void* parent, void* previous, void* text, int icon, int expanded, void* data, void* result);
+    void wxDataViewTreeCtrl_InsertItem(void* pObject, void* parent, void* previous, void* text, int icon, void* data, void* result);
+    void wxDataViewTreeCtrl_DeleteItem(void* pObject, void* item);
+    void wxDataViewTreeCtrl_DeleteChildren(void* pObject, void* item);
+    void wxDataViewTreeCtrl_DeleteAllItems(void* pObject);
+    int wxDataViewTreeCtrl_GetChildCount(void* pObject, void* parent);
+    void* wxDataViewTreeCtrl_GetItemText(void* pObject, void* item);
+    void wxDataViewTreeCtrl_SetItemText(void* pObject, void* item, void* text);
+    void* wxDataViewTreeCtrl_GetItemIcon(void* pObject, void* item);
+    void wxDataViewTreeCtrl_SetItemIcon(void* pObject, void* item, void* icon);
+    void* wxDataViewTreeCtrl_GetItemExpandedIcon(void* pObject, void* item);
+    void wxDataViewTreeCtrl_SetItemExpandedIcon(void* pObject, void* item, void* icon);
+    void* wxDataViewTreeCtrl_GetItemData(void* pObject, void* item);
+    void wxDataViewTreeCtrl_SetItemData(void* pObject, void* item, void* data);
+    int wxDataViewTreeCtrl_IsContainer(void* pObject, void* item);
+    void wxDataViewTreeCtrl_GetItemParent(void* pObject, void* item, void* result);
+    void wxDataViewTreeCtrl_GetNthChild(void* pObject, void* parent, unsigned int pos, void* result);
+    void wxDataViewTreeCtrl_Expand(void* pObject, void* item);
+    void wxDataViewTreeCtrl_Collapse(void* pObject, void* item);
+    int wxDataViewTreeCtrl_IsExpanded(void* pObject, void* item);
+    void wxDataViewTreeCtrl_SetImageList(void* pObject, void* list);
+    void* wxDataViewTreeCtrl_GetImageList(void* pObject);
+    void wxDataViewTreeCtrl_AssignImageList(void* pObject, void* list);
+    void wxDataViewTreeCtrl_SetImages(void* pObject, void* images);
+]]
+
+-- wxDataViewEvent
+ffi.cdef[[
+    void wxDataViewEvent_GetItem(void* pObject, void* item);
+    int wxDataViewEvent_GetColumn(void* pObject);
+    void* wxDataViewEvent_GetDataViewColumn(void* pObject);
+    void* wxDataViewEvent_GetValue(void* pObject);
+    void wxDataViewEvent_SetValue(void* pObject, void* value);
+    void* wxDataViewEvent_GetDataObject(void* pObject);
+    void wxDataViewEvent_SetDataObject(void* pObject, void* obj);
+    void* wxDataViewEvent_GetDataFormat(void* pObject);
+    void wxDataViewEvent_SetDataFormat(void* pObject, void* format);
+    size_t wxDataViewEvent_GetDataSize(void* pObject);
+    void wxDataViewEvent_SetDataSize(void* pObject, size_t size);
+    void* wxDataViewEvent_GetDataBuffer(void* pObject);
+    void wxDataViewEvent_SetDataBuffer(void* pObject, void* buffer);
+    int wxDataViewEvent_GetDropEffect(void* pObject);
+    void wxDataViewEvent_SetDropEffect(void* pObject, int effect);
+    void wxDataViewEvent_SetDragFlags(void* pObject, int flags);
+    int wxDataViewEvent_GetDragFlags(void* pObject);
+    void wxDataViewEvent_SetProposedDropIndex(void* pObject, int index);
+    int wxDataViewEvent_GetProposedDropIndex(void* pObject);
+    void wxDataViewEvent_GetPosition(void* pObject, int* x, int* y);
+    void wxDataViewEvent_SetPosition(void* pObject, int x, int y);
+    int wxDataViewEvent_IsEditCancelled(void* pObject);
+    void wxDataViewEvent_SetEditCancelled(void* pObject);
+    void* wxDataViewEvent_GetModel(void* pObject);
+]]
+
 -- wxTreeListCtrl
 ffi.cdef[[
     void wxTreeListCtrl_SetItemTextSimple(void* pObject, void* item, void* text);
@@ -5704,6 +6418,30 @@ ffi.cdef[[
     int wxStatusBar_GetStatusStyle(void* pObject, int n);
 ]]
 
+-- wxDataViewIconText
+ffi.cdef[[
+    void* wxDataViewIconText_Create(void* text, void* icon);
+    void* wxDataViewIconText_CreateDefault();
+    void wxDataViewIconText_Copy(void* pObject, void* other);
+    void wxDataViewIconText_Delete(void* pObject);
+    void wxDataViewIconText_SetText(void* pObject, void* text);
+    void* wxDataViewIconText_GetText(void* pObject);
+    void wxDataViewIconText_SetBitmapBundle(void* pObject, void* icon);
+    void* wxDataViewIconText_GetBitmapBundle(void* pObject);
+    void wxDataViewIconText_SetIcon(void* pObject, void* icon);
+    void* wxDataViewIconText_GetIcon(void* pObject);
+]]
+
+-- wxDataViewCheckIconText
+ffi.cdef[[
+    void* wxDataViewCheckIconText_Create(void* text, void* icon, int checkedState);
+    void* wxDataViewCheckIconText_CreateDefault();
+    void wxDataViewCheckIconText_Copy(void* pObject, void* other);
+    void wxDataViewCheckIconText_Delete(void* pObject);
+    void wxDataViewCheckIconText_SetCheckedState(void* pObject, int state);
+    int wxDataViewCheckIconText_GetCheckedState(void* pObject);
+]]
+
 -- wxControl
 ffi.cdef[[
     int wxControl_FindAccelIndex(void* label);
@@ -5767,6 +6505,7 @@ ffi.cdef[[
     int wxTextEntry_SetMargins(void* self, int left, int top);
     void wxTextEntry_GetMargins(void* self, int* left, int* top);
     int wxTextEntry_AutoComplete(void* self, int count, void* items);
+    int wxTextEntry_AutoCompleteStrings(void* self, void* items);
     int wxTextEntry_AutoCompleteFileNames(void* self);
     int wxTextEntry_AutoCompleteDirectories(void* self);
     int wxTextEntry_AutoCompleteCompleter(void* self, void* completer);
@@ -5875,6 +6614,25 @@ ffi.cdef[[
     void wxTopLevelWindow_OSXSetModified(void* pObject, int modified);
     int wxTopLevelWindow_OSXIsModified(void* pObject);
     void wxTopLevelWindow_SetRepresentedFilename(void* pObject, void* filename);
+]]
+
+-- kwxMSAA
+ffi.cdef[[
+    void* kwxMSAA_FromWindow(void* window, int objectId);
+    void kwxMSAA_Release(void* accessible);
+    int kwxMSAA_GetChildCount(void* accessible);
+    void* kwxMSAA_GetName(void* accessible, int childId);
+    void* kwxMSAA_GetRoleText(void* accessible, int childId);
+    void* kwxMSAA_GetValue(void* accessible, int childId);
+    void* kwxMSAA_GetDescription(void* accessible, int childId);
+    void* kwxMSAA_GetNameWithStatus(void* accessible, int childId, int* result);
+    void* kwxMSAA_GetRoleTextWithStatus(void* accessible, int childId, int* result);
+    void* kwxMSAA_GetValueWithStatus(void* accessible, int childId, int* result);
+    void* kwxMSAA_GetDescriptionWithStatus(void* accessible, int childId, int* result);
+    int kwxMSAA_GetState(void* accessible, int childId);
+    void* kwxMSAA_GetChild(void* accessible, int childId);
+    int kwxMSAA_GetAccessibleChildCount(void* accessible);
+    void* kwxMSAA_GetAccessibleChild(void* accessible, int index);
 ]]
 
 -- wxProtocol
@@ -6688,31 +7446,6 @@ ffi.cdef[[
     int wxRegEx_ReplaceFirst(void* pObject, void* text, void* replacement);
 ]]
 
--- wxXmlDocument
-ffi.cdef[[
-    void* wxXmlDocument_Create();
-    void* wxXmlDocument_GetDocumentNode(void* pObject);
-    void* wxXmlDocument_CreateFromFile(void* file_name, int flags);
-    void* wxXmlDocument_CreateFromString(void* text, int flags);
-    void wxXmlDocument_Delete(void* pObject);
-    int wxXmlDocument_Load(void* pObject, void* file_name, int flags);
-    int wxXmlDocument_LoadFromString(void* pObject, void* text, int flags);
-    int wxXmlDocument_Save(void* pObject, void* file_name, int indent_step);
-    void* wxXmlDocument_SaveToString(void* pObject, int indent_step);
-    void* wxXmlDocument_GetRoot(void* pObject);
-    void wxXmlDocument_SetRoot(void* pObject, void* root);
-    void* wxXmlDocument_DetachRoot(void* pObject);
-    void* wxXmlDocument_GetVersion(void* pObject);
-    void wxXmlDocument_SetVersion(void* pObject, void* version);
-    void* wxXmlDocument_GetFileEncoding(void* pObject);
-    void wxXmlDocument_SetFileEncoding(void* pObject, void* encoding);
-    int wxXmlDocument_GetFileType(void* pObject);
-    void wxXmlDocument_SetFileType(void* pObject, int file_type);
-    void wxXmlDocument_AppendToProlog(void* pObject, void* node);
-    int wxXmlDocument_AppendChild(void* pObject, void* child);
-    int wxXmlDocument_IsOk(void* pObject);
-]]
-
 -- wxURI
 ffi.cdef[[
     void* wxURI_Create();
@@ -6922,6 +7655,9 @@ ffi.cdef[[
     void* wxRichTextAttr_GetTextBoxAttr(void* self);
     void wxRichTextAttr_SetTextBoxAttr(void* self, void* attr);
     int wxRichTextAttr_HasTextBoxAttr(void* self);
+    void wxRichTextAttr_SetBackgroundColour(void* self, void* colour);
+    void wxRichTextAttr_SetParagraphSpacingAfter(void* self, int spacing);
+    void wxRichTextAttr_SetLineSpacing(void* self, int spacing);
 ]]
 
 -- wxRichTextProperties
@@ -7132,6 +7868,18 @@ ffi.cdef[[
     int wxRichTextCompositeObject_RemoveChild(void* self, void* child, int deleteChild);
     int wxRichTextCompositeObject_DeleteChildren(void* self);
     void wxRichTextCompositeObject_Delete(void* self);
+]]
+
+-- wxRichTextParagraph
+ffi.cdef[[
+    void* wxRichTextParagraph_Create();
+    void wxRichTextParagraph_Delete(void* self);
+]]
+
+-- wxRichTextPlainText
+ffi.cdef[[
+    void* wxRichTextPlainText_Create(void* text);
+    void wxRichTextPlainText_Delete(void* self);
 ]]
 
 -- wxRichTextParagraphLayoutBox
@@ -7493,6 +8241,8 @@ ffi.cdef[[
     int wxRichTextCtrl_HitTest(void* self, int x, int y, long* position);
     void wxRichTextCtrl_SetCaretPosition(void* self, long position, int showAtLineStart);
     long wxRichTextCtrl_GetAdjustedCaretPosition(void* self, long caretPosition);
+    long wxRichTextCtrl_GetCaretPosition(void* self);
+    int wxRichTextCtrl_SetMargins(void* self, int left, int top);
     long wxRichTextCtrl_FindNextWordPosition(void* self, int direction);
     int wxRichTextCtrl_IsPositionVisible(void* self, long position);
     long wxRichTextCtrl_GetFirstVisiblePosition(void* self);
@@ -7820,13 +8570,24 @@ ffi.cdef[[
     void kwxRichTextCtrl_SetOnPrepareContent(void* pObject, void* pFunction);
     void kwxRichTextCtrl_SetOnCanDeleteRange(void* pObject, void* pFunction);
     void kwxRichTextCtrl_SetOnCanInsertContent(void* pObject, void* pFunction);
+    void kwxRichTextCtrl_SetOnPrepareContentWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextCtrl_SetOnCanDeleteRangeWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextCtrl_SetOnCanInsertContentWithData(void* pObject, void* pFunction, void* data);
     void kwxRichTextCtrl_SetCanDeleteRangeResult(void* pObject, int result);
     void kwxRichTextCtrl_SetCanInsertContentResult(void* pObject, int result);
+    void kwxRichTextCtrl_SetCallbackObject(void* pObject, void* object);
+    void* kwxRichTextCtrl_GetCallbackObject(void* pObject);
+    void kwxRichTextCtrl_SetLockId(void* pObject, long id);
+    long kwxRichTextCtrl_GetLockId(void* pObject);
+    void kwxRichTextCtrl_BeginLock(void* pObject);
+    void kwxRichTextCtrl_EndLock(void* pObject);
+    int kwxRichTextCtrl_IsLocked(void* pObject);
 ]]
 
 -- kwxRichTextFieldTypeStandard
 ffi.cdef[[
     void* kwxRichTextFieldTypeStandard_Create(void* pObject, void* name, void* label, int displayStyle);
+    void* kwxRichTextFieldTypeStandard_CreateWithBitmap(void* pObject, void* name, void* bitmap, int displayStyle);
     void kwxRichTextFieldTypeStandard_Delete(void* pObject);
     void kwxRichTextFieldTypeStandard_SetOnCanEditProperties(void* pObject, void* pFunction);
     void kwxRichTextFieldTypeStandard_SetOnEditProperties(void* pObject, void* pFunction);
@@ -7838,6 +8599,11 @@ ffi.cdef[[
     void kwxRichTextFieldTypeStandard_SetIsTopLevelResult(void* pObject, int result);
     void kwxRichTextFieldTypeStandard_SetOnUpdateField(void* pObject, void* pFunction);
     void kwxRichTextFieldTypeStandard_SetOnIsTopLevel(void* pObject, void* pFunction);
+    void kwxRichTextFieldTypeStandard_SetOnCanEditPropertiesWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextFieldTypeStandard_SetOnEditPropertiesWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextFieldTypeStandard_SetOnGetPropertiesMenuLabelWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextFieldTypeStandard_SetOnUpdateFieldWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextFieldTypeStandard_SetOnIsTopLevelWithData(void* pObject, void* pFunction, void* data);
 ]]
 
 -- kwxRichTextDrawingHandler
@@ -7849,6 +8615,11 @@ ffi.cdef[[
     void kwxRichTextDrawingHandler_SetOnGetVirtualSubobjectAttributesCount(void* pObject, void* pFunction);
     void kwxRichTextDrawingHandler_SetOnHasVirtualText(void* pObject, void* pFunction);
     void kwxRichTextDrawingHandler_SetOnGetVirtualText(void* pObject, void* pFunction);
+    void kwxRichTextDrawingHandler_SetOnHasVirtualAttributesWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextDrawingHandler_SetOnGetVirtualAttributesWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextDrawingHandler_SetOnGetVirtualSubobjectAttributesCountWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextDrawingHandler_SetOnHasVirtualTextWithData(void* pObject, void* pFunction, void* data);
+    void kwxRichTextDrawingHandler_SetOnGetVirtualTextWithData(void* pObject, void* pFunction, void* data);
     void kwxRichTextDrawingHandler_SetVirtualTextResult(void* pObject, void* text);
     void kwxRichTextDrawingHandler_SetHasVirtualAttributesResult(void* pObject, int result);
     void kwxRichTextDrawingHandler_SetGetVirtualAttributesResult(void* pObject, int result);
@@ -7948,6 +8719,7 @@ ffi.cdef[[
     void* wxTextUrlEvent_GetMouseEvent(void* pObject);
     long wxTextUrlEvent_GetURLStart(void* pObject);
     long wxTextUrlEvent_GetURLEnd(void* pObject);
+    void* wxTextUrlEvent_GetString(void* pObject);
 ]]
 
 -- wxThreadEvent
@@ -8076,6 +8848,8 @@ ffi.cdef[[
     int wxArtProvider_Pop();
     void wxArtProvider_Push(void* provider);
     void* wxArtProvider_GetBitmapBundle(void* id, void* client, int width, int height);
+    void* wxArtProvider_GetBitmapBundleDefault(void* id);
+    void* wxArtProvider_MakeClientId(const char* id);
     void* wxArtProvider_GetIcon(void* id, void* client, int width, int height);
     void* wxArtProvider_GetIconBundle(void* id, void* client);
     void* wxArtProvider_GetNativeSizeHint(void* client, void* window);
@@ -8286,6 +9060,23 @@ ffi.cdef[[
     void* wxDynamicLibrary_GetName(void* pObject);
 ]]
 
+-- wxDynamicLibraryDetails
+ffi.cdef[[
+    void* wxDynamicLibraryDetails_GetName(void* pObject);
+    void* wxDynamicLibraryDetails_GetPath(void* pObject);
+    void* wxDynamicLibraryDetails_GetVersion(void* pObject);
+    void* wxDynamicLibraryDetails_GetAddress(void* pObject);
+    size_t wxDynamicLibraryDetails_GetLength(void* pObject);
+]]
+
+-- kwxDynamicLibraryList
+ffi.cdef[[
+    void* kwxDynamicLibraryList_Create();
+    void kwxDynamicLibraryList_Delete(void* pObject);
+    size_t kwxDynamicLibraryList_GetCount(void* pObject);
+    void* kwxDynamicLibraryList_GetDetails(void* pObject, size_t index);
+]]
+
 -- wxMutex
 ffi.cdef[[
     int wxMutex_IsOk(void* pObject);
@@ -8318,10 +9109,33 @@ ffi.cdef[[
     int wxCondition_WaitFor(void* pObject, int sec, int nsec);
 ]]
 
+-- wxItemAttr
+ffi.cdef[[
+    void* wxItemAttr_Create();
+    void wxItemAttr_Copy(void* pObject, void* other);
+    void wxItemAttr_Delete(void* pObject);
+    void wxItemAttr_SetTextColour(void* pObject, void* colour);
+    void wxItemAttr_SetBackgroundColour(void* pObject, void* colour);
+    void wxItemAttr_SetFont(void* pObject, void* font);
+    int wxItemAttr_HasTextColour(void* pObject);
+    int wxItemAttr_HasBackgroundColour(void* pObject);
+    int wxItemAttr_HasFont(void* pObject);
+    int wxItemAttr_HasColours(void* pObject);
+    void* wxItemAttr_GetTextColour(void* pObject);
+    void* wxItemAttr_GetBackgroundColour(void* pObject);
+    void* wxItemAttr_GetFont(void* pObject);
+]]
+
 -- kwxArtProv
 ffi.cdef[[
     void* kwxArtProv_Create(void* pObject, void* callback);
     void kwxArtProv_Release(void* pObject);
+    void kwxArtProv_Push(void* pObject);
+    void kwxArtProv_PushBack(void* pObject);
+    void kwxArtProv_SetOnCreateBitmapWithData(void* pObject, void* pFunction, void* data);
+    int kwxArtProv_GetRequestedWidth(void* pObject);
+    int kwxArtProv_GetRequestedHeight(void* pObject);
+    void kwxArtProv_SetCreateBitmapResult(void* pObject, void* bitmap);
 ]]
 
 -- kwxClient
@@ -8376,6 +9190,16 @@ ffi.cdef[[
     void kwxDropTarget_SetOnDrop(void* pObject, void* pFunction);
     void kwxDropTarget_SetOnEnter(void* pObject, void* pFunction);
     void kwxDropTarget_SetOnLeave(void* pObject, void* pFunction);
+    void kwxDropTarget_SetOnDataWithData(void* pObject, void* pFunction, void* data);
+    void kwxDropTarget_SetOnDropWithData(void* pObject, void* pFunction, void* data);
+    void kwxDropTarget_SetOnEnterWithData(void* pObject, void* pFunction, void* data);
+    void kwxDropTarget_SetOnDragOverWithData(void* pObject, void* pFunction, void* data);
+    void kwxDropTarget_SetOnLeaveWithData(void* pObject, void* pFunction, void* data);
+    void kwxDropTarget_SetDataResult(void* pObject, int result);
+    void kwxDropTarget_SetDropResult(void* pObject, int result);
+    void kwxDropTarget_SetEnterResult(void* pObject, int result);
+    void kwxDropTarget_SetDragOverResult(void* pObject, int result);
+    int kwxDropTarget_GetDropResult(void* pObject);
 ]]
 
 -- kwxFileDropTarget
@@ -8387,6 +9211,19 @@ ffi.cdef[[
     void kwxFileDropTarget_SetOnDrop(void* pObject, void* pFunction);
     void kwxFileDropTarget_SetOnEnter(void* pObject, void* pFunction);
     void kwxFileDropTarget_SetOnLeave(void* pObject, void* pFunction);
+    void kwxFileDropTarget_SetOnDataWithData(void* pObject, void* pFunction, void* data);
+    void kwxFileDropTarget_SetOnDropWithData(void* pObject, void* pFunction, void* data);
+    void kwxFileDropTarget_SetOnEnterWithData(void* pObject, void* pFunction, void* data);
+    void kwxFileDropTarget_SetOnDragOverWithData(void* pObject, void* pFunction, void* data);
+    void kwxFileDropTarget_SetOnLeaveWithData(void* pObject, void* pFunction, void* data);
+    void kwxFileDropTarget_SetDataResult(void* pObject, int result);
+    void kwxFileDropTarget_SetDropResult(void* pObject, int result);
+    void kwxFileDropTarget_SetEnterResult(void* pObject, int result);
+    void kwxFileDropTarget_SetDragOverResult(void* pObject, int result);
+    int kwxFileDropTarget_GetDropResult(void* pObject);
+    void kwxFileDropTarget_SetOnDropFilesWithData(void* pObject, void* pFunction, void* data);
+    void kwxFileDropTarget_SetDropFilesResult(void* pObject, int result);
+    void* kwxFileDropTarget_GetDropFiles(void* pObject);
 ]]
 
 -- kwxGridTable
@@ -8488,6 +9325,19 @@ ffi.cdef[[
     void kwxTextDropTarget_SetOnDrop(void* pObject, void* pFunction);
     void kwxTextDropTarget_SetOnEnter(void* pObject, void* pFunction);
     void kwxTextDropTarget_SetOnLeave(void* pObject, void* pFunction);
+    void kwxTextDropTarget_SetOnDataWithData(void* pObject, void* pFunction, void* data);
+    void kwxTextDropTarget_SetOnDropWithData(void* pObject, void* pFunction, void* data);
+    void kwxTextDropTarget_SetOnEnterWithData(void* pObject, void* pFunction, void* data);
+    void kwxTextDropTarget_SetOnDragOverWithData(void* pObject, void* pFunction, void* data);
+    void kwxTextDropTarget_SetOnLeaveWithData(void* pObject, void* pFunction, void* data);
+    void kwxTextDropTarget_SetDataResult(void* pObject, int result);
+    void kwxTextDropTarget_SetDropResult(void* pObject, int result);
+    void kwxTextDropTarget_SetEnterResult(void* pObject, int result);
+    void kwxTextDropTarget_SetDragOverResult(void* pObject, int result);
+    int kwxTextDropTarget_GetDropResult(void* pObject);
+    void kwxTextDropTarget_SetOnDropTextWithData(void* pObject, void* pFunction, void* data);
+    void kwxTextDropTarget_SetDropTextResult(void* pObject, int result);
+    void* kwxTextDropTarget_GetDropText(void* pObject);
 ]]
 
 -- kwxTextValidator
@@ -8576,6 +9426,11 @@ ffi.cdef[[
     void wxApp_SetOnGetClassInfo(void* pObject, void* pFunction);
     void wxApp_SetOnOnAssertFailure(void* pObject, void* pFunction);
     void wxApp_SetOnCreateTraits(void* pObject, void* pFunction);
+    void wxApp_SetOnOnFatalException(void* pObject, void* pFunction);
+    void wxApp_SetOnOnUnhandledException(void* pObject, void* pFunction);
+    void wxApp_SetOnStoreCurrentException(void* pObject, void* pFunction);
+    void wxApp_SetOnOnExceptionInMainLoop(void* pObject, void* pFunction);
+    void wxApp_SetOnRethrowStoredException(void* pObject, void* pFunction);
 ]]
 
 -- wxArrayString
@@ -8637,6 +9492,7 @@ ffi.cdef[[
 ffi.cdef[[
     void* wxAuiToolBarItem_CreateDefault();
     void* wxAuiToolBarItem_Create(void* source);
+    void wxAuiToolBarItem_Delete(void* pObject);
     void* wxAuiToolBarItem_Copy(void* pObject, void* source);
     void wxAuiToolBarItem_Assign(void* pObject, void* source);
     void wxAuiToolBarItem_SetWindow(void* pObject, void* window);
@@ -8758,6 +9614,10 @@ ffi.cdef[[
     void wxAuiToolBar_Clear(void* pObject);
     int wxAuiToolBar_DeleteTool(void* pObject, int tool_id);
     int wxAuiToolBar_DeleteByIndex(void* pObject, int tool_id);
+    int wxAuiToolBar_DestroyTool(void* pObject, int tool_id);
+    int wxAuiToolBar_DestroyToolByIndex(void* pObject, int idx);
+    void* wxAuiToolBar_GetToolClientData(void* pObject, int tool_id);
+    void wxAuiToolBar_SetToolClientData(void* pObject, int tool_id, void* clientData);
     size_t wxAuiToolBar_GetToolCount(void* pObject);
     int wxAuiToolBar_GetToolPos(void* pObject, int tool_id);
     int wxAuiToolBar_GetToolIndex(void* pObject, int tool_id);
@@ -8803,6 +9663,10 @@ ffi.cdef[[
     void wxAuiToolBar_SetCustomOverflowItems(void* pObject, void* prepend, void* append);
     void* wxAuiToolBar_GetHintSize(void* pObject, int dock_direction);
     int wxAuiToolBar_IsPaneValid(void* pObject, void* pane);
+    void* wxAuiToolBar_AddToolByLabelBundle(void* pObject, int tool_id, void* label, void* bitmap, void* shortHelpString, int kind);
+    void* wxAuiToolBar_AddToolBundle(void* pObject, int tool_id, void* label, void* bitmap, void* disabledBitmap, int kind, void* shortHelpString, void* longHelpString, void* clientData);
+    void* wxAuiToolBar_AddToolByBitmapBundle(void* pObject, int tool_id, void* bitmap, void* disabledBitmap, int toggle, void* clientData, void* shortHelpString, void* longHelpString);
+    void wxAuiToolBar_SetToolBitmapBundle(void* pObject, int tool_id, void* bitmap);
 ]]
 
 -- wxAuiNotebook
@@ -8857,6 +9721,13 @@ ffi.cdef[[
     void* wxAuiNotebook_GetPagesInDisplayOrder(void* pObject, void* tabCtrl);
     void wxAuiNotebook_SaveLayout(void* pObject, void* name, void* serializer);
     void wxAuiNotebook_LoadLayout(void* pObject, void* name, void* deserializer);
+    int wxAuiNotebook_AddPageWithBundle(void* pObject, void* page, void* caption, int select, void* bitmap);
+    int wxAuiNotebook_InsertPageWithBundle(void* pObject, int page_idx, void* page, void* caption, int select, void* bitmap);
+    int wxAuiNotebook_SetPageBitmapBundle(void* pObject, int page, void* bitmap);
+    void* wxAuiNotebook_CalculateNewSplitSize(void* pObject);
+    void* wxAuiNotebook_GetTabCtrlFromPoint(void* pObject, int x, int y);
+    void* wxAuiNotebook_FindTabCtrl(void* pObject, void* page);
+    int wxAuiNotebook_FindTabIndex(void* pObject, void* page);
 ]]
 
 -- wxAuiTabContainerButton
@@ -9035,6 +9906,19 @@ ffi.cdef[[
     void* wxAuiManager_GetPaneByWindow(void* pObject, void* window);
     void* wxAuiManager_GetPaneByName(void* pObject, void* name);
     void* wxAuiManager_GetManager(void* window);
+    int wxAuiManager_CanDockPanel(void* pObject, void* pane);
+    void* wxAuiManager_CalculateNewSplitSize(void* pObject);
+    void* wxAuiManager_CalculateHintRect(void* pObject, void* paneWindow, int x, int y, int offsetX, int offsetY);
+    void wxAuiManager_ClosePane(void* pObject, void* paneInfo);
+    void wxAuiManager_DrawHintRect(void* pObject, void* paneWindow, int x, int y, int offsetX, int offsetY);
+    int wxAuiManager_HasLiveResize(void* pObject);
+    void wxAuiManager_MaximizePane(void* pObject, void* paneInfo);
+    void wxAuiManager_MinimizePane(void* pObject, void* paneInfo);
+    void wxAuiManager_RestoreMaximizedPane(void* pObject);
+    void wxAuiManager_RestorePane(void* pObject, void* paneInfo);
+    int wxAuiManager_SplitPane(void* pObject, void* window, void* newWindow, int direction, int dropX, int dropY);
+    void wxAuiManager_StartPaneDrag(void* pObject, void* paneWindow, int offsetX, int offsetY);
+    void wxAuiManager_UpdateHint(void* pObject, void* rect);
 ]]
 
 -- wxAuiDockArt
@@ -9152,6 +10036,7 @@ ffi.cdef[[
     void* wxAuiPaneInfo_MaxSizeXY(void* pObject, int x, int y);
     void* wxAuiPaneInfo_MinSize(void* pObject, int width, int height);
     void* wxAuiPaneInfo_MinSizeXY(void* pObject, int x, int y);
+    void* wxAuiPaneInfo_IconBundle(void* pObject, void* bitmap);
 ]]
 
 -- wxAuiManagerEvent
@@ -9285,6 +10170,7 @@ ffi.cdef[[
 -- wxBitmapButton
 ffi.cdef[[
     void* wxBitmapButton_Create(void* parent, int id, void* bitmap, int left, int top, int width, int height, int style);
+    void* wxBitmapButton_CreateWithBundle(void* parent, int id, void* bitmap, int left, int top, int width, int height, int style);
     void wxBitmapButton_GetBitmapDisabled(void* pObject, void* ref);
     void wxBitmapButton_GetBitmapFocus(void* pObject, void* ref);
     void wxBitmapButton_GetBitmapLabel(void* pObject, void* ref);
@@ -9295,6 +10181,10 @@ ffi.cdef[[
     void wxBitmapButton_SetBitmapFocus(void* pObject, void* focus);
     void wxBitmapButton_SetBitmapLabel(void* pObject, void* bitmap);
     void wxBitmapButton_SetBitmapSelected(void* pObject, void* sel);
+    void wxBitmapButton_SetBitmapDisabledBundle(void* pObject, void* disabled);
+    void wxBitmapButton_SetBitmapFocusBundle(void* pObject, void* focus);
+    void wxBitmapButton_SetBitmapLabelBundle(void* pObject, void* bitmap);
+    void wxBitmapButton_SetBitmapSelectedBundle(void* pObject, void* sel);
     void wxBitmapButton_SetMargins(void* pObject, int x, int y);
 ]]
 
@@ -9338,6 +10228,7 @@ ffi.cdef[[
     void* wxBitmapBundle_GetDefaultSize(void* pObject);
     int wxBitmapBundle_IsOk(void* pObject);
     void* wxBitmapBundle_CreateFromData(void* data, size_t size, int bitmap_type);
+    void* wxBitmapBundle_CreateDefault();
     void* wxBitmapBundle_CreateFromBase64(void* base64, size_t len, int bitmap_type);
     void* wxBitmapBundle_CreateFromSVGBase64(void* base64, size_t len, int default_w, int default_h);
     void* wxBitmapBundle_FromSVGFile(void* file, int width, int height);
@@ -9543,6 +10434,7 @@ ffi.cdef[[
 -- wxCaret
 ffi.cdef[[
     void* wxCaret_Create(void* window, int width, int height);
+    void wxCaret_Delete(void* pObject);
     int wxCaret_GetBlinkTime();
     void* wxCaret_GetPosition(void* pObject);
     void* wxCaret_GetSize(void* pObject);
@@ -9844,6 +10736,7 @@ ffi.cdef[[
 -- wxDataObjectComposite
 ffi.cdef[[
     void wxDataObjectComposite_Add(void* pObject, void* data, int preferred);
+    void* wxDataObjectComposite_GetReceivedFormat(void* pObject);
     void* wxDataObjectComposite_Create();
     void wxDataObjectComposite_Delete(void* pObject);
 ]]
@@ -9857,6 +10750,15 @@ ffi.cdef[[
     size_t wxDataObjectSimple_GetDataSize(void* pObject);
     int wxDataObjectSimple_GetDataHere(void* pObject, void* buffer);
     int wxDataObjectSimple_SetData(void* pObject, size_t len, void* buffer);
+]]
+
+-- wxURLDataObject
+ffi.cdef[[
+    void* wxURLDataObject_Create(void* url);
+    void* wxURLDataObject_CreateDefault();
+    void wxURLDataObject_Delete(void* pObject);
+    void* wxURLDataObject_GetURL(void* pObject);
+    void wxURLDataObject_SetURL(void* pObject, void* url);
 ]]
 
 -- wxDataOutputStream
@@ -9941,13 +10843,28 @@ ffi.cdef[[
 
 -- wxDocManager
 ffi.cdef[[
+    void* wxDocManager_Create(int flags, int initialize);
+    void* wxDocManager_CreateDefault();
+    void wxDocManager_Delete(void* pObject);
+    void wxDocManager_AddDocument(void* pObject, void* doc);
+    void wxDocManager_AssociateTemplate(void* pObject, void* docTemplate);
+    int wxDocManager_Clear(void* pObject, int force);
     int wxDocManager_CloseDocuments(void* pObject, int force);
     void* wxDocManager_CreateDocument(void* pObject, void* path, long flags);
     void* wxDocManager_CreateNewDocument(void* pObject);
+    void wxDocManager_DisassociateTemplate(void* pObject, void* docTemplate);
     void wxDocManager_FileHistoryLoad(void* pObject, void* config);
     void wxDocManager_FileHistorySave(void* pObject, void* config);
     void wxDocManager_FileHistoryUseMenu(void* pObject, void* menu);
+    void* wxDocManager_GetCurrentDocument(void* pObject);
+    void* wxDocManager_GetCurrentView(void* pObject);
+    int wxDocManager_GetDocumentCount(void* pObject);
+    void* wxDocManager_GetDocumentAt(void* pObject, int pos);
     void* wxDocManager_GetDocumentManager();
+    int wxDocManager_GetMaxDocsOpen(void* pObject);
+    void* wxDocManager_GetTemplateAt(void* pObject, int pos);
+    int wxDocManager_GetTemplateCount(void* pObject);
+    void wxDocManager_RemoveDocument(void* pObject, void* doc);
     void wxDocManager_SetMaxDocsOpen(void* pObject, int n);
 ]]
 
@@ -9957,14 +10874,36 @@ ffi.cdef[[
     void* wxDocParentFrame_GetDocumentManager(void* self);
 ]]
 
+-- wxDocTemplate
+ffi.cdef[[
+    void* wxDocTemplate_GetDescription(void* pObject);
+    void* wxDocTemplate_GetFileFilter(void* pObject);
+    void wxDocTemplate_SetFileFilter(void* pObject, void* filter);
+    void* wxDocTemplate_GetDefaultExtension(void* pObject);
+    void* wxDocTemplate_GetDirectory(void* pObject);
+    void wxDocTemplate_SetDirectory(void* pObject, void* dir);
+    void* wxDocTemplate_GetViewName(void* pObject);
+    void* wxDocTemplate_GetDocumentName(void* pObject);
+    long wxDocTemplate_GetFlags(void* pObject);
+    void* wxDocTemplate_GetDocumentManager(void* pObject);
+    int wxDocTemplate_FileMatchesTemplate(void* pObject, void* path);
+]]
+
 -- wxDocument
 ffi.cdef[[
     int wxDocument_DeleteContents(void* pObject);
     void* wxDocument_GetCommandProcessor(void* pObject);
     void* wxDocument_GetFilename(void* pObject);
     void* wxDocument_GetFirstView(void* pObject);
+    int wxDocument_IsModified(void* pObject);
     void wxDocument_SetFilename(void* pObject, void* filename, int notifyViews);
     void wxDocument_UpdateAllViews(void* pObject, void* sender, void* hint);
+    int wxDocument_Close(void* pObject);
+    int wxDocument_Save(void* pObject);
+    int wxDocument_SaveAs(void* pObject);
+    int wxDocument_Revert(void* pObject);
+    int wxDocument_AlreadySaved(void* pObject);
+    int wxDocument_CanClose(void* pObject);
     void wxDocument_SetOnDoOpenDocument(void* pObject, void* pFunction);
     void wxDocument_SetOnDoSaveDocument(void* pObject, void* pFunction);
     void wxDocument_SetOnGetClassInfo(void* pObject, void* pFunction);
@@ -9972,6 +10911,22 @@ ffi.cdef[[
     void wxDocument_SetOnModify(void* pObject, void* pFunction);
     void wxDocument_SetOnOnCreate(void* pObject, void* pFunction);
     void wxDocument_SetOnOnOpenDocument(void* pObject, void* pFunction);
+    void wxDocument_SetOnDoOpenDocumentWithData(void* pObject, void* pFunction, void* data);
+    void wxDocument_SetDoOpenDocumentResult(void* pObject, int result);
+    void wxDocument_SetOnDoSaveDocumentWithData(void* pObject, void* pFunction, void* data);
+    void wxDocument_SetDoSaveDocumentResult(void* pObject, int result);
+    void wxDocument_SetOnIsModifiedWithData(void* pObject, void* pFunction, void* data);
+    void wxDocument_SetIsModifiedResult(void* pObject, int result);
+    void wxDocument_SetOnModifyWithData(void* pObject, void* pFunction, void* data);
+    void wxDocument_SetOnOnCreateWithData(void* pObject, void* pFunction, void* data);
+    void wxDocument_SetOnCreateResult(void* pObject, int result);
+    void wxDocument_SetOnOnOpenDocumentWithData(void* pObject, void* pFunction, void* data);
+    void wxDocument_SetOnOpenDocumentResult(void* pObject, int result);
+    int wxDocument_OnCreateBase(void* pObject, void* path, long flags);
+    int wxDocument_OnOpenDocumentBase(void* pObject, void* filename);
+    int wxDocument_IsModifiedBase(void* pObject);
+    void wxDocument_ModifyBase(void* pObject, int modified);
+    void* wxDocument_CreateWithParent(void* pObject, void* parent);
 ]]
 
 -- wxDrawControl
@@ -10000,14 +10955,15 @@ ffi.cdef[[
 -- wxDropSource
 ffi.cdef[[
     void* DropSource_Create(void* data, void* win, void* copy, void* move, void* none);
+    void* DropSource_CreateDefault(void* data, void* win);
     int wxDropSource_DoDragDrop(void* pObject, int flags);
     void DropSource_Delete(void* pObject);
-    int DropSource_DoDragDrop(void* pObject, int move);
 ]]
 
 -- wxDropTarget
 ffi.cdef[[
-    void wxDropTarget_GetData(void* pObject);
+    int wxDropTarget_GetData(void* pObject);
+    void* wxDropTarget_GetDataObject(void* pObject);
     void wxDropTarget_SetDataObject(void* pObject, void* dataObject);
 ]]
 
@@ -10040,6 +10996,23 @@ ffi.cdef[[
     void* FileDataObject_Create(int count, void* list);
     void FileDataObject_Delete(void* pObject);
     int FileDataObject_GetFilenames(void* pObject, void* list, int capacity);
+    void wxFileDataObject_GetFilenamesArray(void* pObject, void* filenames);
+]]
+
+-- wxVirtualFileDataObject
+ffi.cdef[[
+    void* wxVirtualFileDataObject_Create();
+    void wxVirtualFileDataObject_Delete(void* pObject);
+    int wxVirtualFileDataObject_GetCount(void* pObject);
+    void* wxVirtualFileDataObject_GetName(void* pObject, int index);
+    int wxVirtualFileDataObject_IsDir(void* pObject, int index);
+    int64_t wxVirtualFileDataObject_GetSize(void* pObject, int index);
+    void* wxVirtualFileDataObject_GetModificationTime(void* pObject, int index);
+    void* wxVirtualFileDataObject_OpenStream(void* pObject, int index);
+    int wxVirtualFileDataObject_SaveTo(void* pObject, int index, void* path);
+    int wxVirtualFileDataObject_SaveAll(void* pObject, void* dir, void* paths);
+    int wxVirtualFileDataObject_SaveAllToTempDir(void* pObject, void* paths);
+    int wxVirtualFileDataObject_DeleteAllTempFiles(void* pObject);
 ]]
 
 -- wxFileCtrl
@@ -10258,6 +11231,13 @@ ffi.cdef[[
     void* wxGenericValidator_CreateInt(void* value);
     void* wxGenericValidator_CreateBool(void* value);
     void* wxGenericValidator_CreateString(void* value);
+    void* wxGenericValidator_CreateArrayInt(void* value);
+    void* wxGenericValidator_CreateDateTime(void* value);
+    void* wxGenericValidator_CreateFileName(void* value);
+    void* wxGenericValidator_CreateFloat(void* value);
+    void* wxGenericValidator_CreateDouble(void* value);
+    void* wxGenericValidator_CreateColour(void* value);
+    void* wxGenericValidator_CreateCheckBoxState(void* value);
     void wxGenericValidator_Delete(void* pObject);
 ]]
 
@@ -10767,6 +11747,7 @@ ffi.cdef[[
     void* wxIcon_FromRaw(void* data, int width, int height);
     void* wxIcon_FromXPM(void* data);
     void* wxIcon_CreateFromXPMData(void* xpm);
+    void* wxIcon_CreateFromXPMString(const char* xpm);
     int wxIcon_GetDepth(void* pObject);
     int wxIcon_GetHeight(void* pObject);
     int wxIcon_GetWidth(void* pObject);
@@ -11142,12 +12123,25 @@ ffi.cdef[[
     int wxMetafile_IsOk(void* pObject);
     int wxMetafile_Play(void* pObject, void* dc);
     int wxMetafile_SetClipboard(void* pObject, int width, int height);
+    int wxMetafile_GetWidth(void* pObject);
+    int wxMetafile_GetHeight(void* pObject);
+    void* wxMetafile_GetSize(void* pObject);
+]]
+
+-- wxMetafileDataObject
+ffi.cdef[[
+    void* wxMetafileDataObject_CreateDefault();
+    void* wxMetafileDataObject_Create(void* metafile);
+    void wxMetafileDataObject_Delete(void* pObject);
+    void* wxMetafileDataObject_GetMetafile(void* pObject);
+    void wxMetafileDataObject_SetMetafile(void* pObject, void* metafile);
 ]]
 
 -- wxMetafileDC
 ffi.cdef[[
     void* wxMetafileDC_Close(void* pObject);
     void* wxMetafileDC_Create(void* filePath);
+    void* wxMetafileDC_CreateWithExtent(void* filePath, int xext, int yext, int xorg, int yorg);
     void wxMetafileDC_Delete(void* pObject);
 ]]
 
@@ -12039,14 +13033,65 @@ ffi.cdef[[
     void wxRegionIterator_ResetToRegion(void* pObject, void* region);
 ]]
 
+-- wxSVGAttributes
+ffi.cdef[[
+    void* wxSVGAttributes_Create();
+    void wxSVGAttributes_Delete(void* pObject);
+    void wxSVGAttributes_SetRole(void* pObject, void* role);
+    void wxSVGAttributes_SetAriaLabel(void* pObject, void* label);
+    void wxSVGAttributes_SetAriaLabelledBy(void* pObject, void* id);
+    void wxSVGAttributes_SetAriaDescribedBy(void* pObject, void* id);
+    void wxSVGAttributes_SetAriaHidden(void* pObject, int hidden);
+    void wxSVGAttributes_SetAriaDetails(void* pObject, void* id);
+    void wxSVGAttributes_SetAriaRoleDescription(void* pObject, void* description);
+    void wxSVGAttributes_SetId(void* pObject, void* id);
+    void wxSVGAttributes_SetClass(void* pObject, void* className);
+    void wxSVGAttributes_Add(void* pObject, void* name, void* value);
+    void* wxSVGAttributes_GetAttribute(void* pObject, void* name);
+    void* wxSVGAttributes_GetAsString(void* pObject);
+    void* wxSVGAttributes_GetRole(void* pObject);
+    void* wxSVGAttributes_GetAriaLabel(void* pObject);
+    void* wxSVGAttributes_GetAriaLabelledBy(void* pObject);
+    void* wxSVGAttributes_GetAriaDescribedBy(void* pObject);
+    int wxSVGAttributes_IsAriaHidden(void* pObject);
+    void* wxSVGAttributes_GetAriaDetails(void* pObject);
+    void* wxSVGAttributes_GetAriaRoleDescription(void* pObject);
+    void* wxSVGAttributes_GetId(void* pObject);
+    void* wxSVGAttributes_GetClass(void* pObject);
+    int wxSVGAttributes_IsEmpty(void* pObject);
+]]
+
 -- wxSVGFileDC
 ffi.cdef[[
     void* wxSVGFileDC_Create(void* fileName);
+    void wxSVGFileDC_BeginAccessibleGroup(void* pObject, void* attributes, void* title, void* desc);
     void wxSVGFileDC_EndAccessibleGroup(void* pObject);
+    void wxSVGFileDC_BeginLayer(void* pObject, double opacity);
+    void wxSVGFileDC_EndLayer(void* pObject);
+    int wxSVGFileDC_Save(void* pObject);
+    void* wxSVGFileDC_GetSVGDocument(void* pObject);
+    void wxSVGFileDC_SetShapeRenderingMode(void* pObject, int mode);
     void wxSVGFileDC_SetBitmapHandler(void* pObject, void* handler);
     void* wxSVGFileDC_CreateWithSize(void* fileName, int width, int height);
     void* wxSVGFileDC_CreateWithSizeAndResolution(void* fileName, int width, int height, float a_dpi);
+    void* wxSVGFileDC_CreateWithTitle(void* fileName, void* title);
+    void* wxSVGFileDC_CreateWithSizeAndTitle(void* fileName, int width, int height, void* title);
+    void* wxSVGFileDC_CreateWithSizeResolutionAndTitle(void* fileName, int width, int height, float a_dpi, void* title);
+    void* wxSVGFileDC_CreateFromSize(int width, int height);
+    void* wxSVGFileDC_CreateFromSizeWithFileAndTitle(int width, int height, void* fileName, void* title);
+    void* wxSVGFileDC_CreateFromSizeWithFileTitleAndResolution(int width, int height, void* fileName, void* title, float a_dpi);
     void wxSVGFileDC_Delete(void* obj);
+]]
+
+-- wxSVGGraphicsContext
+ffi.cdef[[
+    void* wxSVGGraphicsContext_Create(void* dc);
+    void* wxSVGGraphicsContext_CreateFromFile(void* fileName, int width, int height, float a_dpi, void* title);
+    void* wxSVGGraphicsContext_CreateFromSize(int width, int height, void* fileName, void* title);
+    void* wxSVGGraphicsContext_GetSVGDocument(void* pObject);
+    int wxSVGGraphicsContext_Save(void* pObject);
+    void wxSVGGraphicsContext_SetBitmapHandler(void* pObject, void* handler);
+    void wxSVGGraphicsContext_Delete(void* pObject);
 ]]
 
 -- wxSashEvent
@@ -12212,6 +13257,7 @@ ffi.cdef[[
     int wxSizerFlags_GetFlags(void* pObject);
     int wxSizerFlags_GetBorderInPixels(void* pObject);
     double wxSizerFlags_GetDefaultBorderFractional();
+    int wxSizerFlags_GetDefaultBorder();
     void wxSizerFlags_DisableConsistencyChecks();
 ]]
 
@@ -12443,6 +13489,9 @@ ffi.cdef[[
     void wxString_Delete(void* pObject);
     int wxString_GetString(void* pObject, char* buffer);
     size_t wxString_Length(void* pObject);
+    int wxString_ToLong(void* pObject, long* value);
+    int wxString_ToLongLong(void* pObject, int64_t* value);
+    int wxString_ToDouble(void* pObject, double* value);
 ]]
 
 -- wxStringClientData
@@ -12452,6 +13501,7 @@ ffi.cdef[[
     void wxStringClientData_Delete(void* pObject);
     void* wxStringClientData_GetData(void* pObject);
     void wxStringClientData_SetData(void* pObject, void* data);
+    void* wxStringClientData_FromClientData(void* data);
 ]]
 
 -- wxSysColourChangedEvent
@@ -12504,6 +13554,11 @@ ffi.cdef[[
     void wxTextEntryDialog_SetHint(void* pObject, void* hint);
     void* wxTextEntryDialog_GetValue(void* pObject);
     void wxTextEntryDialog_SetValue(void* pObject, void* value);
+]]
+
+-- wxPasswordEntryDialog
+ffi.cdef[[
+    void* wxPasswordEntryDialog_Create(void* parent, void* message, void* caption, void* value, long style, int x, int y);
 ]]
 
 -- wxTextValidator
@@ -12657,11 +13712,17 @@ ffi.cdef[[
     void wxView_SetOnOnClose(void* pObject, void* pFunction);
     void wxView_SetOnOnCreate(void* pObject, void* pFunction);
     void wxView_SetOnOnUpdate(void* pObject, void* pFunction);
+    void wxView_SetOnOnCreateWithData(void* pObject, void* pFunction, void* data);
+    void wxView_SetOnCreateResult(void* pObject, int result);
+    void wxView_SetOnOnCloseWithData(void* pObject, void* pFunction, void* data);
+    void wxView_SetOnCloseResult(void* pObject, int result);
     void wxView_Activate(void* pObject, int activate);
     void* wxView_GetDocument(void* pObject);
     void* wxView_GetFrame(void* pObject);
     void wxView_SetDocument(void* pObject, void* doc);
     void wxView_SetFrame(void* pObject, void* frame);
+    int wxView_Close(void* pObject, int deleteWindow);
+    int wxView_CloseDefault(void* pObject);
 ]]
 
 -- wxWebViewEvent
@@ -12727,6 +13788,12 @@ ffi.cdef[[
     int wxWizard_Create2(void* pObject, void* parent, int id, void* text, void* bitmap, int x, int y, long style);
     void wxWizard_SetBitmap(void* pObject, void* bitmap);
     int wxWizard_GetBitmapPlacement(void* pObject);
+    int wxWizard_IsRunning(void* pObject);
+    void wxWizard_SetBitmapBackgroundColour(void* pObject, void* colour);
+    void wxWizard_GetBitmapBackgroundColour(void* pObject, void* ref);
+    void wxWizard_SetMinimumBitmapWidth(void* pObject, int width);
+    int wxWizard_GetMinimumBitmapWidth(void* pObject);
+    int wxWizard_TileBitmap(int left, int top, int width, int height, void* dc, void* bitmap);
 ]]
 
 -- wxWizardEvent
@@ -12743,6 +13810,7 @@ ffi.cdef[[
     void* wxWizardPageSimple_GetPrev(void* pObject);
     void wxWizardPageSimple_SetNext(void* pObject, void* next);
     void wxWizardPageSimple_SetPrev(void* pObject, void* prev);
+    void* wxWizardPageSimple_Chain(void* pObject, void* next);
     void* wxWizardPageSimple_CreateWithBundle(void* parent, void* prev, void* next, void* bitmap);
 ]]
 

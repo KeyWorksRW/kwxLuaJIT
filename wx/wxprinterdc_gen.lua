@@ -26,7 +26,7 @@ function M.Create(data)
 end
 
 function M:GetPaperRect()
-    return _H.wrap("wxrect_gen", C.wxPrinterDC_GetPaperRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxPrinterDC_GetPaperRect(self._ptr), true)
 end
 
 --- Delete the underlying C++ object.

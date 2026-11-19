@@ -30,7 +30,7 @@ function M:GetFlags()
 end
 
 function M:GetRect()
-    return _H.wrap("wxrect_gen", C.wxCalculateLayoutEvent_GetRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxCalculateLayoutEvent_GetRect(self._ptr), true)
 end
 
 function M:SetFlags(flags)

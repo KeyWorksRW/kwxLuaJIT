@@ -94,6 +94,18 @@ function M:CreatePen(pen)
     return _H.wrap("wxgraphicspen_gen", C.wxGraphicsContext_CreatePen(self._ptr, _H.ptr(pen)))
 end
 
+function M:CreatePenFromInfo(info)
+    return _H.wrap("wxgraphicspen_gen", C.wxGraphicsContext_CreatePenFromInfo(self._ptr, _H.ptr(info)))
+end
+
+function M:CreateLinearGradientBrushFromStops(x1, y1, x2, y2, stops, matrix)
+    return _H.wrap("wxgraphicsbrush_gen", C.wxGraphicsContext_CreateLinearGradientBrushFromStops(self._ptr, x1, y1, x2, y2, _H.ptr(stops), _H.ptr(matrix)))
+end
+
+function M:CreateRadialGradientBrushFromStops(startX, startY, endX, endY, radius, stops, matrix)
+    return _H.wrap("wxgraphicsbrush_gen", C.wxGraphicsContext_CreateRadialGradientBrushFromStops(self._ptr, startX, startY, endX, endY, radius, _H.ptr(stops), _H.ptr(matrix)))
+end
+
 function M:CreateRadialGradientBrush(startX, startY, endX, endY, radius, oColor, cColor, matrix)
     return _H.wrap("wxgraphicsbrush_gen", C.wxGraphicsContext_CreateRadialGradientBrush(self._ptr, startX, startY, endX, endY, radius, _H.ptr(oColor), _H.ptr(cColor), _H.ptr(matrix)))
 end
@@ -107,7 +119,7 @@ function M:EndLayer()
 end
 
 function M:FromDIP(sz)
-    return _H.wrap("wxsize_gen", C.wxGraphicsContext_FromDIP(self._ptr, _H.ptr(sz)))
+    return _H.wrap("wxsize_gen", C.wxGraphicsContext_FromDIP(self._ptr, _H.ptr(sz)), true)
 end
 
 function M:SetAntialiasMode(antialias)

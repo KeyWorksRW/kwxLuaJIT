@@ -23,11 +23,11 @@ function M:Draw(grid, attr, dc, x, y, width, height, row, col, is_selected)
 end
 
 function M:GetPreferredSize(grid, attr, dc, row, col)
-    return _H.wrap("wxsize_gen", C.wxGridCellBoolRenderer_GetPreferredSize(self._ptr, _H.ptr(grid), _H.ptr(attr), _H.ptr(dc), row, col))
+    return _H.wrap("wxsize_gen", C.wxGridCellBoolRenderer_GetPreferredSize(self._ptr, _H.ptr(grid), _H.ptr(attr), _H.ptr(dc), row, col), true)
 end
 
 function M:GetMaxBestSize(grid, attr, dc)
-    return _H.wrap("wxsize_gen", C.wxGridCellBoolRenderer_GetMaxBestSize(self._ptr, _H.ptr(grid), _H.ptr(attr), _H.ptr(dc)))
+    return _H.wrap("wxsize_gen", C.wxGridCellBoolRenderer_GetMaxBestSize(self._ptr, _H.ptr(grid), _H.ptr(attr), _H.ptr(dc)), true)
 end
 
 function M.Ctor()

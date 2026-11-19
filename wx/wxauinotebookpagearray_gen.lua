@@ -29,7 +29,7 @@ function M:GetCount()
 end
 
 function M:Item(index)
-    return _H.wrap("wxauinotebookpage_gen", C.wxAuiNotebookPageArray_Item(self._ptr, index))
+    return _H.wrap("wxauinotebookpage_gen", C.wxAuiNotebookPageArray_Item(self._ptr, index), true)
 end
 
 --- Delete the underlying C++ object.

@@ -34,7 +34,7 @@ function M:Bitmap()
 end
 
 function M:Rect()
-    return _H.wrap("wxrect_gen", C.wxAuiNotebookPage_Rect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxAuiNotebookPage_Rect(self._ptr), true)
 end
 
 function M:Active()

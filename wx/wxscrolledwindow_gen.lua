@@ -125,4 +125,20 @@ function M:GetViewStartPixels(x, y)
     C.wxScrolledWindow_GetViewStartPixels(self._ptr, x, y)
 end
 
+function M:EnableAutoScrollInside(insideWidth)
+    C.wxScrolledWindow_EnableAutoScrollInside(self._ptr, insideWidth)
+end
+
+function M:DisableAutoScrollOutside()
+    C.wxScrolledWindow_DisableAutoScrollOutside(self._ptr)
+end
+
+function M:EnableAutoscrollWithoutCapture()
+    C.wxScrolledWindow_EnableAutoscrollWithoutCapture(self._ptr)
+end
+
+function M:DisableAutoscrollWithoutCapture()
+    C.wxScrolledWindow_DisableAutoscrollWithoutCapture(self._ptr)
+end
+
 return M

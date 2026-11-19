@@ -41,7 +41,7 @@ function M:EndSuppressUndo()
 end
 
 function M:GetCommandProcessor()
-    return C.wxRichTextCtrl_GetCommandProcessor(self._ptr)
+    return _H.wrap("wxcommandprocessor_gen", C.wxRichTextCtrl_GetCommandProcessor(self._ptr))
 end
 
 function M:WriteField(fieldType, properties, textAttr)
@@ -477,6 +477,14 @@ end
 
 function M:GetAdjustedCaretPosition(caretPosition)
     return C.wxRichTextCtrl_GetAdjustedCaretPosition(self._ptr, caretPosition)
+end
+
+function M:GetCaretPosition()
+    return C.wxRichTextCtrl_GetCaretPosition(self._ptr)
+end
+
+function M:SetMargins(left, top)
+    return _H.to_bool(C.wxRichTextCtrl_SetMargins(self._ptr, left, top))
 end
 
 function M:FindNextWordPosition(direction)

@@ -60,7 +60,7 @@ function M:Realize()
 end
 
 function M:GetMinSize()
-    return _H.wrap("wxsize_gen", C.wxRibbonPage_GetMinSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxRibbonPage_GetMinSize(self._ptr), true)
 end
 
 function M:SetArtProvider(art)

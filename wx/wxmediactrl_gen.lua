@@ -39,7 +39,7 @@ function M:GetDownloadTotal()
 end
 
 function M:GetBestSize()
-    return _H.wrap("wxsize_gen", C.wxMediaCtrl_GetBestSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxMediaCtrl_GetBestSize(self._ptr), true)
 end
 
 function M:GetPlaybackRate()

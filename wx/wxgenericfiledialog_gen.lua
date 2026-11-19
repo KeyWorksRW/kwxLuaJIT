@@ -87,6 +87,10 @@ function M:SetCustomizeHook(customizeHook)
     return _H.to_bool(C.wxGenericFileDialog_SetCustomizeHook(self._ptr, _H.ptr(customizeHook)))
 end
 
+function M:GetCurrentlySelectedFilename()
+    return _H.wxs_to_str(C.wxGenericFileDialog_GetCurrentlySelectedFilename(self._ptr))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

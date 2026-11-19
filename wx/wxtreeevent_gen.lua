@@ -47,7 +47,7 @@ function M:GetOldItem(ref)
 end
 
 function M:GetPoint()
-    return _H.wrap("wxpoint_gen", C.wxTreeEvent_GetPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxTreeEvent_GetPoint(self._ptr), true)
 end
 
 return M

@@ -65,7 +65,7 @@ function M:SetItemBitmap(index, bitmap)
 end
 
 function M:GetBitmapSize()
-    return _H.wrap("wxsize_gen", C.wxBitmapComboBox_GetBitmapSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxBitmapComboBox_GetBitmapSize(self._ptr), true)
 end
 
 return M

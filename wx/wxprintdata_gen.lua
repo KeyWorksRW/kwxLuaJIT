@@ -62,7 +62,7 @@ function M:GetPaperId()
 end
 
 function M:GetPaperSize()
-    return _H.wrap("wxsize_gen", C.wxPrintData_GetPaperSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxPrintData_GetPaperSize(self._ptr), true)
 end
 
 function M:GetPreviewCommand()

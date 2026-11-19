@@ -45,6 +45,58 @@ function M:SetOnLeave(pFunction)
     C.kwxFileDropTarget_SetOnLeave(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnDataWithData(pFunction, data)
+    C.kwxFileDropTarget_SetOnDataWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnDropWithData(pFunction, data)
+    C.kwxFileDropTarget_SetOnDropWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnEnterWithData(pFunction, data)
+    C.kwxFileDropTarget_SetOnEnterWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnDragOverWithData(pFunction, data)
+    C.kwxFileDropTarget_SetOnDragOverWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnLeaveWithData(pFunction, data)
+    C.kwxFileDropTarget_SetOnLeaveWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDataResult(result)
+    C.kwxFileDropTarget_SetDataResult(self._ptr, result)
+end
+
+function M:SetDropResult(result)
+    C.kwxFileDropTarget_SetDropResult(self._ptr, result)
+end
+
+function M:SetEnterResult(result)
+    C.kwxFileDropTarget_SetEnterResult(self._ptr, result)
+end
+
+function M:SetDragOverResult(result)
+    C.kwxFileDropTarget_SetDragOverResult(self._ptr, result)
+end
+
+function M:GetDropResult()
+    return C.kwxFileDropTarget_GetDropResult(self._ptr)
+end
+
+function M:SetOnDropFilesWithData(pFunction, data)
+    C.kwxFileDropTarget_SetOnDropFilesWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDropFilesResult(result)
+    C.kwxFileDropTarget_SetDropFilesResult(self._ptr, result)
+end
+
+function M:GetDropFiles()
+    return _H.wrap("wxarraystring_gen", C.kwxFileDropTarget_GetDropFiles(self._ptr))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

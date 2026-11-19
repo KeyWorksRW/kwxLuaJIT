@@ -111,11 +111,11 @@ function M:Entering()
 end
 
 function M:GetLogicalPosition(dc)
-    return _H.wrap("wxpoint_gen", C.wxMouseEvent_GetLogicalPosition(self._ptr, _H.ptr(dc)))
+    return _H.wrap("wxpoint_gen", C.wxMouseEvent_GetLogicalPosition(self._ptr, _H.ptr(dc)), true)
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxMouseEvent_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxMouseEvent_GetPosition(self._ptr), true)
 end
 
 function M:GetX()

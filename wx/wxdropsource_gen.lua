@@ -24,12 +24,15 @@ function M.Create(data, win, copy, move, none)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:DoDragDrop(flags)
-    return C.wxDropSource_DoDragDrop(self._ptr, flags)
+--- Constructor: DropSource_CreateDefault
+function M.CreateDefault(data, win)
+    local ptr = C.DropSource_CreateDefault(_H.ptr(data), _H.ptr(win))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
 end
 
-function M:DoDragDrop(move)
-    return C.DropSource_DoDragDrop(self._ptr, move)
+function M:DoDragDrop(flags)
+    return C.wxDropSource_DoDragDrop(self._ptr, flags)
 end
 
 --- Delete the underlying C++ object.

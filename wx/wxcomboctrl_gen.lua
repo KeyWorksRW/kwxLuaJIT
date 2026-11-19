@@ -63,7 +63,7 @@ function M:GetBitmapPressed()
 end
 
 function M:GetButtonSize()
-    return _H.wrap("wxsize_gen", C.wxComboCtrl_GetButtonSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxComboCtrl_GetButtonSize(self._ptr), true)
 end
 
 function M:GetCustomPaintWidth()
@@ -107,7 +107,7 @@ function M:GetTextCtrl()
 end
 
 function M:GetTextRect()
-    return _H.wrap("wxrect_gen", C.wxComboCtrl_GetTextRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxComboCtrl_GetTextRect(self._ptr), true)
 end
 
 function M:GetValue()

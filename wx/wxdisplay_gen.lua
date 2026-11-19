@@ -44,7 +44,7 @@ function M:GetDepth()
 end
 
 function M:GetRawPPI()
-    return _H.wrap("wxsize_gen", C.wxDisplay_GetRawPPI(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxDisplay_GetRawPPI(self._ptr), true)
 end
 
 function M:ResetMode()

@@ -156,12 +156,14 @@ ffi.cdef[[
     void* expwxART_ADD_BOOKMARK();
     void* expwxART_BUTTON();
     void* expwxART_CDROM();
+    void* expwxART_CLOSE();
     void* expwxART_CMN_DIALOG();
     void* expwxART_COPY();
     void* expwxART_CROSS_MARK();
     void* expwxART_CUT();
     void* expwxART_DELETE();
     void* expwxART_DEL_BOOKMARK();
+    void* expwxART_EDIT();
     void* expwxART_ERROR();
     void* expwxART_EXECUTABLE_FILE();
     void* expwxART_FILE_OPEN();
@@ -174,6 +176,8 @@ ffi.cdef[[
     void* expwxART_FOLDER_OPEN();
     void* expwxART_FRAME_ICON();
     void* expwxART_FULL_SCREEN();
+    void* expwxART_GOTO_FIRST();
+    void* expwxART_GOTO_LAST();
     void* expwxART_GO_BACK();
     void* expwxART_GO_DIR_UP();
     void* expwxART_GO_DOWN();
@@ -190,26 +194,51 @@ ffi.cdef[[
     void* expwxART_HELP_SETTINGS();
     void* expwxART_HELP_SIDE_PANEL();
     void* expwxART_INFORMATION();
+    void* expwxART_LIST();
     void* expwxART_LIST_VIEW();
     void* expwxART_MENU();
     void* expwxART_MESSAGE_BOX();
+    void* expwxART_MINUS();
     void* expwxART_MISSING_IMAGE();
     void* expwxART_NEW();
     void* expwxART_NEW_DIR();
     void* expwxART_NORMAL_FILE();
     void* expwxART_OTHER();
     void* expwxART_PASTE();
+    void* expwxART_PLUS();
     void* expwxART_PRINT();
     void* expwxART_QUESTION();
     void* expwxART_QUIT();
     void* expwxART_REDO();
+    void* expwxART_REFRESH();
     void* expwxART_REMOVABLE();
     void* expwxART_REPORT_VIEW();
+    void* expwxART_STOP();
     void* expwxART_TICK_MARK();
     void* expwxART_TIP();
     void* expwxART_TOOLBAR();
     void* expwxART_UNDO();
     void* expwxART_WARNING();
+    void* expwxART_WX_LOGO();
+    int expwxAUI_BUTTON_CLOSE();
+    int expwxAUI_BUTTON_CUSTOM1();
+    int expwxAUI_BUTTON_CUSTOM2();
+    int expwxAUI_BUTTON_CUSTOM3();
+    int expwxAUI_BUTTON_DOWN();
+    int expwxAUI_BUTTON_LEFT();
+    int expwxAUI_BUTTON_MAXIMIZE_RESTORE();
+    int expwxAUI_BUTTON_MINIMIZE();
+    int expwxAUI_BUTTON_OPTIONS();
+    int expwxAUI_BUTTON_PIN();
+    int expwxAUI_BUTTON_RIGHT();
+    int expwxAUI_BUTTON_STATE_CHECKED();
+    int expwxAUI_BUTTON_STATE_DISABLED();
+    int expwxAUI_BUTTON_STATE_HIDDEN();
+    int expwxAUI_BUTTON_STATE_HOVER();
+    int expwxAUI_BUTTON_STATE_NORMAL();
+    int expwxAUI_BUTTON_STATE_PRESSED();
+    int expwxAUI_BUTTON_UP();
+    int expwxAUI_BUTTON_WINDOWLIST();
     int expwxAUI_DOCKART_ACTIVE_CAPTION_COLOUR();
     int expwxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR();
     int expwxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR();
@@ -224,13 +253,25 @@ ffi.cdef[[
     int expwxAUI_DOCKART_PANE_BORDER_SIZE();
     int expwxAUI_DOCKART_SASH_COLOUR();
     int expwxAUI_DOCKART_SASH_SIZE();
+    int expwxAUI_DOCK_BOTTOM();
+    int expwxAUI_DOCK_CENTER();
+    int expwxAUI_DOCK_CENTRE();
+    int expwxAUI_DOCK_LEFT();
+    int expwxAUI_DOCK_NONE();
+    int expwxAUI_DOCK_RIGHT();
+    int expwxAUI_DOCK_TOP();
     int expwxAUI_GRADIENT_HORIZONTAL();
     int expwxAUI_GRADIENT_NONE();
     int expwxAUI_GRADIENT_VERTICAL();
+    int expwxAUI_INSERT_DOCK();
+    int expwxAUI_INSERT_PANE();
+    int expwxAUI_INSERT_ROW();
     int expwxAUI_MGR_ALLOW_ACTIVE_PANE();
     int expwxAUI_MGR_ALLOW_FLOATING();
+    int expwxAUI_MGR_DEFAULT();
     int expwxAUI_MGR_HINT_FADE();
     int expwxAUI_MGR_LIVE_RESIZE();
+    int expwxAUI_MGR_NO_VENETIAN_BLINDS_FADE();
     int expwxAUI_MGR_RECTANGLE_HINT();
     int expwxAUI_MGR_TRANSPARENT_DRAG();
     int expwxAUI_MGR_TRANSPARENT_HINT();
@@ -244,6 +285,7 @@ ffi.cdef[[
     int expwxAUI_NB_CLOSE_ON_ACTIVE_TAB();
     int expwxAUI_NB_CLOSE_ON_ALL_TABS();
     int expwxAUI_NB_DEFAULT_STYLE();
+    int expwxAUI_NB_MIDDLE_CLICK_CLOSE();
     int expwxAUI_NB_MULTILINE();
     int expwxAUI_NB_PIN_ON_ACTIVE_TAB();
     int expwxAUI_NB_SCROLL_BUTTONS();
@@ -254,10 +296,18 @@ ffi.cdef[[
     int expwxAUI_NB_TOP();
     int expwxAUI_NB_UNPIN_ON_ALL_PINNED();
     int expwxAUI_NB_WINDOWLIST_BUTTON();
+    int expwxAUI_TAB_LOCKED();
+    int expwxAUI_TAB_NORMAL();
+    int expwxAUI_TAB_PINNED();
     int expwxAUI_TB_DEFAULT_STYLE();
+    int expwxAUI_TB_GRIPPER();
     int expwxAUI_TB_HORIZONTAL();
+    int expwxAUI_TB_HORZ_LAYOUT();
     int expwxAUI_TB_HORZ_TEXT();
+    int expwxAUI_TB_NO_AUTORESIZE();
+    int expwxAUI_TB_NO_TOOLTIPS();
     int expwxAUI_TB_OVERFLOW();
+    int expwxAUI_TB_PLAIN_BACKGROUND();
     int expwxAUI_TB_TEXT();
     int expwxAUI_TB_VERTICAL();
     int expwxApp_AppearanceResult_CannotChange();
@@ -338,6 +388,7 @@ ffi.cdef[[
     int expwxBMP_8BPP_GREY();
     int expwxBMP_8BPP_PALETTE();
     int expwxBMP_8BPP_RED();
+    int expwxBORDER();
     int expwxBORDER_DEFAULT();
     int expwxBORDER_DOUBLE();
     int expwxBORDER_MASK();
@@ -363,6 +414,16 @@ ffi.cdef[[
     int expwxBRUSHSTYLE_STIPPLE_MASK_OPAQUE();
     int expwxBRUSHSTYLE_TRANSPARENT();
     int expwxBRUSHSTYLE_VERTICAL_HATCH();
+    int expwxBRUSH_STOCK_BLACK();
+    int expwxBRUSH_STOCK_BLUE();
+    int expwxBRUSH_STOCK_CYAN();
+    int expwxBRUSH_STOCK_GREEN();
+    int expwxBRUSH_STOCK_GREY();
+    int expwxBRUSH_STOCK_LIGHT_GREY();
+    int expwxBRUSH_STOCK_MEDIUM_GREY();
+    int expwxBRUSH_STOCK_RED();
+    int expwxBRUSH_STOCK_TRANSPARENT();
+    int expwxBRUSH_STOCK_WHITE();
     int expwxBU_AUTODRAW();
     int expwxBU_BOTTOM();
     int expwxBU_EXACTFIT();
@@ -432,6 +493,13 @@ ffi.cdef[[
     int expwxCMD_LINE_VAL_STRING();
     int expwxCMD_SWITCH_ON();
     int expwxCOLOURED();
+    int expwxCOLOUR_STOCK_BLACK();
+    int expwxCOLOUR_STOCK_BLUE();
+    int expwxCOLOUR_STOCK_CYAN();
+    int expwxCOLOUR_STOCK_GREEN();
+    int expwxCOLOUR_STOCK_LIGHT_GREY();
+    int expwxCOLOUR_STOCK_RED();
+    int expwxCOLOUR_STOCK_WHITE();
     int expwxCOL_DEFAULT_FLAGS();
     int expwxCOL_HIDDEN();
     int expwxCOL_REORDERABLE();
@@ -512,6 +580,7 @@ ffi.cdef[[
     int expwxDD_SHOW_HIDDEN();
     int expwxDEFAULT_DIALOG_STYLE();
     int expwxDEFAULT_FRAME_STYLE();
+    int expwxDEFAULT_TEMPLATE_FLAGS();
     int expwxDF_BITMAP();
     int expwxDF_DIB();
     int expwxDF_DIF();
@@ -553,6 +622,7 @@ ffi.cdef[[
     int expwxDIR_IGNORE();
     int expwxDIR_NO_FOLLOW();
     int expwxDIR_STOP();
+    int expwxDOC_NEW();
     int expwxDOC_SILENT();
     int expwxDOUBLE_BORDER();
     int expwxDOWN();
@@ -564,6 +634,14 @@ ffi.cdef[[
     int expwxDUPLEX_HORIZONTAL();
     int expwxDUPLEX_SIMPLEX();
     int expwxDUPLEX_VERTICAL();
+    int expwxDVR_DEFAULT_ALIGNMENT();
+    int expwxDV_HORIZ_RULES();
+    int expwxDV_MULTIPLE();
+    int expwxDV_NO_HEADER();
+    int expwxDV_ROW_LINES();
+    int expwxDV_SINGLE();
+    int expwxDV_VARIABLE_LINE_HEIGHT();
+    int expwxDV_VERT_RULES();
     int expwxDateTime_Apr();
     int expwxDateTime_Aug();
     int expwxDateTime_Country_Default();
@@ -592,6 +670,8 @@ ffi.cdef[[
     int expwxDateTime_Thu();
     int expwxDateTime_Tue();
     int expwxDateTime_Wed();
+    int expwxDebugReport_Context_Current();
+    int expwxDebugReport_Context_Exception();
     int expwxDefaultCoord();
     void* expwxDirDialogDefaultFolderStr();
     int expwxDragCancel();
@@ -743,6 +823,10 @@ ffi.cdef[[
     int expwxFONTWEIGHT_NORMAL();
     int expwxFONTWEIGHT_SEMIBOLD();
     int expwxFONTWEIGHT_THIN();
+    int expwxFONT_STOCK_ITALIC();
+    int expwxFONT_STOCK_NORMAL();
+    int expwxFONT_STOCK_SMALL();
+    int expwxFONT_STOCK_SWISS();
     int expwxFORWARD();
     int expwxFRAME_EX_CONTEXTHELP();
     int expwxFRAME_FLOAT_ON_PARENT();
@@ -842,6 +926,7 @@ ffi.cdef[[
     int expwxICONIZE();
     int expwxICON_AUTH_NEEDED();
     int expwxICON_ERROR();
+    int expwxICON_HAND();
     int expwxICON_INFORMATION();
     int expwxICON_NONE();
     int expwxICON_QUESTION();
@@ -1358,6 +1443,7 @@ ffi.cdef[[
     void* expwxNORMAL_FONT();
     int expwxNORTH();
     int expwxNOT_FOUND();
+    int expwxNO_BORDER();
     int expwxNO_DEFAULT();
     int expwxNO_FULL_REPAINT_ON_RESIZE();
     int expwxNO_OP();
@@ -1494,6 +1580,16 @@ ffi.cdef[[
     int expwxPENSTYLE_TRANSPARENT();
     int expwxPENSTYLE_USER_DASH();
     int expwxPENSTYLE_VERTICAL_HATCH();
+    int expwxPEN_STOCK_BLACK();
+    int expwxPEN_STOCK_BLACK_DASHED();
+    int expwxPEN_STOCK_CYAN();
+    int expwxPEN_STOCK_GREEN();
+    int expwxPEN_STOCK_GREY();
+    int expwxPEN_STOCK_LIGHT_GREY();
+    int expwxPEN_STOCK_MEDIUM_GREY();
+    int expwxPEN_STOCK_RED();
+    int expwxPEN_STOCK_TRANSPARENT();
+    int expwxPEN_STOCK_WHITE();
     void* expwxPG_ARRAY_DELIMITER();
     void* expwxPG_ATTR_AUTOCOMPLETE();
     void* expwxPG_ATTR_DEFAULT_VALUE();
@@ -1598,6 +1694,7 @@ ffi.cdef[[
     int expwxPROPSHEET_BUTTONTOOLBOOK();
     int expwxPROPSHEET_SHRINKTOFIT();
     int expwxPROPSHEET_TOOLBOOK();
+    int expwxRAISED_BORDER();
     int expwxRA_SPECIFY_COLS();
     int expwxRA_SPECIFY_ROWS();
     int expwxRB_GROUP();
@@ -1743,6 +1840,7 @@ ffi.cdef[[
     int expwxROLE_SYSTEM_TOOLTIP();
     int expwxROLE_SYSTEM_WHITESPACE();
     int expwxROLE_SYSTEM_WINDOW();
+    int expwxRichTextFormattingDialog_Option_AllowPixelFontSize();
     int expwxSASH_BOTTOM();
     int expwxSASH_DRAG_DRAGGING();
     int expwxSASH_DRAG_LEFT_DOWN();
@@ -1791,6 +1889,7 @@ ffi.cdef[[
     int expwxSIGSYS();
     int expwxSIGTERM();
     int expwxSIGTRAP();
+    int expwxSIMPLE_BORDER();
     int expwxSIZE_ALLOW_MINUS_ONE();
     int expwxSIZE_AUTO();
     int expwxSIZE_AUTO_HEIGHT();
@@ -1852,6 +1951,7 @@ ffi.cdef[[
     int expwxSP_WRAP();
     int expwxSRC_INVERT();
     void* expwxSTANDARD_CURSOR();
+    int expwxSTATIC_BORDER();
     int expwxSTAY_ON_TOP();
     int expwxSTB_DEFAULT_STYLE();
     int expwxSTB_ELLIPSIZE_END();
@@ -1872,6 +1972,7 @@ ffi.cdef[[
     int expwxST_NO_AUTORESIZE();
     int expwxST_SIZEGRIP();
     int expwxST_WRAP();
+    int expwxSUNKEN_BORDER();
     void* expwxSWISS_FONT();
     int expwxSW_3D();
     int expwxSW_3DBORDER();
@@ -2019,6 +2120,8 @@ ffi.cdef[[
     int expwxTC_MULTILINE();
     int expwxTC_OWNERDRAW();
     int expwxTC_RIGHTJUSTIFY();
+    int expwxTEMPLATE_INVISIBLE();
+    int expwxTEMPLATE_VISIBLE();
     int expwxTEXT_ALIGNMENT_CENTRE();
     int expwxTEXT_ALIGNMENT_JUSTIFIED();
     int expwxTEXT_ALIGNMENT_LEFT();
@@ -2157,6 +2260,7 @@ ffi.cdef[[
     int expwxTOP();
     int expwxTOUCH_ALL_GESTURES();
     int expwxTOUCH_RAW_EVENTS();
+    void* expwxTRACE_OleCalls();
     int expwxTRANSPARENT();
     void* expwxTRANSPARENT_BRUSH();
     void* expwxTRANSPARENT_PEN();
@@ -2278,12 +2382,14 @@ local _wstring = {
     ART_ADD_BOOKMARK = true,
     ART_BUTTON = true,
     ART_CDROM = true,
+    ART_CLOSE = true,
     ART_CMN_DIALOG = true,
     ART_COPY = true,
     ART_CROSS_MARK = true,
     ART_CUT = true,
     ART_DELETE = true,
     ART_DEL_BOOKMARK = true,
+    ART_EDIT = true,
     ART_ERROR = true,
     ART_EXECUTABLE_FILE = true,
     ART_FILE_OPEN = true,
@@ -2296,6 +2402,8 @@ local _wstring = {
     ART_FOLDER_OPEN = true,
     ART_FRAME_ICON = true,
     ART_FULL_SCREEN = true,
+    ART_GOTO_FIRST = true,
+    ART_GOTO_LAST = true,
     ART_GO_BACK = true,
     ART_GO_DIR_UP = true,
     ART_GO_DOWN = true,
@@ -2312,26 +2420,32 @@ local _wstring = {
     ART_HELP_SETTINGS = true,
     ART_HELP_SIDE_PANEL = true,
     ART_INFORMATION = true,
+    ART_LIST = true,
     ART_LIST_VIEW = true,
     ART_MENU = true,
     ART_MESSAGE_BOX = true,
+    ART_MINUS = true,
     ART_MISSING_IMAGE = true,
     ART_NEW = true,
     ART_NEW_DIR = true,
     ART_NORMAL_FILE = true,
     ART_OTHER = true,
     ART_PASTE = true,
+    ART_PLUS = true,
     ART_PRINT = true,
     ART_QUESTION = true,
     ART_QUIT = true,
     ART_REDO = true,
+    ART_REFRESH = true,
     ART_REMOVABLE = true,
     ART_REPORT_VIEW = true,
+    ART_STOP = true,
     ART_TICK_MARK = true,
     ART_TIP = true,
     ART_TOOLBAR = true,
     ART_UNDO = true,
     ART_WARNING = true,
+    ART_WX_LOGO = true,
     DirDialogDefaultFolderStr = true,
     FileSelectorDefaultWildcardStr = true,
     PG_ARRAY_DELIMITER = true,
@@ -2362,6 +2476,7 @@ local _wstring = {
     PG_STRING_PASSWORD = true,
     PG_UINT_BASE = true,
     PG_UINT_PREFIX = true,
+    TRACE_OleCalls = true,
     VERSION_NUM_DOT_STRING = true,
 }
 
@@ -2486,12 +2601,14 @@ local _symbols = {
     ART_ADD_BOOKMARK = "expwxART_ADD_BOOKMARK",
     ART_BUTTON = "expwxART_BUTTON",
     ART_CDROM = "expwxART_CDROM",
+    ART_CLOSE = "expwxART_CLOSE",
     ART_CMN_DIALOG = "expwxART_CMN_DIALOG",
     ART_COPY = "expwxART_COPY",
     ART_CROSS_MARK = "expwxART_CROSS_MARK",
     ART_CUT = "expwxART_CUT",
     ART_DELETE = "expwxART_DELETE",
     ART_DEL_BOOKMARK = "expwxART_DEL_BOOKMARK",
+    ART_EDIT = "expwxART_EDIT",
     ART_ERROR = "expwxART_ERROR",
     ART_EXECUTABLE_FILE = "expwxART_EXECUTABLE_FILE",
     ART_FILE_OPEN = "expwxART_FILE_OPEN",
@@ -2504,6 +2621,8 @@ local _symbols = {
     ART_FOLDER_OPEN = "expwxART_FOLDER_OPEN",
     ART_FRAME_ICON = "expwxART_FRAME_ICON",
     ART_FULL_SCREEN = "expwxART_FULL_SCREEN",
+    ART_GOTO_FIRST = "expwxART_GOTO_FIRST",
+    ART_GOTO_LAST = "expwxART_GOTO_LAST",
     ART_GO_BACK = "expwxART_GO_BACK",
     ART_GO_DIR_UP = "expwxART_GO_DIR_UP",
     ART_GO_DOWN = "expwxART_GO_DOWN",
@@ -2520,26 +2639,51 @@ local _symbols = {
     ART_HELP_SETTINGS = "expwxART_HELP_SETTINGS",
     ART_HELP_SIDE_PANEL = "expwxART_HELP_SIDE_PANEL",
     ART_INFORMATION = "expwxART_INFORMATION",
+    ART_LIST = "expwxART_LIST",
     ART_LIST_VIEW = "expwxART_LIST_VIEW",
     ART_MENU = "expwxART_MENU",
     ART_MESSAGE_BOX = "expwxART_MESSAGE_BOX",
+    ART_MINUS = "expwxART_MINUS",
     ART_MISSING_IMAGE = "expwxART_MISSING_IMAGE",
     ART_NEW = "expwxART_NEW",
     ART_NEW_DIR = "expwxART_NEW_DIR",
     ART_NORMAL_FILE = "expwxART_NORMAL_FILE",
     ART_OTHER = "expwxART_OTHER",
     ART_PASTE = "expwxART_PASTE",
+    ART_PLUS = "expwxART_PLUS",
     ART_PRINT = "expwxART_PRINT",
     ART_QUESTION = "expwxART_QUESTION",
     ART_QUIT = "expwxART_QUIT",
     ART_REDO = "expwxART_REDO",
+    ART_REFRESH = "expwxART_REFRESH",
     ART_REMOVABLE = "expwxART_REMOVABLE",
     ART_REPORT_VIEW = "expwxART_REPORT_VIEW",
+    ART_STOP = "expwxART_STOP",
     ART_TICK_MARK = "expwxART_TICK_MARK",
     ART_TIP = "expwxART_TIP",
     ART_TOOLBAR = "expwxART_TOOLBAR",
     ART_UNDO = "expwxART_UNDO",
     ART_WARNING = "expwxART_WARNING",
+    ART_WX_LOGO = "expwxART_WX_LOGO",
+    AUI_BUTTON_CLOSE = "expwxAUI_BUTTON_CLOSE",
+    AUI_BUTTON_CUSTOM1 = "expwxAUI_BUTTON_CUSTOM1",
+    AUI_BUTTON_CUSTOM2 = "expwxAUI_BUTTON_CUSTOM2",
+    AUI_BUTTON_CUSTOM3 = "expwxAUI_BUTTON_CUSTOM3",
+    AUI_BUTTON_DOWN = "expwxAUI_BUTTON_DOWN",
+    AUI_BUTTON_LEFT = "expwxAUI_BUTTON_LEFT",
+    AUI_BUTTON_MAXIMIZE_RESTORE = "expwxAUI_BUTTON_MAXIMIZE_RESTORE",
+    AUI_BUTTON_MINIMIZE = "expwxAUI_BUTTON_MINIMIZE",
+    AUI_BUTTON_OPTIONS = "expwxAUI_BUTTON_OPTIONS",
+    AUI_BUTTON_PIN = "expwxAUI_BUTTON_PIN",
+    AUI_BUTTON_RIGHT = "expwxAUI_BUTTON_RIGHT",
+    AUI_BUTTON_STATE_CHECKED = "expwxAUI_BUTTON_STATE_CHECKED",
+    AUI_BUTTON_STATE_DISABLED = "expwxAUI_BUTTON_STATE_DISABLED",
+    AUI_BUTTON_STATE_HIDDEN = "expwxAUI_BUTTON_STATE_HIDDEN",
+    AUI_BUTTON_STATE_HOVER = "expwxAUI_BUTTON_STATE_HOVER",
+    AUI_BUTTON_STATE_NORMAL = "expwxAUI_BUTTON_STATE_NORMAL",
+    AUI_BUTTON_STATE_PRESSED = "expwxAUI_BUTTON_STATE_PRESSED",
+    AUI_BUTTON_UP = "expwxAUI_BUTTON_UP",
+    AUI_BUTTON_WINDOWLIST = "expwxAUI_BUTTON_WINDOWLIST",
     AUI_DOCKART_ACTIVE_CAPTION_COLOUR = "expwxAUI_DOCKART_ACTIVE_CAPTION_COLOUR",
     AUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR = "expwxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR",
     AUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR = "expwxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR",
@@ -2554,13 +2698,25 @@ local _symbols = {
     AUI_DOCKART_PANE_BORDER_SIZE = "expwxAUI_DOCKART_PANE_BORDER_SIZE",
     AUI_DOCKART_SASH_COLOUR = "expwxAUI_DOCKART_SASH_COLOUR",
     AUI_DOCKART_SASH_SIZE = "expwxAUI_DOCKART_SASH_SIZE",
+    AUI_DOCK_BOTTOM = "expwxAUI_DOCK_BOTTOM",
+    AUI_DOCK_CENTER = "expwxAUI_DOCK_CENTER",
+    AUI_DOCK_CENTRE = "expwxAUI_DOCK_CENTRE",
+    AUI_DOCK_LEFT = "expwxAUI_DOCK_LEFT",
+    AUI_DOCK_NONE = "expwxAUI_DOCK_NONE",
+    AUI_DOCK_RIGHT = "expwxAUI_DOCK_RIGHT",
+    AUI_DOCK_TOP = "expwxAUI_DOCK_TOP",
     AUI_GRADIENT_HORIZONTAL = "expwxAUI_GRADIENT_HORIZONTAL",
     AUI_GRADIENT_NONE = "expwxAUI_GRADIENT_NONE",
     AUI_GRADIENT_VERTICAL = "expwxAUI_GRADIENT_VERTICAL",
+    AUI_INSERT_DOCK = "expwxAUI_INSERT_DOCK",
+    AUI_INSERT_PANE = "expwxAUI_INSERT_PANE",
+    AUI_INSERT_ROW = "expwxAUI_INSERT_ROW",
     AUI_MGR_ALLOW_ACTIVE_PANE = "expwxAUI_MGR_ALLOW_ACTIVE_PANE",
     AUI_MGR_ALLOW_FLOATING = "expwxAUI_MGR_ALLOW_FLOATING",
+    AUI_MGR_DEFAULT = "expwxAUI_MGR_DEFAULT",
     AUI_MGR_HINT_FADE = "expwxAUI_MGR_HINT_FADE",
     AUI_MGR_LIVE_RESIZE = "expwxAUI_MGR_LIVE_RESIZE",
+    AUI_MGR_NO_VENETIAN_BLINDS_FADE = "expwxAUI_MGR_NO_VENETIAN_BLINDS_FADE",
     AUI_MGR_RECTANGLE_HINT = "expwxAUI_MGR_RECTANGLE_HINT",
     AUI_MGR_TRANSPARENT_DRAG = "expwxAUI_MGR_TRANSPARENT_DRAG",
     AUI_MGR_TRANSPARENT_HINT = "expwxAUI_MGR_TRANSPARENT_HINT",
@@ -2574,6 +2730,7 @@ local _symbols = {
     AUI_NB_CLOSE_ON_ACTIVE_TAB = "expwxAUI_NB_CLOSE_ON_ACTIVE_TAB",
     AUI_NB_CLOSE_ON_ALL_TABS = "expwxAUI_NB_CLOSE_ON_ALL_TABS",
     AUI_NB_DEFAULT_STYLE = "expwxAUI_NB_DEFAULT_STYLE",
+    AUI_NB_MIDDLE_CLICK_CLOSE = "expwxAUI_NB_MIDDLE_CLICK_CLOSE",
     AUI_NB_MULTILINE = "expwxAUI_NB_MULTILINE",
     AUI_NB_PIN_ON_ACTIVE_TAB = "expwxAUI_NB_PIN_ON_ACTIVE_TAB",
     AUI_NB_SCROLL_BUTTONS = "expwxAUI_NB_SCROLL_BUTTONS",
@@ -2584,10 +2741,18 @@ local _symbols = {
     AUI_NB_TOP = "expwxAUI_NB_TOP",
     AUI_NB_UNPIN_ON_ALL_PINNED = "expwxAUI_NB_UNPIN_ON_ALL_PINNED",
     AUI_NB_WINDOWLIST_BUTTON = "expwxAUI_NB_WINDOWLIST_BUTTON",
+    AUI_TAB_LOCKED = "expwxAUI_TAB_LOCKED",
+    AUI_TAB_NORMAL = "expwxAUI_TAB_NORMAL",
+    AUI_TAB_PINNED = "expwxAUI_TAB_PINNED",
     AUI_TB_DEFAULT_STYLE = "expwxAUI_TB_DEFAULT_STYLE",
+    AUI_TB_GRIPPER = "expwxAUI_TB_GRIPPER",
     AUI_TB_HORIZONTAL = "expwxAUI_TB_HORIZONTAL",
+    AUI_TB_HORZ_LAYOUT = "expwxAUI_TB_HORZ_LAYOUT",
     AUI_TB_HORZ_TEXT = "expwxAUI_TB_HORZ_TEXT",
+    AUI_TB_NO_AUTORESIZE = "expwxAUI_TB_NO_AUTORESIZE",
+    AUI_TB_NO_TOOLTIPS = "expwxAUI_TB_NO_TOOLTIPS",
     AUI_TB_OVERFLOW = "expwxAUI_TB_OVERFLOW",
+    AUI_TB_PLAIN_BACKGROUND = "expwxAUI_TB_PLAIN_BACKGROUND",
     AUI_TB_TEXT = "expwxAUI_TB_TEXT",
     AUI_TB_VERTICAL = "expwxAUI_TB_VERTICAL",
     App_AppearanceResult_CannotChange = "expwxApp_AppearanceResult_CannotChange",
@@ -2653,6 +2818,13 @@ local _symbols = {
     BK_LEFT = "expwxBK_LEFT",
     BK_RIGHT = "expwxBK_RIGHT",
     BK_TOP = "expwxBK_TOP",
+    BLACK = "expwxBLACK",
+    BLACK_BRUSH = "expwxBLACK_BRUSH",
+    BLACK_DASHED_PEN = "expwxBLACK_DASHED_PEN",
+    BLACK_PEN = "expwxBLACK_PEN",
+    BLUE = "expwxBLUE",
+    BLUE_BRUSH = "expwxBLUE_BRUSH",
+    BLUE_PEN = "expwxBLUE_PEN",
     BMP_1BPP = "expwxBMP_1BPP",
     BMP_1BPP_BW = "expwxBMP_1BPP_BW",
     BMP_24BPP = "expwxBMP_24BPP",
@@ -2661,6 +2833,7 @@ local _symbols = {
     BMP_8BPP_GREY = "expwxBMP_8BPP_GREY",
     BMP_8BPP_PALETTE = "expwxBMP_8BPP_PALETTE",
     BMP_8BPP_RED = "expwxBMP_8BPP_RED",
+    BORDER = "expwxBORDER",
     BORDER_DEFAULT = "expwxBORDER_DEFAULT",
     BORDER_DOUBLE = "expwxBORDER_DOUBLE",
     BORDER_MASK = "expwxBORDER_MASK",
@@ -2686,6 +2859,16 @@ local _symbols = {
     BRUSHSTYLE_STIPPLE_MASK_OPAQUE = "expwxBRUSHSTYLE_STIPPLE_MASK_OPAQUE",
     BRUSHSTYLE_TRANSPARENT = "expwxBRUSHSTYLE_TRANSPARENT",
     BRUSHSTYLE_VERTICAL_HATCH = "expwxBRUSHSTYLE_VERTICAL_HATCH",
+    BRUSH_STOCK_BLACK = "expwxBRUSH_STOCK_BLACK",
+    BRUSH_STOCK_BLUE = "expwxBRUSH_STOCK_BLUE",
+    BRUSH_STOCK_CYAN = "expwxBRUSH_STOCK_CYAN",
+    BRUSH_STOCK_GREEN = "expwxBRUSH_STOCK_GREEN",
+    BRUSH_STOCK_GREY = "expwxBRUSH_STOCK_GREY",
+    BRUSH_STOCK_LIGHT_GREY = "expwxBRUSH_STOCK_LIGHT_GREY",
+    BRUSH_STOCK_MEDIUM_GREY = "expwxBRUSH_STOCK_MEDIUM_GREY",
+    BRUSH_STOCK_RED = "expwxBRUSH_STOCK_RED",
+    BRUSH_STOCK_TRANSPARENT = "expwxBRUSH_STOCK_TRANSPARENT",
+    BRUSH_STOCK_WHITE = "expwxBRUSH_STOCK_WHITE",
     BU_AUTODRAW = "expwxBU_AUTODRAW",
     BU_BOTTOM = "expwxBU_BOTTOM",
     BU_EXACTFIT = "expwxBU_EXACTFIT",
@@ -2755,6 +2938,13 @@ local _symbols = {
     CMD_LINE_VAL_STRING = "expwxCMD_LINE_VAL_STRING",
     CMD_SWITCH_ON = "expwxCMD_SWITCH_ON",
     COLOURED = "expwxCOLOURED",
+    COLOUR_STOCK_BLACK = "expwxCOLOUR_STOCK_BLACK",
+    COLOUR_STOCK_BLUE = "expwxCOLOUR_STOCK_BLUE",
+    COLOUR_STOCK_CYAN = "expwxCOLOUR_STOCK_CYAN",
+    COLOUR_STOCK_GREEN = "expwxCOLOUR_STOCK_GREEN",
+    COLOUR_STOCK_LIGHT_GREY = "expwxCOLOUR_STOCK_LIGHT_GREY",
+    COLOUR_STOCK_RED = "expwxCOLOUR_STOCK_RED",
+    COLOUR_STOCK_WHITE = "expwxCOLOUR_STOCK_WHITE",
     COL_DEFAULT_FLAGS = "expwxCOL_DEFAULT_FLAGS",
     COL_HIDDEN = "expwxCOL_HIDDEN",
     COL_REORDERABLE = "expwxCOL_REORDERABLE",
@@ -2820,6 +3010,9 @@ local _symbols = {
     CURSOR_SPRAYCAN = "expwxCURSOR_SPRAYCAN",
     CURSOR_WAIT = "expwxCURSOR_WAIT",
     CURSOR_WATCH = "expwxCURSOR_WATCH",
+    CYAN = "expwxCYAN",
+    CYAN_BRUSH = "expwxCYAN_BRUSH",
+    CYAN_PEN = "expwxCYAN_PEN",
     ColourData_NUM_CUSTOM = "expwxColourData_NUM_CUSTOM",
     DATAVIEW_CELL_ACTIVATABLE = "expwxDATAVIEW_CELL_ACTIVATABLE",
     DATAVIEW_CELL_EDITABLE = "expwxDATAVIEW_CELL_EDITABLE",
@@ -2834,6 +3027,7 @@ local _symbols = {
     DD_SHOW_HIDDEN = "expwxDD_SHOW_HIDDEN",
     DEFAULT_DIALOG_STYLE = "expwxDEFAULT_DIALOG_STYLE",
     DEFAULT_FRAME_STYLE = "expwxDEFAULT_FRAME_STYLE",
+    DEFAULT_TEMPLATE_FLAGS = "expwxDEFAULT_TEMPLATE_FLAGS",
     DF_BITMAP = "expwxDF_BITMAP",
     DF_DIB = "expwxDF_DIB",
     DF_DIF = "expwxDF_DIF",
@@ -2875,6 +3069,7 @@ local _symbols = {
     DIR_IGNORE = "expwxDIR_IGNORE",
     DIR_NO_FOLLOW = "expwxDIR_NO_FOLLOW",
     DIR_STOP = "expwxDIR_STOP",
+    DOC_NEW = "expwxDOC_NEW",
     DOC_SILENT = "expwxDOC_SILENT",
     DOUBLE_BORDER = "expwxDOUBLE_BORDER",
     DOWN = "expwxDOWN",
@@ -2886,6 +3081,14 @@ local _symbols = {
     DUPLEX_HORIZONTAL = "expwxDUPLEX_HORIZONTAL",
     DUPLEX_SIMPLEX = "expwxDUPLEX_SIMPLEX",
     DUPLEX_VERTICAL = "expwxDUPLEX_VERTICAL",
+    DVR_DEFAULT_ALIGNMENT = "expwxDVR_DEFAULT_ALIGNMENT",
+    DV_HORIZ_RULES = "expwxDV_HORIZ_RULES",
+    DV_MULTIPLE = "expwxDV_MULTIPLE",
+    DV_NO_HEADER = "expwxDV_NO_HEADER",
+    DV_ROW_LINES = "expwxDV_ROW_LINES",
+    DV_SINGLE = "expwxDV_SINGLE",
+    DV_VARIABLE_LINE_HEIGHT = "expwxDV_VARIABLE_LINE_HEIGHT",
+    DV_VERT_RULES = "expwxDV_VERT_RULES",
     DateTime_Apr = "expwxDateTime_Apr",
     DateTime_Aug = "expwxDateTime_Aug",
     DateTime_Country_Default = "expwxDateTime_Country_Default",
@@ -2914,6 +3117,8 @@ local _symbols = {
     DateTime_Thu = "expwxDateTime_Thu",
     DateTime_Tue = "expwxDateTime_Tue",
     DateTime_Wed = "expwxDateTime_Wed",
+    DebugReport_Context_Current = "expwxDebugReport_Context_Current",
+    DebugReport_Context_Exception = "expwxDebugReport_Context_Exception",
     DefaultCoord = "expwxDefaultCoord",
     DirDialogDefaultFolderStr = "expwxDirDialogDefaultFolderStr",
     DragCancel = "expwxDragCancel",
@@ -3065,6 +3270,10 @@ local _symbols = {
     FONTWEIGHT_NORMAL = "expwxFONTWEIGHT_NORMAL",
     FONTWEIGHT_SEMIBOLD = "expwxFONTWEIGHT_SEMIBOLD",
     FONTWEIGHT_THIN = "expwxFONTWEIGHT_THIN",
+    FONT_STOCK_ITALIC = "expwxFONT_STOCK_ITALIC",
+    FONT_STOCK_NORMAL = "expwxFONT_STOCK_NORMAL",
+    FONT_STOCK_SMALL = "expwxFONT_STOCK_SMALL",
+    FONT_STOCK_SWISS = "expwxFONT_STOCK_SWISS",
     FORWARD = "expwxFORWARD",
     FRAME_EX_CONTEXTHELP = "expwxFRAME_EX_CONTEXTHELP",
     FRAME_FLOAT_ON_PARENT = "expwxFRAME_FLOAT_ON_PARENT",
@@ -3102,6 +3311,11 @@ local _symbols = {
     GA_PROGRESS = "expwxGA_PROGRESS",
     GA_SMOOTH = "expwxGA_SMOOTH",
     GA_VERTICAL = "expwxGA_VERTICAL",
+    GREEN = "expwxGREEN",
+    GREEN_BRUSH = "expwxGREEN_BRUSH",
+    GREEN_PEN = "expwxGREEN_PEN",
+    GREY_BRUSH = "expwxGREY_BRUSH",
+    GREY_PEN = "expwxGREY_PEN",
     GRIDTABLE_NOTIFY_COLS_APPENDED = "expwxGRIDTABLE_NOTIFY_COLS_APPENDED",
     GRIDTABLE_NOTIFY_COLS_DELETED = "expwxGRIDTABLE_NOTIFY_COLS_DELETED",
     GRIDTABLE_NOTIFY_COLS_INSERTED = "expwxGRIDTABLE_NOTIFY_COLS_INSERTED",
@@ -3157,6 +3371,7 @@ local _symbols = {
     HL_ALIGN_RIGHT = "expwxHL_ALIGN_RIGHT",
     HL_DEFAULT_STYLE = "expwxHL_DEFAULT_STYLE",
     HORIZONTAL = "expwxHORIZONTAL",
+    HOURGLASS_CURSOR = "expwxHOURGLASS_CURSOR",
     HSCROLL = "expwxHSCROLL",
     HTML_OPEN = "expwxHTML_OPEN",
     HW_SCROLLBAR_AUTO = "expwxHW_SCROLLBAR_AUTO",
@@ -3164,6 +3379,7 @@ local _symbols = {
     ICONIZE = "expwxICONIZE",
     ICON_AUTH_NEEDED = "expwxICON_AUTH_NEEDED",
     ICON_ERROR = "expwxICON_ERROR",
+    ICON_HAND = "expwxICON_HAND",
     ICON_INFORMATION = "expwxICON_INFORMATION",
     ICON_NONE = "expwxICON_NONE",
     ICON_QUESTION = "expwxICON_QUESTION",
@@ -3301,6 +3517,7 @@ local _symbols = {
     IPC_TEXT = "expwxIPC_TEXT",
     IPC_UNICODETEXT = "expwxIPC_UNICODETEXT",
     IPC_UTF8TEXT = "expwxIPC_UTF8TEXT",
+    ITALIC_FONT = "expwxITALIC_FONT",
     ITEM_CHECK = "expwxITEM_CHECK",
     ITEM_DROPDOWN = "expwxITEM_DROPDOWN",
     ITEM_MAX = "expwxITEM_MAX",
@@ -3590,6 +3807,9 @@ local _symbols = {
     LC_USER_TEXT = "expwxLC_USER_TEXT",
     LC_VRULES = "expwxLC_VRULES",
     LEFT = "expwxLEFT",
+    LIGHT_GREY = "expwxLIGHT_GREY",
+    LIGHT_GREY_BRUSH = "expwxLIGHT_GREY_BRUSH",
+    LIGHT_GREY_PEN = "expwxLIGHT_GREY_PEN",
     LIST_AUTOSIZE = "expwxLIST_AUTOSIZE",
     LIST_AUTOSIZE_USEHEADER = "expwxLIST_AUTOSIZE_USEHEADER",
     LIST_FORMAT_CENTER = "expwxLIST_FORMAT_CENTER",
@@ -3634,6 +3854,8 @@ local _symbols = {
     MEDIACTRLPLAYERCONTROLS_NONE = "expwxMEDIACTRLPLAYERCONTROLS_NONE",
     MEDIASTATE_PLAYING = "expwxMEDIASTATE_PLAYING",
     MEDIASTATE_STOPPED = "expwxMEDIASTATE_STOPPED",
+    MEDIUM_GREY_BRUSH = "expwxMEDIUM_GREY_BRUSH",
+    MEDIUM_GREY_PEN = "expwxMEDIUM_GREY_PEN",
     MENU_TEAROFF = "expwxMENU_TEAROFF",
     MINIMIZE_BOX = "expwxMINIMIZE_BOX",
     MINOR_VERSION = "expwxMINOR_VERSION",
@@ -3671,8 +3893,10 @@ local _symbols = {
     NB_TOP = "expwxNB_TOP",
     NO = "expwxNO",
     NOR = "expwxNOR",
+    NORMAL_FONT = "expwxNORMAL_FONT",
     NORTH = "expwxNORTH",
     NOT_FOUND = "expwxNOT_FOUND",
+    NO_BORDER = "expwxNO_BORDER",
     NO_DEFAULT = "expwxNO_DEFAULT",
     NO_FULL_REPAINT_ON_RESIZE = "expwxNO_FULL_REPAINT_ON_RESIZE",
     NO_OP = "expwxNO_OP",
@@ -3809,6 +4033,16 @@ local _symbols = {
     PENSTYLE_TRANSPARENT = "expwxPENSTYLE_TRANSPARENT",
     PENSTYLE_USER_DASH = "expwxPENSTYLE_USER_DASH",
     PENSTYLE_VERTICAL_HATCH = "expwxPENSTYLE_VERTICAL_HATCH",
+    PEN_STOCK_BLACK = "expwxPEN_STOCK_BLACK",
+    PEN_STOCK_BLACK_DASHED = "expwxPEN_STOCK_BLACK_DASHED",
+    PEN_STOCK_CYAN = "expwxPEN_STOCK_CYAN",
+    PEN_STOCK_GREEN = "expwxPEN_STOCK_GREEN",
+    PEN_STOCK_GREY = "expwxPEN_STOCK_GREY",
+    PEN_STOCK_LIGHT_GREY = "expwxPEN_STOCK_LIGHT_GREY",
+    PEN_STOCK_MEDIUM_GREY = "expwxPEN_STOCK_MEDIUM_GREY",
+    PEN_STOCK_RED = "expwxPEN_STOCK_RED",
+    PEN_STOCK_TRANSPARENT = "expwxPEN_STOCK_TRANSPARENT",
+    PEN_STOCK_WHITE = "expwxPEN_STOCK_WHITE",
     PGMAN_DEFAULT_STYLE = "expPGMAN_DEFAULT_STYLE",
     PG_ARRAY_DELIMITER = "expwxPG_ARRAY_DELIMITER",
     PG_ATTR_AUTOCOMPLETE = "expwxPG_ATTR_AUTOCOMPLETE",
@@ -3915,9 +4149,13 @@ local _symbols = {
     PROPSHEET_SHRINKTOFIT = "expwxPROPSHEET_SHRINKTOFIT",
     PROPSHEET_TOOLBOOK = "expwxPROPSHEET_TOOLBOOK",
     PU_CONTAINS_CONTROLS = "expPU_CONTAINS_CONTROLS",
+    RAISED_BORDER = "expwxRAISED_BORDER",
     RA_SPECIFY_COLS = "expwxRA_SPECIFY_COLS",
     RA_SPECIFY_ROWS = "expwxRA_SPECIFY_ROWS",
     RB_GROUP = "expwxRB_GROUP",
+    RED = "expwxRED",
+    RED_BRUSH = "expwxRED_BRUSH",
+    RED_PEN = "expwxRED_PEN",
     REMOVE_LEADING_SPACES = "expwxREMOVE_LEADING_SPACES",
     RESET = "expwxRESET",
     RESIZE_BORDER = "expwxRESIZE_BORDER",
@@ -4074,6 +4312,7 @@ local _symbols = {
     ROLE_SYSTEM_TOOLTIP = "expwxROLE_SYSTEM_TOOLTIP",
     ROLE_SYSTEM_WHITESPACE = "expwxROLE_SYSTEM_WHITESPACE",
     ROLE_SYSTEM_WINDOW = "expwxROLE_SYSTEM_WINDOW",
+    RichTextFormattingDialog_Option_AllowPixelFontSize = "expwxRichTextFormattingDialog_Option_AllowPixelFontSize",
     SASH_BOTTOM = "expwxSASH_BOTTOM",
     SASH_DRAG_DRAGGING = "expwxSASH_DRAG_DRAGGING",
     SASH_DRAG_LEFT_DOWN = "expwxSASH_DRAG_LEFT_DOWN",
@@ -4122,6 +4361,7 @@ local _symbols = {
     SIGSYS = "expwxSIGSYS",
     SIGTERM = "expwxSIGTERM",
     SIGTRAP = "expwxSIGTRAP",
+    SIMPLE_BORDER = "expwxSIMPLE_BORDER",
     SIZE_ALLOW_MINUS_ONE = "expwxSIZE_ALLOW_MINUS_ONE",
     SIZE_AUTO = "expwxSIZE_AUTO",
     SIZE_AUTO_HEIGHT = "expwxSIZE_AUTO_HEIGHT",
@@ -4141,6 +4381,7 @@ local _symbols = {
     SL_TOP = "expwxSL_TOP",
     SL_VALUE_LABEL = "expwxSL_VALUE_LABEL",
     SL_VERTICAL = "expwxSL_VERTICAL",
+    SMALL_FONT = "expwxSMALL_FONT",
     SOCKET_BLOCK = "expwxSOCKET_BLOCK",
     SOCKET_CONNECTION = "expwxSOCKET_CONNECTION",
     SOCKET_CONNECTION_FLAG = "expwxSOCKET_CONNECTION_FLAG",
@@ -4181,6 +4422,8 @@ local _symbols = {
     SP_VERTICAL = "expwxSP_VERTICAL",
     SP_WRAP = "expwxSP_WRAP",
     SRC_INVERT = "expwxSRC_INVERT",
+    STANDARD_CURSOR = "expwxSTANDARD_CURSOR",
+    STATIC_BORDER = "expwxSTATIC_BORDER",
     STAY_ON_TOP = "expwxSTAY_ON_TOP",
     STB_DEFAULT_STYLE = "expwxSTB_DEFAULT_STYLE",
     STB_ELLIPSIZE_END = "expwxSTB_ELLIPSIZE_END",
@@ -4201,6 +4444,8 @@ local _symbols = {
     ST_NO_AUTORESIZE = "expwxST_NO_AUTORESIZE",
     ST_SIZEGRIP = "expwxST_SIZEGRIP",
     ST_WRAP = "expwxST_WRAP",
+    SUNKEN_BORDER = "expwxSUNKEN_BORDER",
+    SWISS_FONT = "expwxSWISS_FONT",
     SW_3D = "expwxSW_3D",
     SW_3DBORDER = "expwxSW_3DBORDER",
     SW_3DSASH = "expwxSW_3DSASH",
@@ -4347,6 +4592,8 @@ local _symbols = {
     TC_MULTILINE = "expwxTC_MULTILINE",
     TC_OWNERDRAW = "expwxTC_OWNERDRAW",
     TC_RIGHTJUSTIFY = "expwxTC_RIGHTJUSTIFY",
+    TEMPLATE_INVISIBLE = "expwxTEMPLATE_INVISIBLE",
+    TEMPLATE_VISIBLE = "expwxTEMPLATE_VISIBLE",
     TEXT_ALIGNMENT_CENTRE = "expwxTEXT_ALIGNMENT_CENTRE",
     TEXT_ALIGNMENT_JUSTIFIED = "expwxTEXT_ALIGNMENT_JUSTIFIED",
     TEXT_ALIGNMENT_LEFT = "expwxTEXT_ALIGNMENT_LEFT",
@@ -4487,7 +4734,10 @@ local _symbols = {
     TOP = "expwxTOP",
     TOUCH_ALL_GESTURES = "expwxTOUCH_ALL_GESTURES",
     TOUCH_RAW_EVENTS = "expwxTOUCH_RAW_EVENTS",
+    TRACE_OleCalls = "expwxTRACE_OleCalls",
     TRANSPARENT = "expwxTRANSPARENT",
+    TRANSPARENT_BRUSH = "expwxTRANSPARENT_BRUSH",
+    TRANSPARENT_PEN = "expwxTRANSPARENT_PEN",
     TREE_HITTEST_ABOVE = "expwxTREE_HITTEST_ABOVE",
     TREE_HITTEST_BELOW = "expwxTREE_HITTEST_BELOW",
     TREE_HITTEST_NOWHERE = "expwxTREE_HITTEST_NOWHERE",
@@ -4518,6 +4768,8 @@ local _symbols = {
     Tab_Leave = "expTab_Leave",
     Tab_Stop = "expTab_Stop",
     Tab_Wrap = "expTab_Wrap",
+    TheApp = "expwxTheApp",
+    TheClipboard = "expwxTheClipboard",
     TipKind_Auto = "expwxTipKind_Auto",
     TreeItemIcon_Expanded = "expwxTreeItemIcon_Expanded",
     TreeItemIcon_Normal = "expwxTreeItemIcon_Normal",
@@ -4564,6 +4816,9 @@ local _symbols = {
     WEBVIEW_ZOOM_TYPE_LAYOUT = "expwxWEBVIEW_ZOOM_TYPE_LAYOUT",
     WEBVIEW_ZOOM_TYPE_TEXT = "expwxWEBVIEW_ZOOM_TYPE_TEXT",
     WEST = "expwxWEST",
+    WHITE = "expwxWHITE",
+    WHITE_BRUSH = "expwxWHITE_BRUSH",
+    WHITE_PEN = "expwxWHITE_PEN",
     WINDING_RULE = "expwxWINDING_RULE",
     WINDOW_VARIANT_LARGE = "expwxWINDOW_VARIANT_LARGE",
     WINDOW_VARIANT_MINI = "expwxWINDOW_VARIANT_MINI",
@@ -4583,6 +4838,9 @@ local _symbols = {
     XOR = "expwxXOR",
     XRC_USE_ENVVARS = "expwxXRC_USE_ENVVARS",
     XRC_USE_LOCALE = "expwxXRC_USE_LOCALE",
+    YELLOW = "expwxYELLOW",
+    YELLOW_BRUSH = "expwxYELLOW_BRUSH",
+    YELLOW_PEN = "expwxYELLOW_PEN",
     YES = "expwxYES",
     YES_DEFAULT = "expwxYES_DEFAULT",
     YES_NO = "expwxYES_NO",

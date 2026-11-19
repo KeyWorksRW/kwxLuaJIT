@@ -19,11 +19,11 @@ end
 function M:Ptr() return self._ptr end
 
 function M:GetOldDPI()
-    return _H.wrap("wxsize_gen", C.wxDPIChangedEvent_GetOldDPI(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxDPIChangedEvent_GetOldDPI(self._ptr), true)
 end
 
 function M:GetNewDPI()
-    return _H.wrap("wxsize_gen", C.wxDPIChangedEvent_GetNewDPI(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxDPIChangedEvent_GetNewDPI(self._ptr), true)
 end
 
 return M

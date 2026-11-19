@@ -34,7 +34,7 @@ function M:SetFont(font)
 end
 
 function M:GetFont()
-    return _H.wrap("wxfont_gen", C.wxAuiToolBarArt_GetFont(self._ptr))
+    return _H.wrap("wxfont_gen", C.wxAuiToolBarArt_GetFont(self._ptr), true)
 end
 
 function M:SetTextOrientation(orientation)
@@ -82,11 +82,11 @@ function M:DrawOverflowButton(dc, window, rect, state)
 end
 
 function M:GetLabelSize(dc, window, item)
-    return _H.wrap("wxsize_gen", C.wxAuiToolBarArt_GetLabelSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item)))
+    return _H.wrap("wxsize_gen", C.wxAuiToolBarArt_GetLabelSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item)), true)
 end
 
 function M:GetToolSize(dc, window, item)
-    return _H.wrap("wxsize_gen", C.wxAuiToolBarArt_GetToolSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item)))
+    return _H.wrap("wxsize_gen", C.wxAuiToolBarArt_GetToolSize(self._ptr, _H.ptr(dc), _H.ptr(window), _H.ptr(item)), true)
 end
 
 function M:GetElementSize(element_id)

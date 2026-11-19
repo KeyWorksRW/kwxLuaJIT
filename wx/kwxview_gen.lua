@@ -41,6 +41,26 @@ function M:SetOnOnUpdate(pFunction)
     C.kwxView_SetOnOnUpdate(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnOnCreateWithData(pFunction, data)
+    C.kwxView_SetOnOnCreateWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCreateResult(result)
+    C.kwxView_SetOnCreateResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnOnCloseWithData(pFunction, data)
+    C.kwxView_SetOnOnCloseWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCloseResult(result)
+    C.kwxView_SetOnCloseResult(self._ptr, _H.from_bool(result))
+end
+
+function M:OnCloseBase(deleteWindow)
+    return _H.to_bool(C.kwxView_OnCloseBase(self._ptr, _H.from_bool(deleteWindow)))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

@@ -34,11 +34,11 @@ function M:GetCurrentPage()
 end
 
 function M:GetControllerSize()
-    return _H.wrap("wxsize_gen", C.wxNotebook_GetControllerSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxNotebook_GetControllerSize(self._ptr), true)
 end
 
 function M:CalcSizeFromPage(width, height)
-    return _H.wrap("wxsize_gen", C.wxNotebook_CalcSizeFromPage(self._ptr, width, height))
+    return _H.wrap("wxsize_gen", C.wxNotebook_CalcSizeFromPage(self._ptr, width, height), true)
 end
 
 function M:GetInternalBorder()
@@ -82,7 +82,7 @@ function M:SetTabSize(width, height)
 end
 
 function M:GetTabRect(page)
-    return _H.wrap("wxrect_gen", C.wxNotebook_GetTabRect(self._ptr, page))
+    return _H.wrap("wxrect_gen", C.wxNotebook_GetTabRect(self._ptr, page), true)
 end
 
 function M:GetTabOrientation()

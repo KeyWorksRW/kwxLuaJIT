@@ -401,6 +401,10 @@ function M:MinSizeXY(x, y)
     return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_MinSizeXY(self._ptr, x, y))
 end
 
+function M:IconBundle(bitmap)
+    return _H.wrap("wxauipaneinfo_gen", C.wxAuiPaneInfo_IconBundle(self._ptr, _H.ptr(bitmap)))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

@@ -25,6 +25,13 @@ function M.Create(parent, id, bitmap, left, top, width, height, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxBitmapButton_CreateWithBundle
+function M.CreateWithBundle(parent, id, bitmap, left, top, width, height, style)
+    local ptr = C.wxBitmapButton_CreateWithBundle(_H.ptr(parent), id, _H.ptr(bitmap), left, top, width, height, style)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:GetBitmapDisabled(ref)
     C.wxBitmapButton_GetBitmapDisabled(self._ptr, _H.ptr(ref))
 end
@@ -63,6 +70,22 @@ end
 
 function M:SetBitmapSelected(sel)
     C.wxBitmapButton_SetBitmapSelected(self._ptr, _H.ptr(sel))
+end
+
+function M:SetBitmapDisabledBundle(disabled)
+    C.wxBitmapButton_SetBitmapDisabledBundle(self._ptr, _H.ptr(disabled))
+end
+
+function M:SetBitmapFocusBundle(focus)
+    C.wxBitmapButton_SetBitmapFocusBundle(self._ptr, _H.ptr(focus))
+end
+
+function M:SetBitmapLabelBundle(bitmap)
+    C.wxBitmapButton_SetBitmapLabelBundle(self._ptr, _H.ptr(bitmap))
+end
+
+function M:SetBitmapSelectedBundle(sel)
+    C.wxBitmapButton_SetBitmapSelectedBundle(self._ptr, _H.ptr(sel))
 end
 
 function M:SetMargins(x, y)

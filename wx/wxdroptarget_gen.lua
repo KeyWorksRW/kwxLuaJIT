@@ -18,7 +18,11 @@ end
 function M:Ptr() return self._ptr end
 
 function M:GetData()
-    C.wxDropTarget_GetData(self._ptr)
+    return _H.to_bool(C.wxDropTarget_GetData(self._ptr))
+end
+
+function M:GetDataObject()
+    return _H.wrap("wxdataobject_gen", C.wxDropTarget_GetDataObject(self._ptr))
 end
 
 function M:SetDataObject(dataObject)

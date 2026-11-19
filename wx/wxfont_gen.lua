@@ -60,7 +60,7 @@ function M:GetFractionalPointSize()
 end
 
 function M:GetPixelSize()
-    return _H.wrap("wxsize_gen", C.wxFont_GetPixelSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxFont_GetPixelSize(self._ptr), true)
 end
 
 function M:IsUsingSizeInPixels()

@@ -78,7 +78,7 @@ function M:ShowFullScreen(show, style)
 end
 
 function M:GetClientAreaOriginPoint()
-    return _H.wrap("wxpoint_gen", C.wxFrame_GetClientAreaOriginPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxFrame_GetClientAreaOriginPoint(self._ptr), true)
 end
 
 function M:SetWindowModality(modality)

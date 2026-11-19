@@ -55,6 +55,18 @@ function M:HasTextBoxAttr()
     return _H.to_bool(C.wxRichTextAttr_HasTextBoxAttr(self._ptr))
 end
 
+function M:SetBackgroundColour(colour)
+    C.wxRichTextAttr_SetBackgroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:SetParagraphSpacingAfter(spacing)
+    C.wxRichTextAttr_SetParagraphSpacingAfter(self._ptr, spacing)
+end
+
+function M:SetLineSpacing(spacing)
+    C.wxRichTextAttr_SetLineSpacing(self._ptr, spacing)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

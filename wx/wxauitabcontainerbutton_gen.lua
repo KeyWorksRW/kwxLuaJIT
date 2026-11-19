@@ -38,7 +38,7 @@ function M:DisBitmap(bitmap)
 end
 
 function M:Rect()
-    return _H.wrap("wxrect_gen", C.wxAuiTabContainerButton_Rect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxAuiTabContainerButton_Rect(self._ptr), true)
 end
 
 return M

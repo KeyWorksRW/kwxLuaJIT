@@ -120,6 +120,10 @@ function M.GetDefaultBorderFractional()
     return C.wxSizerFlags_GetDefaultBorderFractional()
 end
 
+function M.GetDefaultBorder()
+    return C.wxSizerFlags_GetDefaultBorder()
+end
+
 function M.DisableConsistencyChecks()
     C.wxSizerFlags_DisableConsistencyChecks()
 end

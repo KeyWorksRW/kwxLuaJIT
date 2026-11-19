@@ -53,6 +53,26 @@ function M:SetOnCreateTraits(pFunction)
     C.kwxApp_SetOnCreateTraits(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnOnFatalException(pFunction)
+    C.kwxApp_SetOnOnFatalException(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnOnUnhandledException(pFunction)
+    C.kwxApp_SetOnOnUnhandledException(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnStoreCurrentException(pFunction)
+    C.kwxApp_SetOnStoreCurrentException(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnOnExceptionInMainLoop(pFunction)
+    C.kwxApp_SetOnOnExceptionInMainLoop(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnRethrowStoredException(pFunction)
+    C.kwxApp_SetOnRethrowStoredException(self._ptr, _H.ptr(pFunction))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

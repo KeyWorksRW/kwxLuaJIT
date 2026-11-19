@@ -19,7 +19,7 @@ end
 function M:Ptr() return self._ptr end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxDropFilesEvent_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxDropFilesEvent_GetPosition(self._ptr), true)
 end
 
 function M:GetNumberOfFiles()
