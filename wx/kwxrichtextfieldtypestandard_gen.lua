@@ -29,6 +29,15 @@ function M.Create(pObject, name, label, displayStyle)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: kwxRichTextFieldTypeStandard_CreateWithBitmap
+function M.CreateWithBitmap(pObject, name, bitmap, displayStyle)
+    local _ws_name = _H.wxs(name)
+    local ptr = C.kwxRichTextFieldTypeStandard_CreateWithBitmap(_H.ptr(pObject), _ws_name, _H.ptr(bitmap), displayStyle)
+    _H.wxs_free(_ws_name)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:SetOnCanEditProperties(pFunction)
     C.kwxRichTextFieldTypeStandard_SetOnCanEditProperties(self._ptr, _H.ptr(pFunction))
 end
@@ -69,6 +78,26 @@ end
 
 function M:SetOnIsTopLevel(pFunction)
     C.kwxRichTextFieldTypeStandard_SetOnIsTopLevel(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnCanEditPropertiesWithData(pFunction, data)
+    C.kwxRichTextFieldTypeStandard_SetOnCanEditPropertiesWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnEditPropertiesWithData(pFunction, data)
+    C.kwxRichTextFieldTypeStandard_SetOnEditPropertiesWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetPropertiesMenuLabelWithData(pFunction, data)
+    C.kwxRichTextFieldTypeStandard_SetOnGetPropertiesMenuLabelWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnUpdateFieldWithData(pFunction, data)
+    C.kwxRichTextFieldTypeStandard_SetOnUpdateFieldWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnIsTopLevelWithData(pFunction, data)
+    C.kwxRichTextFieldTypeStandard_SetOnIsTopLevelWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
 end
 
 --- Delete the underlying C++ object.

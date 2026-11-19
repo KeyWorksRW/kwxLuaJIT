@@ -53,6 +53,13 @@ function M.CreateFromXPM(data)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxBitmap_CreateFromXPMString
+function M.CreateFromXPMString(xpm)
+    local ptr = C.wxBitmap_CreateFromXPMString(xpm)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Constructor: wxBitmap_CreateLoad
 function M.CreateLoad(name, type)
     local _ws_name = _H.wxs(name)
@@ -81,7 +88,7 @@ function M:Init(width, height, depth)
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxBitmap_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxBitmap_GetSize(self._ptr), true)
 end
 
 function M:SetScaleFactor(scale)
@@ -93,11 +100,11 @@ function M:GetScaleFactor()
 end
 
 function M:GetDIPSize()
-    return _H.wrap("wxsize_gen", C.wxBitmap_GetDIPSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxBitmap_GetDIPSize(self._ptr), true)
 end
 
 function M:GetLogicalSize()
-    return _H.wrap("wxsize_gen", C.wxBitmap_GetLogicalSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxBitmap_GetLogicalSize(self._ptr), true)
 end
 
 function M:GetLogicalWidth()

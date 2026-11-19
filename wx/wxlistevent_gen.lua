@@ -71,7 +71,7 @@ function M:GetMask()
 end
 
 function M:GetPoint()
-    return _H.wrap("wxpoint_gen", C.wxListEvent_GetPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxListEvent_GetPoint(self._ptr), true)
 end
 
 function M:GetText()

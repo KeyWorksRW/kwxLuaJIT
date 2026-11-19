@@ -87,7 +87,7 @@ function M:SetBitmapMargins(x, y)
 end
 
 function M:GetBitmapMargins()
-    return _H.wrap("wxsize_gen", C.wxAnyButton_GetBitmapMargins(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxAnyButton_GetBitmapMargins(self._ptr), true)
 end
 
 function M:SetBitmapPosition(dir)

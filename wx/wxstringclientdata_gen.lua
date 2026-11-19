@@ -44,6 +44,10 @@ function M:SetData(data)
     _H.wxs_free(_ws_data)
 end
 
+function M.FromClientData(data)
+    return _H.wrap("wxstringclientdata_gen", C.wxStringClientData_FromClientData(_H.ptr(data)))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

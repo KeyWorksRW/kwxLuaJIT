@@ -33,15 +33,15 @@ function M.CreateWithBundle(parent, prev, next, bitmap)
 end
 
 function M:GetBitmap()
-    return _H.wrap("wxbitmap_gen", C.wxWizardPageSimple_GetBitmap(self._ptr))
+    return _H.wrap("wxbitmap_gen", C.wxWizardPageSimple_GetBitmap(self._ptr), true)
 end
 
 function M:GetNext()
-    return _H.wrap("wxwizardpagesimple_gen", C.wxWizardPageSimple_GetNext(self._ptr))
+    return _H.wrap("wxwizardpage_gen", C.wxWizardPageSimple_GetNext(self._ptr))
 end
 
 function M:GetPrev()
-    return _H.wrap("wxwizardpagesimple_gen", C.wxWizardPageSimple_GetPrev(self._ptr))
+    return _H.wrap("wxwizardpage_gen", C.wxWizardPageSimple_GetPrev(self._ptr))
 end
 
 function M:SetNext(next)
@@ -50,6 +50,10 @@ end
 
 function M:SetPrev(prev)
     C.wxWizardPageSimple_SetPrev(self._ptr, _H.ptr(prev))
+end
+
+function M:Chain(next)
+    return _H.wrap("wxwizardpagesimple_gen", C.wxWizardPageSimple_Chain(self._ptr, _H.ptr(next)))
 end
 
 return M

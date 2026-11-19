@@ -23,7 +23,7 @@ function M:GetCursor()
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxSetCursorEvent_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxSetCursorEvent_GetPosition(self._ptr), true)
 end
 
 function M:GetX()

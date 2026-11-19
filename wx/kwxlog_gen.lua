@@ -54,7 +54,7 @@ function M:FlushActive()
 end
 
 function M.GetActiveTarget()
-    return C.kwxLog_GetActiveTarget()
+    return _H.wrap("wxlog_gen", C.kwxLog_GetActiveTarget())
 end
 
 function M:GetTimestamp()

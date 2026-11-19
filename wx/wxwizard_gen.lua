@@ -51,7 +51,7 @@ function M:GetCurrentPage()
 end
 
 function M:GetPageSize()
-    return _H.wrap("wxsize_gen", C.wxWizard_GetPageSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWizard_GetPageSize(self._ptr), true)
 end
 
 function M:RunWizard(firstPage)
@@ -99,6 +99,30 @@ end
 
 function M:GetBitmapPlacement()
     return C.wxWizard_GetBitmapPlacement(self._ptr)
+end
+
+function M:IsRunning()
+    return _H.to_bool(C.wxWizard_IsRunning(self._ptr))
+end
+
+function M:SetBitmapBackgroundColour(colour)
+    C.wxWizard_SetBitmapBackgroundColour(self._ptr, _H.ptr(colour))
+end
+
+function M:GetBitmapBackgroundColour(ref)
+    C.wxWizard_GetBitmapBackgroundColour(self._ptr, _H.ptr(ref))
+end
+
+function M:SetMinimumBitmapWidth(width)
+    C.wxWizard_SetMinimumBitmapWidth(self._ptr, width)
+end
+
+function M:GetMinimumBitmapWidth()
+    return C.wxWizard_GetMinimumBitmapWidth(self._ptr)
+end
+
+function M.TileBitmap(left, top, width, height, dc, bitmap)
+    return _H.to_bool(C.wxWizard_TileBitmap(left, top, width, height, _H.ptr(dc), _H.ptr(bitmap)))
 end
 
 return M

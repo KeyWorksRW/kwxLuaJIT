@@ -22,7 +22,7 @@ function M:DrawBackground(dc, window, orientation, rect)
 end
 
 function M:GetColor(id)
-    return _H.wrap("wxcolour_gen", C.wxAuiDockArt_GetColor(self._ptr, id))
+    return _H.wrap("wxcolour_gen", C.wxAuiDockArt_GetColor(self._ptr, id), true)
 end
 
 function M:GetMetricForWindow(id, window)
@@ -56,11 +56,11 @@ function M:DrawSash(dc, window, orientation, rect)
 end
 
 function M:GetColour(id)
-    return _H.wrap("wxcolour_gen", C.wxAuiDockArt_GetColour(self._ptr, id))
+    return _H.wrap("wxcolour_gen", C.wxAuiDockArt_GetColour(self._ptr, id), true)
 end
 
 function M:GetFont(id)
-    return _H.wrap("wxfont_gen", C.wxAuiDockArt_GetFont(self._ptr, id))
+    return _H.wrap("wxfont_gen", C.wxAuiDockArt_GetFont(self._ptr, id), true)
 end
 
 function M:GetMetric(id)

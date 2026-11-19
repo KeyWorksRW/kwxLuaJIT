@@ -37,6 +37,10 @@ function M:IsScrolledWindow()
     return _H.to_bool(C.wxObject_IsScrolledWindow(self._ptr))
 end
 
+function M:IsOfClass(className)
+    return _H.to_bool(C.wxObject_IsOfClass(self._ptr, className))
+end
+
 function M:SetClientClosure(closure)
     C.wxObject_SetClientClosure(self._ptr, _H.ptr(closure))
 end

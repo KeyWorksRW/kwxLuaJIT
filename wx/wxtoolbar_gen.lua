@@ -36,7 +36,7 @@ function M:AddTool2(toolId, label, bmp, bmpDisabled, itemKind, shortHelp, longHe
 end
 
 function M:GetToolMargins()
-    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolMargins(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolMargins(self._ptr), true)
 end
 
 function M:SetMaxRowsCols(rows, cols)
@@ -95,11 +95,11 @@ function M:EnableTool(id, enable)
 end
 
 function M:GetMargins()
-    return _H.wrap("wxpoint_gen", C.wxToolBar_GetMargins(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxToolBar_GetMargins(self._ptr), true)
 end
 
 function M:GetToolBitmapSize()
-    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolBitmapSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolBitmapSize(self._ptr), true)
 end
 
 function M:GetToolClientData(id)
@@ -123,7 +123,7 @@ function M:GetToolShortHelp(id)
 end
 
 function M:GetToolSize()
-    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxToolBar_GetToolSize(self._ptr), true)
 end
 
 function M:GetToolState(id)

@@ -66,7 +66,7 @@ function M:AddGrowableRow(idx, proportion)
 end
 
 function M:CalcMin()
-    return _H.wrap("wxsize_gen", C.wxFlexGridSizer_CalcMin(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxFlexGridSizer_CalcMin(self._ptr), true)
 end
 
 function M:RecalcSizes()

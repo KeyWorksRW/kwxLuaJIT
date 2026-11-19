@@ -25,7 +25,7 @@ function M.Create(x, y, width, height)
 end
 
 function M:CentreIn(r, dir)
-    return _H.wrap("wxrect_gen", C.wxRect_CentreIn(self._ptr, _H.ptr(r), dir))
+    return _H.wrap("wxrect_gen", C.wxRect_CentreIn(self._ptr, _H.ptr(r), dir), true)
 end
 
 function M:Contains(x, y)
@@ -33,7 +33,7 @@ function M:Contains(x, y)
 end
 
 function M:Deflate(dx, dy)
-    return _H.wrap("wxrect_gen", C.wxRect_Deflate(self._ptr, dx, dy))
+    return _H.wrap("wxrect_gen", C.wxRect_Deflate(self._ptr, dx, dy), true)
 end
 
 function M:GetBottom()
@@ -41,7 +41,7 @@ function M:GetBottom()
 end
 
 function M:GetBottomLeft()
-    return _H.wrap("wxpoint_gen", C.wxRect_GetBottomLeft(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxRect_GetBottomLeft(self._ptr), true)
 end
 
 function M:GetLeft()
@@ -49,11 +49,11 @@ function M:GetLeft()
 end
 
 function M:GetLeftTop()
-    return _H.wrap("wxpoint_gen", C.wxRect_GetLeftTop(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxRect_GetLeftTop(self._ptr), true)
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxRect_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxRect_GetPosition(self._ptr), true)
 end
 
 function M:GetRight()
@@ -61,7 +61,7 @@ function M:GetRight()
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxRect_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxRect_GetSize(self._ptr), true)
 end
 
 function M:GetTop()
@@ -69,15 +69,15 @@ function M:GetTop()
 end
 
 function M:GetTopLeft()
-    return _H.wrap("wxpoint_gen", C.wxRect_GetTopLeft(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxRect_GetTopLeft(self._ptr), true)
 end
 
 function M:GetTopRight()
-    return _H.wrap("wxpoint_gen", C.wxRect_GetTopRight(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxRect_GetTopRight(self._ptr), true)
 end
 
 function M:Inflate(dx, dy)
-    return _H.wrap("wxrect_gen", C.wxRect_Inflate(self._ptr, dx, dy))
+    return _H.wrap("wxrect_gen", C.wxRect_Inflate(self._ptr, dx, dy), true)
 end
 
 function M:Offset(dx, dy)

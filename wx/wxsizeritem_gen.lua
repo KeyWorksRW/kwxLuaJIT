@@ -40,7 +40,7 @@ function M.CreateInWindow(window, option, flag, border, userData)
 end
 
 function M:CalcMin()
-    return _H.wrap("wxsize_gen", C.wxSizerItem_CalcMin(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizerItem_CalcMin(self._ptr), true)
 end
 
 function M:SetMinSize(size)
@@ -56,11 +56,11 @@ function M:GetFlag()
 end
 
 function M:GetMinSize()
-    return _H.wrap("wxsize_gen", C.wxSizerItem_GetMinSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizerItem_GetMinSize(self._ptr), true)
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxSizerItem_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxSizerItem_GetPosition(self._ptr), true)
 end
 
 function M:GetRatio()
@@ -68,7 +68,7 @@ function M:GetRatio()
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxSizerItem_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizerItem_GetSize(self._ptr), true)
 end
 
 function M:GetSizer()
@@ -140,11 +140,11 @@ function M:GetProportion()
 end
 
 function M:GetRect()
-    return _H.wrap("wxrect_gen", C.wxSizerItem_GetRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxSizerItem_GetRect(self._ptr), true)
 end
 
 function M:GetSpacer()
-    return _H.wrap("wxsize_gen", C.wxSizerItem_GetSpacer(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizerItem_GetSpacer(self._ptr), true)
 end
 
 function M:IsShown()

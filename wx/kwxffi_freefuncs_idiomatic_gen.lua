@@ -113,7 +113,7 @@ function M.kwxUtf8Buffer_Create(str)
 end
 
 function M.kwxUtf8Buffer_Data(buf)
-    return _H.wxs_to_str(C.kwxUtf8Buffer_Data(_H.ptr(buf)))
+    return _H.borrow_cstr(C.kwxUtf8Buffer_Data(_H.ptr(buf)))
 end
 
 function M.kwxUtf8Buffer_Delete(buf)
@@ -217,6 +217,13 @@ function M.wxGetEnv(var, value)
     local _result = _H.to_bool(C.wxGetEnv(_ws_var, _ws_value))
     _H.wxs_free(_ws_var)
     _H.wxs_free(_ws_value)
+    return _result
+end
+
+function M.wxGetEnvValue(var)
+    local _ws_var = _H.wxs(var)
+    local _result = _H.wxs_to_str(C.wxGetEnvValue(_ws_var))
+    _H.wxs_free(_ws_var)
     return _result
 end
 
@@ -626,6 +633,15 @@ function M.wxGetSingleChoiceIndex(message, caption, choices, count, parent)
     return _result
 end
 
+function M.wxGetSingleChoiceIndexArray(message, caption, choices, parent)
+    local _ws_message = _H.wxs(message)
+    local _ws_caption = _H.wxs(caption)
+    local _result = C.wxGetSingleChoiceIndexArray(_ws_message, _ws_caption, _H.ptr(choices), _H.ptr(parent))
+    _H.wxs_free(_ws_message)
+    _H.wxs_free(_ws_caption)
+    return _result
+end
+
 function M.wxGetSingleChoiceIndexEx(message, caption, n, choices, parent, x, y, centre, width, height, initialSelection)
     local _ws_message = _H.wxs(message)
     local _ws_caption = _H.wxs(caption)
@@ -655,7 +671,7 @@ function M.wxAtoi(str)
 end
 
 function M.wxGetDisplaySize()
-    return _H.wrap("wxsize_gen", C.wxGetDisplaySize())
+    return _H.wrap("wxsize_gen", C.wxGetDisplaySize(), true)
 end
 
 function M.wxGetTopLevelParent(window)
@@ -683,7 +699,14 @@ function M.wxDegToRad(degrees)
 end
 
 function M.wxFgets(buffer, size, stream)
-    return _H.wxs_to_str(C.wxFgets(buffer, size, _H.ptr(stream)))
+    return _H.borrow_cstr(C.wxFgets(buffer, size, _H.ptr(stream)))
+end
+
+function M.wxFputs(str, stream)
+    local _ws_str = _H.wxs(str)
+    local _result = C.wxFputs(_ws_str, _H.ptr(stream))
+    _H.wxs_free(_ws_str)
+    return _result
 end
 
 function M.wxGetCwd()
@@ -762,7 +785,7 @@ function M.wxGetBatteryState()
 end
 
 function M.wxGetClientDisplayRect()
-    return _H.wrap("wxrect_gen", C.wxGetClientDisplayRect())
+    return _H.wrap("wxrect_gen", C.wxGetClientDisplayRect(), true)
 end
 
 function M.wxGetLocalTime()
@@ -773,12 +796,10 @@ function M.wxGetPowerType()
     return C.wxGetPowerType()
 end
 
-function M.wxGetSelectedChoices(selections, choices, count, message, caption, parent)
-    local _ws_choices = _H.wxs(choices)
+function M.wxGetSelectedChoices(selections, count, choices, message, caption, parent)
     local _ws_message = _H.wxs(message)
     local _ws_caption = _H.wxs(caption)
-    local _result = C.wxGetSelectedChoices(_H.ptr(selections), _ws_choices, count, _ws_message, _ws_caption, _H.ptr(parent))
-    _H.wxs_free(_ws_choices)
+    local _result = C.wxGetSelectedChoices(_H.ptr(selections), count, choices, _ws_message, _ws_caption, _H.ptr(parent))
     _H.wxs_free(_ws_message)
     _H.wxs_free(_ws_caption)
     return _result
@@ -793,25 +814,21 @@ function M.wxGetSelectedChoicesEx(selections, message, caption, n, choices, pare
     return _result
 end
 
-function M.wxGetSingleChoice(message, caption, choices, count, parent)
+function M.wxGetSingleChoice(message, caption, count, choices, parent)
     local _ws_message = _H.wxs(message)
     local _ws_caption = _H.wxs(caption)
-    local _ws_choices = _H.wxs(choices)
-    local _result = _H.wxs_to_str(C.wxGetSingleChoice(_ws_message, _ws_caption, _ws_choices, count, _H.ptr(parent)))
+    local _result = _H.wxs_to_str(C.wxGetSingleChoice(_ws_message, _ws_caption, count, choices, _H.ptr(parent)))
     _H.wxs_free(_ws_message)
     _H.wxs_free(_ws_caption)
-    _H.wxs_free(_ws_choices)
     return _result
 end
 
-function M.wxGetSingleChoiceData(message, caption, choices, count, client_data, parent)
+function M.wxGetSingleChoiceData(message, caption, count, choices, client_data, parent)
     local _ws_message = _H.wxs(message)
     local _ws_caption = _H.wxs(caption)
-    local _ws_choices = _H.wxs(choices)
-    local _result = C.wxGetSingleChoiceData(_ws_message, _ws_caption, _ws_choices, count, _H.ptr(client_data), _H.ptr(parent))
+    local _result = C.wxGetSingleChoiceData(_ws_message, _ws_caption, count, choices, _H.ptr(client_data), _H.ptr(parent))
     _H.wxs_free(_ws_message)
     _H.wxs_free(_ws_caption)
-    _H.wxs_free(_ws_choices)
     return _result
 end
 
@@ -920,9 +937,13 @@ end
 
 function M.wxStrdup(str)
     local _ws_str = _H.wxs(str)
-    local _result = _H.wxs_to_str(C.wxStrdup(_ws_str))
+    local _result = _H.cstr_to_str(C.wxStrdup(_ws_str))
     _H.wxs_free(_ws_str)
     return _result
+end
+
+function M.wxStrlen(str)
+    return C.wxStrlen(str)
 end
 
 function M.wxStrtod(nptr)
@@ -960,7 +981,7 @@ function M.kwxFree(pObject)
 end
 
 function M.kwxGetMousePosition()
-    return _H.wrap("wxpoint_gen", C.kwxGetMousePosition())
+    return _H.wrap("wxpoint_gen", C.kwxGetMousePosition(), true)
 end
 
 function M.kwxGetPixelRGB(buffer, width, x, y)
@@ -1004,7 +1025,7 @@ function M.kwxSetPixelRowRGBA(buffer, width, x, y, rgba0, rgba1, count)
 end
 
 function M.kwxSvgStringFromBase64(base64, len)
-    return _H.wxs_to_str(C.kwxSvgStringFromBase64(base64, len))
+    return _H.cstr_to_str(C.kwxSvgStringFromBase64(base64, len))
 end
 
 function M.kwxSystemSettingsGetColour(systemColour)
@@ -1023,6 +1044,10 @@ function M.wxDragIcon(icon, x, y)
     return _H.wrap("wxdragimage_gen", C.wxDragIcon(_H.ptr(icon), x, y))
 end
 
+function M.wxDragIconWithCursor(icon, cursor)
+    return _H.wrap("wxdragimage_gen", C.wxDragIconWithCursor(_H.ptr(icon), _H.ptr(cursor)))
+end
+
 function M.wxDragListItem(listCtrl, id)
     return _H.wrap("wxdragimage_gen", C.wxDragListItem(_H.ptr(listCtrl), id))
 end
@@ -1030,6 +1055,13 @@ end
 function M.wxDragString(text, x, y)
     local _ws_text = _H.wxs(text)
     local _result = _H.wrap("wxdragimage_gen", C.wxDragString(_ws_text, x, y))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M.wxDragStringWithCursor(text, cursor)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.wrap("wxdragimage_gen", C.wxDragStringWithCursor(_ws_text, _H.ptr(cursor)))
     _H.wxs_free(_ws_text)
     return _result
 end
@@ -1042,6 +1074,10 @@ function M.wxGenericDragIcon(icon)
     return _H.wrap("wxgenericdragimage_gen", C.wxGenericDragIcon(_H.ptr(icon)))
 end
 
+function M.wxGenericDragIconWithCursor(icon, cursor)
+    return _H.wrap("wxgenericdragimage_gen", C.wxGenericDragIconWithCursor(_H.ptr(icon), _H.ptr(cursor)))
+end
+
 function M.wxGenericDragListItem(listCtrl, id)
     return _H.wrap("wxgenericdragimage_gen", C.wxGenericDragListItem(_H.ptr(listCtrl), id))
 end
@@ -1049,6 +1085,13 @@ end
 function M.wxGenericDragString(text)
     local _ws_text = _H.wxs(text)
     local _result = _H.wrap("wxgenericdragimage_gen", C.wxGenericDragString(_ws_text))
+    _H.wxs_free(_ws_text)
+    return _result
+end
+
+function M.wxGenericDragStringWithCursor(text, cursor)
+    local _ws_text = _H.wxs(text)
+    local _result = _H.wrap("wxgenericdragimage_gen", C.wxGenericDragStringWithCursor(_ws_text, _H.ptr(cursor)))
     _H.wxs_free(_ws_text)
     return _result
 end
@@ -1122,6 +1165,10 @@ function M.kwxConsoleInitialize(argc, argv)
     return C.kwxConsoleInitialize(argc, _H.ptr(argv))
 end
 
+function M.kwxConsoleInitializeFromArgs(argc, argv)
+    return C.kwxConsoleInitializeFromArgs(argc, argv)
+end
+
 function M.kwxConsoleRun()
     return C.kwxConsoleRun()
 end
@@ -1150,11 +1197,39 @@ function M.kwxConsoleYield()
     return C.kwxConsoleYield()
 end
 
+function M.kwxConsoleOnInitCmdLineBase(parser)
+    C.kwxConsoleOnInitCmdLineBase(_H.ptr(parser))
+end
+
+function M.kwxConsoleOnCmdLineParsedBase(parser)
+    return _H.to_bool(C.kwxConsoleOnCmdLineParsedBase(_H.ptr(parser)))
+end
+
+function M.kwxStdin()
+    return C.kwxStdin()
+end
+
+function M.kwxStdout()
+    return C.kwxStdout()
+end
+
+function M.kwxStderr()
+    return C.kwxStderr()
+end
+
+function M.kwxConsoleCheckBuildOptions(componentName)
+    return _H.to_bool(C.kwxConsoleCheckBuildOptions(componentName))
+end
+
 function M.wxPrintf(text)
     local _ws_text = _H.wxs(text)
     local _result = C.wxPrintf(_ws_text)
     _H.wxs_free(_ws_text)
     return _result
+end
+
+function M.wxPrintfLen(text, len)
+    return C.wxPrintfLen(text, len)
 end
 
 function M.kwxMessageOutputUseStderr()
@@ -1167,6 +1242,10 @@ end
 
 function M.kwxMessageOutputReset()
     C.kwxMessageOutputReset()
+end
+
+function M.kwxLogUseStderr()
+    C.kwxLogUseStderr()
 end
 
 function M.wxBase64EncodeBuffer(source, src_length)
@@ -1337,8 +1416,12 @@ function M.expPROPSHEET_SHRINKTOFIT()
     return C.expPROPSHEET_SHRINKTOFIT()
 end
 
+function M.wxCreateSVGBitmapEmbedHandler()
+    return C.wxCreateSVGBitmapEmbedHandler()
+end
+
 function M.kwxGetMousePositionPoint()
-    return _H.wrap("wxpoint_gen", C.kwxGetMousePositionPoint())
+    return _H.wrap("wxpoint_gen", C.kwxGetMousePositionPoint(), true)
 end
 
 function M.kwxSetActiveLogTarget(pLogger)

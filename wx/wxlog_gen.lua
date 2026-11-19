@@ -60,7 +60,7 @@ function M:FlushActive()
 end
 
 function M.GetActiveTarget()
-    return C.wxLog_GetActiveTarget()
+    return _H.wrap("wxlog_gen", C.wxLog_GetActiveTarget())
 end
 
 function M.SetActiveTarget(pLogger)

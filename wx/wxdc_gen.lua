@@ -51,11 +51,11 @@ function M:ToDIP(value)
 end
 
 function M:FromDIPSize(width, height)
-    return _H.wrap("wxsize_gen", C.wxDC_FromDIPSize(self._ptr, width, height))
+    return _H.wrap("wxsize_gen", C.wxDC_FromDIPSize(self._ptr, width, height), true)
 end
 
 function M:ToDIPSize(width, height)
-    return _H.wrap("wxsize_gen", C.wxDC_ToDIPSize(self._ptr, width, height))
+    return _H.wrap("wxsize_gen", C.wxDC_ToDIPSize(self._ptr, width, height), true)
 end
 
 function M:SetLayoutDirection(direction)
@@ -68,14 +68,14 @@ end
 
 function M:GetTextExtentSize(string)
     local _ws_string = _H.wxs(string)
-    local _result = _H.wrap("wxsize_gen", C.wxDC_GetTextExtentSize(self._ptr, _ws_string))
+    local _result = _H.wrap("wxsize_gen", C.wxDC_GetTextExtentSize(self._ptr, _ws_string), true)
     _H.wxs_free(_ws_string)
     return _result
 end
 
 function M:GetMultiLineTextExtentSize(string)
     local _ws_string = _H.wxs(string)
-    local _result = _H.wrap("wxsize_gen", C.wxDC_GetMultiLineTextExtentSize(self._ptr, _ws_string))
+    local _result = _H.wrap("wxsize_gen", C.wxDC_GetMultiLineTextExtentSize(self._ptr, _ws_string), true)
     _H.wxs_free(_ws_string)
     return _result
 end
@@ -88,27 +88,27 @@ function M:GetPartialTextExtents(text, count, widths)
 end
 
 function M:DeviceToLogical(x, y)
-    return _H.wrap("wxpoint_gen", C.wxDC_DeviceToLogical(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxDC_DeviceToLogical(self._ptr, x, y), true)
 end
 
 function M:LogicalToDevice(x, y)
-    return _H.wrap("wxpoint_gen", C.wxDC_LogicalToDevice(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxDC_LogicalToDevice(self._ptr, x, y), true)
 end
 
 function M:DeviceToLogicalRel(width, height)
-    return _H.wrap("wxsize_gen", C.wxDC_DeviceToLogicalRel(self._ptr, width, height))
+    return _H.wrap("wxsize_gen", C.wxDC_DeviceToLogicalRel(self._ptr, width, height), true)
 end
 
 function M:LogicalToDeviceRel(width, height)
-    return _H.wrap("wxsize_gen", C.wxDC_LogicalToDeviceRel(self._ptr, width, height))
+    return _H.wrap("wxsize_gen", C.wxDC_LogicalToDeviceRel(self._ptr, width, height), true)
 end
 
 function M:GetLogicalOriginPoint()
-    return _H.wrap("wxpoint_gen", C.wxDC_GetLogicalOriginPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxDC_GetLogicalOriginPoint(self._ptr), true)
 end
 
 function M:GetDeviceOriginPoint()
-    return _H.wrap("wxpoint_gen", C.wxDC_GetDeviceOriginPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxDC_GetDeviceOriginPoint(self._ptr), true)
 end
 
 function M:CopyAttributes(dc)
@@ -263,7 +263,7 @@ end
 
 function M:DrawLabelBitmap(str, bmp, x, y, width, height, align, indexAccel)
     local _ws_str = _H.wxs(str)
-    local _result = _H.wrap("wxrect_gen", C.wxDC_DrawLabelBitmap(self._ptr, _ws_str, _H.ptr(bmp), x, y, width, height, align, indexAccel))
+    local _result = _H.wrap("wxrect_gen", C.wxDC_DrawLabelBitmap(self._ptr, _ws_str, _H.ptr(bmp), x, y, width, height, align, indexAccel), true)
     _H.wxs_free(_ws_str)
     return _result
 end
@@ -373,7 +373,7 @@ function M:GetMapMode()
 end
 
 function M:GetPPI()
-    return _H.wrap("wxsize_gen", C.wxDC_GetPPI(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxDC_GetPPI(self._ptr), true)
 end
 
 function M:GetPen(ref)
@@ -385,11 +385,11 @@ function M:GetPixel(x, y, col)
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxDC_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxDC_GetSize(self._ptr), true)
 end
 
 function M:GetSizeMM()
-    return _H.wrap("wxsize_gen", C.wxDC_GetSizeMM(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxDC_GetSizeMM(self._ptr), true)
 end
 
 function M:GetTextBackground(ref)

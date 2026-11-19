@@ -68,7 +68,7 @@ function M:BeginBatch()
 end
 
 function M:BlockToDeviceRect(top, left, bottom, right)
-    return _H.wrap("wxrect_gen", C.wxGrid_BlockToDeviceRect(self._ptr, top, left, bottom, right))
+    return _H.wrap("wxrect_gen", C.wxGrid_BlockToDeviceRect(self._ptr, top, left, bottom, right), true)
 end
 
 function M:CanDragColSize(col)
@@ -88,7 +88,7 @@ function M:CanEnableCellControl()
 end
 
 function M:CellToRect(row, col)
-    return _H.wrap("wxrect_gen", C.wxGrid_CellToRect(self._ptr, row, col))
+    return _H.wrap("wxrect_gen", C.wxGrid_CellToRect(self._ptr, row, col), true)
 end
 
 function M:ClearGrid()

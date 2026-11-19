@@ -29,6 +29,10 @@ function M:Add(data, preferred)
     C.wxDataObjectComposite_Add(self._ptr, _H.ptr(data), preferred)
 end
 
+function M:GetReceivedFormat()
+    return _H.wrap("wxdataformat_gen", C.wxDataObjectComposite_GetReceivedFormat(self._ptr), true)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

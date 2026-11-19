@@ -47,6 +47,26 @@ function M:SetOnGetVirtualText(pFunction)
     C.kwxRichTextDrawingHandler_SetOnGetVirtualText(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnHasVirtualAttributesWithData(pFunction, data)
+    C.kwxRichTextDrawingHandler_SetOnHasVirtualAttributesWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetVirtualAttributesWithData(pFunction, data)
+    C.kwxRichTextDrawingHandler_SetOnGetVirtualAttributesWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetVirtualSubobjectAttributesCountWithData(pFunction, data)
+    C.kwxRichTextDrawingHandler_SetOnGetVirtualSubobjectAttributesCountWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnHasVirtualTextWithData(pFunction, data)
+    C.kwxRichTextDrawingHandler_SetOnHasVirtualTextWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnGetVirtualTextWithData(pFunction, data)
+    C.kwxRichTextDrawingHandler_SetOnGetVirtualTextWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
 function M:SetVirtualTextResult(text)
     local _ws_text = _H.wxs(text)
     C.kwxRichTextDrawingHandler_SetVirtualTextResult(self._ptr, _ws_text)

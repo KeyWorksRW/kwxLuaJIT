@@ -97,19 +97,19 @@ function M:GetEnablePrinter()
 end
 
 function M:GetMarginBottomRight()
-    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMarginBottomRight(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMarginBottomRight(self._ptr), true)
 end
 
 function M:GetMarginTopLeft()
-    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMarginTopLeft(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMarginTopLeft(self._ptr), true)
 end
 
 function M:GetMinMarginBottomRight()
-    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMinMarginBottomRight(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMinMarginBottomRight(self._ptr), true)
 end
 
 function M:GetMinMarginTopLeft()
-    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMinMarginTopLeft(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxPageSetupDialogData_GetMinMarginTopLeft(self._ptr), true)
 end
 
 function M:GetPaperId()
@@ -117,7 +117,7 @@ function M:GetPaperId()
 end
 
 function M:GetPaperSize()
-    return _H.wrap("wxsize_gen", C.wxPageSetupDialogData_GetPaperSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxPageSetupDialogData_GetPaperSize(self._ptr), true)
 end
 
 function M:GetPrintData(ref)

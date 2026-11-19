@@ -29,7 +29,7 @@ function M:DoDrawImage(dc, x, y)
 end
 
 function M:GetImageRect(x_pos, y_pos)
-    return _H.wrap("wxrect_gen", C.wxGenericDragImage_GetImageRect(self._ptr, x_pos, y_pos))
+    return _H.wrap("wxrect_gen", C.wxGenericDragImage_GetImageRect(self._ptr, x_pos, y_pos), true)
 end
 
 function M:UpdateBackingFromWindow(windowDC, destDC, x, y, width, height, xdest, ydest, destWidth, destHeight)

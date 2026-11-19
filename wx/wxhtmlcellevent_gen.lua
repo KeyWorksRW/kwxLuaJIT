@@ -23,7 +23,7 @@ function M:GetCell()
 end
 
 function M:GetPoint()
-    return _H.wrap("wxpoint_gen", C.wxHtmlCellEvent_GetPoint(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxHtmlCellEvent_GetPoint(self._ptr), true)
 end
 
 function M:GetMouseEvent()

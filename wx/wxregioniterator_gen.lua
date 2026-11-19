@@ -33,7 +33,7 @@ function M.CreateFromRegion(region)
 end
 
 function M:GetRect()
-    return _H.wrap("wxrect_gen", C.wxRegionIterator_GetRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxRegionIterator_GetRect(self._ptr), true)
 end
 
 function M:GetHeight()

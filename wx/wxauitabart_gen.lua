@@ -43,7 +43,7 @@ end
 
 function M:GetTabSize(dc, window, caption, bitmap, active, close_button_state, x_extent)
     local _ws_caption = _H.wxs(caption)
-    local _result = _H.wrap("wxsize_gen", C.wxAuiTabArt_GetTabSize(self._ptr, _H.ptr(dc), _H.ptr(window), _ws_caption, _H.ptr(bitmap), _H.from_bool(active), close_button_state, x_extent))
+    local _result = _H.wrap("wxsize_gen", C.wxAuiTabArt_GetTabSize(self._ptr, _H.ptr(dc), _H.ptr(window), _ws_caption, _H.ptr(bitmap), _H.from_bool(active), close_button_state, x_extent), true)
     _H.wxs_free(_ws_caption)
     return _result
 end

@@ -22,7 +22,7 @@ function M:LastError()
 end
 
 function M:LastInput()
-    return _H.wxs_to_str(C.wxInputSinkEvent_LastInput(self._ptr))
+    return _H.borrow_cstr(C.wxInputSinkEvent_LastInput(self._ptr))
 end
 
 function M:LastRead()

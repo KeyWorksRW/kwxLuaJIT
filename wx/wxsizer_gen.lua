@@ -31,15 +31,15 @@ function M:DeleteWindows()
 end
 
 function M:ComputeFittingClientSize(window)
-    return _H.wrap("wxsize_gen", C.wxSizer_ComputeFittingClientSize(self._ptr, _H.ptr(window)))
+    return _H.wrap("wxsize_gen", C.wxSizer_ComputeFittingClientSize(self._ptr, _H.ptr(window)), true)
 end
 
 function M:ComputeFittingWindowSize(window)
-    return _H.wrap("wxsize_gen", C.wxSizer_ComputeFittingWindowSize(self._ptr, _H.ptr(window)))
+    return _H.wrap("wxsize_gen", C.wxSizer_ComputeFittingWindowSize(self._ptr, _H.ptr(window)), true)
 end
 
 function M:FitWithSize(window)
-    return _H.wrap("wxsize_gen", C.wxSizer_FitWithSize(self._ptr, _H.ptr(window)))
+    return _H.wrap("wxsize_gen", C.wxSizer_FitWithSize(self._ptr, _H.ptr(window)), true)
 end
 
 function M:GetItemCount()
@@ -87,7 +87,7 @@ function M:AddWindow(window, option, flag, border, userData)
 end
 
 function M:CalcMin()
-    return _H.wrap("wxsize_gen", C.wxSizer_CalcMin(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizer_CalcMin(self._ptr), true)
 end
 
 function M:Fit(window)
@@ -99,15 +99,15 @@ function M:GetChildren(result, count)
 end
 
 function M:GetMinSize()
-    return _H.wrap("wxsize_gen", C.wxSizer_GetMinSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizer_GetMinSize(self._ptr), true)
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxSizer_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxSizer_GetPosition(self._ptr), true)
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxSizer_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizer_GetSize(self._ptr), true)
 end
 
 function M:Insert(before, width, height, option, flag, border, userData)

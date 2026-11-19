@@ -30,7 +30,7 @@ function M:GetHtmlCellId()
 end
 
 function M:GetLogicalPosition()
-    return _H.wrap("wxpoint_gen", C.kwxHtmlEvent_GetLogicalPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.kwxHtmlEvent_GetLogicalPosition(self._ptr), true)
 end
 
 function M:GetMouseEvent()

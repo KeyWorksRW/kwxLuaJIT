@@ -43,6 +43,28 @@ function M.CreateFromString(text, flags)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+function M:LoadFile(filename, flags)
+    local _ws_filename = _H.wxs(filename)
+    local _result = _H.to_bool(C.wxXmlDocument_LoadFile(self._ptr, _ws_filename, flags))
+    _H.wxs_free(_ws_filename)
+    return _result
+end
+
+function M:LoadStream(stream, flags)
+    return _H.to_bool(C.wxXmlDocument_LoadStream(self._ptr, _H.ptr(stream), flags))
+end
+
+function M:SaveFile(filename, indentstep)
+    local _ws_filename = _H.wxs(filename)
+    local _result = _H.to_bool(C.wxXmlDocument_SaveFile(self._ptr, _ws_filename, indentstep))
+    _H.wxs_free(_ws_filename)
+    return _result
+end
+
+function M:SaveStream(stream, indentstep)
+    return _H.to_bool(C.wxXmlDocument_SaveStream(self._ptr, _H.ptr(stream), indentstep))
+end
+
 function M:GetDocumentNode()
     return _H.wrap("wxxmlnode_gen", C.wxXmlDocument_GetDocumentNode(self._ptr))
 end

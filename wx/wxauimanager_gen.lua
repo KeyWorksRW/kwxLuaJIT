@@ -160,6 +160,58 @@ function M.GetManager(window)
     return _H.wrap("wxauimanager_gen", C.wxAuiManager_GetManager(_H.ptr(window)))
 end
 
+function M:CanDockPanel(pane)
+    return _H.to_bool(C.wxAuiManager_CanDockPanel(self._ptr, _H.ptr(pane)))
+end
+
+function M:CalculateNewSplitSize()
+    return _H.wrap("wxsize_gen", C.wxAuiManager_CalculateNewSplitSize(self._ptr), true)
+end
+
+function M:CalculateHintRect(paneWindow, x, y, offsetX, offsetY)
+    return _H.wrap("wxrect_gen", C.wxAuiManager_CalculateHintRect(self._ptr, _H.ptr(paneWindow), x, y, offsetX, offsetY), true)
+end
+
+function M:ClosePane(paneInfo)
+    C.wxAuiManager_ClosePane(self._ptr, _H.ptr(paneInfo))
+end
+
+function M:DrawHintRect(paneWindow, x, y, offsetX, offsetY)
+    C.wxAuiManager_DrawHintRect(self._ptr, _H.ptr(paneWindow), x, y, offsetX, offsetY)
+end
+
+function M:HasLiveResize()
+    return _H.to_bool(C.wxAuiManager_HasLiveResize(self._ptr))
+end
+
+function M:MaximizePane(paneInfo)
+    C.wxAuiManager_MaximizePane(self._ptr, _H.ptr(paneInfo))
+end
+
+function M:MinimizePane(paneInfo)
+    C.wxAuiManager_MinimizePane(self._ptr, _H.ptr(paneInfo))
+end
+
+function M:RestoreMaximizedPane()
+    C.wxAuiManager_RestoreMaximizedPane(self._ptr)
+end
+
+function M:RestorePane(paneInfo)
+    C.wxAuiManager_RestorePane(self._ptr, _H.ptr(paneInfo))
+end
+
+function M:SplitPane(window, newWindow, direction, dropX, dropY)
+    return _H.to_bool(C.wxAuiManager_SplitPane(self._ptr, _H.ptr(window), _H.ptr(newWindow), direction, dropX, dropY))
+end
+
+function M:StartPaneDrag(paneWindow, offsetX, offsetY)
+    C.wxAuiManager_StartPaneDrag(self._ptr, _H.ptr(paneWindow), offsetX, offsetY)
+end
+
+function M:UpdateHint(rect)
+    C.wxAuiManager_UpdateHint(self._ptr, _H.ptr(rect))
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

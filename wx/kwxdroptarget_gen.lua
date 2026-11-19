@@ -45,6 +45,46 @@ function M:SetOnLeave(pFunction)
     C.kwxDropTarget_SetOnLeave(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnDataWithData(pFunction, data)
+    C.kwxDropTarget_SetOnDataWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnDropWithData(pFunction, data)
+    C.kwxDropTarget_SetOnDropWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnEnterWithData(pFunction, data)
+    C.kwxDropTarget_SetOnEnterWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnDragOverWithData(pFunction, data)
+    C.kwxDropTarget_SetOnDragOverWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnLeaveWithData(pFunction, data)
+    C.kwxDropTarget_SetOnLeaveWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDataResult(result)
+    C.kwxDropTarget_SetDataResult(self._ptr, result)
+end
+
+function M:SetDropResult(result)
+    C.kwxDropTarget_SetDropResult(self._ptr, result)
+end
+
+function M:SetEnterResult(result)
+    C.kwxDropTarget_SetEnterResult(self._ptr, result)
+end
+
+function M:SetDragOverResult(result)
+    C.kwxDropTarget_SetDragOverResult(self._ptr, result)
+end
+
+function M:GetDropResult()
+    return C.kwxDropTarget_GetDropResult(self._ptr)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

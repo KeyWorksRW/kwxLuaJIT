@@ -48,15 +48,15 @@ function M:SetAccessibleName(name)
 end
 
 function M:ConvertDialogToPixelsEx(x, y)
-    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertDialogToPixelsEx(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertDialogToPixelsEx(self._ptr, x, y), true)
 end
 
 function M:ConvertPixelsToDialogEx(x, y)
-    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertPixelsToDialogEx(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertPixelsToDialogEx(self._ptr, x, y), true)
 end
 
 function M:ScreenToClient2(x, y)
-    return _H.wrap("wxpoint_gen", C.wxWindow_ScreenToClient2(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ScreenToClient2(self._ptr, x, y), true)
 end
 
 function M.NewControlId(count)
@@ -83,7 +83,7 @@ function M:GetContainingSizer()
 end
 
 function M:GetMinSizeFromKnownDirection(direction, size, availableOtherDir)
-    return _H.wrap("wxsize_gen", C.wxWindow_GetMinSizeFromKnownDirection(self._ptr, direction, size, availableOtherDir))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMinSizeFromKnownDirection(self._ptr, direction, size, availableOtherDir), true)
 end
 
 function M:IsTransparentBackgroundSupported(reason)
@@ -123,7 +123,7 @@ function M:GetScreenPosition(x, y)
 end
 
 function M:GetScreenRect()
-    return _H.wrap("wxrect_gen", C.wxWindow_GetScreenRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxWindow_GetScreenRect(self._ptr), true)
 end
 
 function M:GetClientAreaOrigin(x, y)
@@ -131,11 +131,15 @@ function M:GetClientAreaOrigin(x, y)
 end
 
 function M:GetClientRect()
-    return _H.wrap("wxrect_gen", C.wxWindow_GetClientRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxWindow_GetClientRect(self._ptr), true)
 end
 
 function M:ClientToWindowSize(width, height)
     C.wxWindow_ClientToWindowSize(self._ptr, width, height)
+end
+
+function M:SetSizeWH(width, height)
+    C.wxWindow_SetSizeWH(self._ptr, width, height)
 end
 
 function M:WindowToClientSize(width, height)
@@ -167,11 +171,11 @@ function M:Centre(direction)
 end
 
 function M:GetMinSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetMinSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMinSize(self._ptr), true)
 end
 
 function M:GetMaxSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetMaxSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMaxSize(self._ptr), true)
 end
 
 function M:SetMinClientSize(width, height)
@@ -183,15 +187,15 @@ function M:SetMaxClientSize(width, height)
 end
 
 function M:GetMinClientSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetMinClientSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMinClientSize(self._ptr), true)
 end
 
 function M:GetMaxClientSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetMaxClientSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetMaxClientSize(self._ptr), true)
 end
 
 function M:GetBestVirtualSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetBestVirtualSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetBestVirtualSize(self._ptr), true)
 end
 
 function M:GetContentScaleFactor()
@@ -203,7 +207,7 @@ function M:GetDPIScaleFactor()
 end
 
 function M:GetWindowBorderSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetWindowBorderSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetWindowBorderSize(self._ptr), true)
 end
 
 function M:SendSizeEvent(flags)
@@ -367,7 +371,7 @@ function M:UnregisterHotKey(hotkeyId)
 end
 
 function M:GetDPI()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetDPI(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetDPI(self._ptr), true)
 end
 
 function M:FromDIP(value)
@@ -376,6 +380,18 @@ end
 
 function M:ToDIP(value)
     return C.wxWindow_ToDIP(self._ptr, value)
+end
+
+function M:FromDIPSize(width, height)
+    return _H.wrap("wxsize_gen", C.wxWindow_FromDIPSize(self._ptr, width, height), true)
+end
+
+function M.FromDIPSizeForWindow(width, height, window)
+    return _H.wrap("wxsize_gen", C.wxWindow_FromDIPSizeForWindow(width, height, _H.ptr(window)), true)
+end
+
+function M.FromDIPSizeDefault(width, height)
+    return _H.wrap("wxsize_gen", C.wxWindow_FromDIPSizeDefault(width, height), true)
 end
 
 function M:HasCapture()
@@ -399,7 +415,7 @@ function M:IsDoubleBuffered()
 end
 
 function M:GetUpdateClientRect()
-    return _H.wrap("wxrect_gen", C.wxWindow_GetUpdateClientRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxWindow_GetUpdateClientRect(self._ptr), true)
 end
 
 function M:SetOwnBackgroundColour(colour)
@@ -459,7 +475,7 @@ function M:UpdateInputMethodCursorRect(x, y, width, height)
 end
 
 function M:GetInputMethodCursorRect()
-    return _H.wrap("wxrect_gen", C.wxWindow_GetInputMethodCursorRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxWindow_GetInputMethodCursorRect(self._ptr), true)
 end
 
 function M:HitTest(x, y)
@@ -645,7 +661,7 @@ function M:ClearBackground()
 end
 
 function M:ClientToScreen(x, y)
-    return _H.wrap("wxpoint_gen", C.wxWindow_ClientToScreen(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ClientToScreen(self._ptr, x, y), true)
 end
 
 function M:Close(force)
@@ -653,11 +669,11 @@ function M:Close(force)
 end
 
 function M:ConvertDialogToPixels()
-    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertDialogToPixels(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertDialogToPixels(self._ptr), true)
 end
 
 function M:ConvertPixelsToDialog()
-    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertPixelsToDialog(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ConvertPixelsToDialog(self._ptr), true)
 end
 
 function M:Destroy()
@@ -704,7 +720,7 @@ function M:Freeze()
 end
 
 function M:GetEffectiveMinSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetEffectiveMinSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetEffectiveMinSize(self._ptr), true)
 end
 
 function M:GetAutoLayout()
@@ -716,7 +732,7 @@ function M:GetBackgroundColour(ref)
 end
 
 function M:GetBestSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetBestSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetBestSize(self._ptr), true)
 end
 
 function M:GetCaret()
@@ -740,7 +756,7 @@ function M:GetClientData()
 end
 
 function M:GetClientSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetClientSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetClientSize(self._ptr), true)
 end
 
 function M:GetCursor()
@@ -804,11 +820,11 @@ function M:GetParent()
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxWindow_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxWindow_GetPosition(self._ptr), true)
 end
 
 function M:GetRect()
-    return _H.wrap("wxrect_gen", C.wxWindow_GetRect(self._ptr))
+    return _H.wrap("wxrect_gen", C.wxWindow_GetRect(self._ptr), true)
 end
 
 function M:GetScrollPos(orient)
@@ -824,7 +840,7 @@ function M:GetScrollThumb(orient)
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetSize(self._ptr), true)
 end
 
 function M:GetSizer()
@@ -850,7 +866,7 @@ function M:GetValidator()
 end
 
 function M:GetVirtualSize()
-    return _H.wrap("wxsize_gen", C.wxWindow_GetVirtualSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxWindow_GetVirtualSize(self._ptr), true)
 end
 
 function M:GetWindowStyleFlag()
@@ -946,7 +962,7 @@ function M:Reparent(parent)
 end
 
 function M:ScreenToClient(x, y)
-    return _H.wrap("wxpoint_gen", C.wxWindow_ScreenToClient(self._ptr, x, y))
+    return _H.wrap("wxpoint_gen", C.wxWindow_ScreenToClient(self._ptr, x, y), true)
 end
 
 function M:ScrollWindow(dx, dy)

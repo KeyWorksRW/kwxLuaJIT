@@ -24,6 +24,13 @@ function M.CreateFromData(data, size, bitmap_type)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxBitmapBundle_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxBitmapBundle_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Constructor: wxBitmapBundle_CreateFromBase64
 function M.CreateFromBase64(base64, len, bitmap_type)
     local ptr = C.wxBitmapBundle_CreateFromBase64(base64, len, bitmap_type)

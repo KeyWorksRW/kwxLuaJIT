@@ -18,6 +18,13 @@ end
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+--- Constructor: wxDocument_CreateWithParent
+function M.CreateWithParent(pObject, parent)
+    local ptr = C.wxDocument_CreateWithParent(_H.ptr(pObject), _H.ptr(parent))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:DeleteContents()
     return _H.to_bool(C.wxDocument_DeleteContents(self._ptr))
 end
@@ -34,6 +41,10 @@ function M:GetFirstView()
     return _H.wrap("wxview_gen", C.wxDocument_GetFirstView(self._ptr))
 end
 
+function M:IsModified()
+    return _H.to_bool(C.wxDocument_IsModified(self._ptr))
+end
+
 function M:SetFilename(filename, notifyViews)
     local _ws_filename = _H.wxs(filename)
     C.wxDocument_SetFilename(self._ptr, _ws_filename, _H.from_bool(notifyViews))
@@ -42,6 +53,30 @@ end
 
 function M:UpdateAllViews(sender, hint)
     C.wxDocument_UpdateAllViews(self._ptr, _H.ptr(sender), _H.ptr(hint))
+end
+
+function M:Close()
+    return _H.to_bool(C.wxDocument_Close(self._ptr))
+end
+
+function M:Save()
+    return _H.to_bool(C.wxDocument_Save(self._ptr))
+end
+
+function M:SaveAs()
+    return _H.to_bool(C.wxDocument_SaveAs(self._ptr))
+end
+
+function M:Revert()
+    return _H.to_bool(C.wxDocument_Revert(self._ptr))
+end
+
+function M:AlreadySaved()
+    return _H.to_bool(C.wxDocument_AlreadySaved(self._ptr))
+end
+
+function M:CanClose()
+    return _H.to_bool(C.wxDocument_CanClose(self._ptr))
 end
 
 function M:SetOnDoOpenDocument(pFunction)
@@ -70,6 +105,72 @@ end
 
 function M:SetOnOnOpenDocument(pFunction)
     C.wxDocument_SetOnOnOpenDocument(self._ptr, _H.ptr(pFunction))
+end
+
+function M:SetOnDoOpenDocumentWithData(pFunction, data)
+    C.wxDocument_SetOnDoOpenDocumentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDoOpenDocumentResult(result)
+    C.wxDocument_SetDoOpenDocumentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnDoSaveDocumentWithData(pFunction, data)
+    C.wxDocument_SetOnDoSaveDocumentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetDoSaveDocumentResult(result)
+    C.wxDocument_SetDoSaveDocumentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnIsModifiedWithData(pFunction, data)
+    C.wxDocument_SetOnIsModifiedWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetIsModifiedResult(result)
+    C.wxDocument_SetIsModifiedResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnModifyWithData(pFunction, data)
+    C.wxDocument_SetOnModifyWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnOnCreateWithData(pFunction, data)
+    C.wxDocument_SetOnOnCreateWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCreateResult(result)
+    C.wxDocument_SetOnCreateResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnOnOpenDocumentWithData(pFunction, data)
+    C.wxDocument_SetOnOnOpenDocumentWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnOpenDocumentResult(result)
+    C.wxDocument_SetOnOpenDocumentResult(self._ptr, _H.from_bool(result))
+end
+
+function M:OnCreateBase(path, flags)
+    local _ws_path = _H.wxs(path)
+    local _result = _H.to_bool(C.wxDocument_OnCreateBase(self._ptr, _ws_path, flags))
+    _H.wxs_free(_ws_path)
+    return _result
+end
+
+function M:OnOpenDocumentBase(filename)
+    local _ws_filename = _H.wxs(filename)
+    local _result = _H.to_bool(C.wxDocument_OnOpenDocumentBase(self._ptr, _ws_filename))
+    _H.wxs_free(_ws_filename)
+    return _result
+end
+
+function M:IsModifiedBase()
+    return _H.to_bool(C.wxDocument_IsModifiedBase(self._ptr))
+end
+
+function M:ModifyBase(modified)
+    C.wxDocument_ModifyBase(self._ptr, _H.from_bool(modified))
 end
 
 return M

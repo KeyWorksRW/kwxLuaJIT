@@ -33,7 +33,7 @@ function M:Add(item)
 end
 
 function M:Item(index)
-    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBarItemArray_Item(self._ptr, index))
+    return _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBarItemArray_Item(self._ptr, index), true)
 end
 
 --- Delete the underlying C++ object.

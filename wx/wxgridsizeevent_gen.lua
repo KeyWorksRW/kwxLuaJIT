@@ -23,7 +23,7 @@ function M:GetRowOrCol()
 end
 
 function M:GetPosition()
-    return _H.wrap("wxpoint_gen", C.wxGridSizeEvent_GetPosition(self._ptr))
+    return _H.wrap("wxpoint_gen", C.wxGridSizeEvent_GetPosition(self._ptr), true)
 end
 
 function M:ControlDown()

@@ -147,6 +147,22 @@ function M:DeleteByIndex(tool_id)
     return _H.to_bool(C.wxAuiToolBar_DeleteByIndex(self._ptr, tool_id))
 end
 
+function M:DestroyTool(tool_id)
+    return _H.to_bool(C.wxAuiToolBar_DestroyTool(self._ptr, tool_id))
+end
+
+function M:DestroyToolByIndex(idx)
+    return _H.to_bool(C.wxAuiToolBar_DestroyToolByIndex(self._ptr, idx))
+end
+
+function M:GetToolClientData(tool_id)
+    return _H.wrap("wxobject_gen", C.wxAuiToolBar_GetToolClientData(self._ptr, tool_id))
+end
+
+function M:SetToolClientData(tool_id, clientData)
+    C.wxAuiToolBar_SetToolClientData(self._ptr, tool_id, _H.ptr(clientData))
+end
+
 function M:GetToolCount()
     return C.wxAuiToolBar_GetToolCount(self._ptr)
 end
@@ -164,7 +180,7 @@ function M:GetToolFits(tool_id)
 end
 
 function M:GetToolRect(tool_id)
-    return _H.wrap("wxrect_gen", C.wxAuiToolBar_GetToolRect(self._ptr, tool_id))
+    return _H.wrap("wxrect_gen", C.wxAuiToolBar_GetToolRect(self._ptr, tool_id), true)
 end
 
 function M:GetToolFitsByIndex(tool_id)
@@ -192,7 +208,7 @@ function M:SetToolBitmapSize(width, height)
 end
 
 function M:GetToolBitmapSize()
-    return _H.wrap("wxsize_gen", C.wxAuiToolBar_GetToolBitmapSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxAuiToolBar_GetToolBitmapSize(self._ptr), true)
 end
 
 function M:GetOverflowVisible()
@@ -326,11 +342,44 @@ function M:SetCustomOverflowItems(prepend, append)
 end
 
 function M:GetHintSize(dock_direction)
-    return _H.wrap("wxsize_gen", C.wxAuiToolBar_GetHintSize(self._ptr, dock_direction))
+    return _H.wrap("wxsize_gen", C.wxAuiToolBar_GetHintSize(self._ptr, dock_direction), true)
 end
 
 function M:IsPaneValid(pane)
     return _H.to_bool(C.wxAuiToolBar_IsPaneValid(self._ptr, _H.ptr(pane)))
+end
+
+function M:AddToolByLabelBundle(tool_id, label, bitmap, shortHelpString, kind)
+    local _ws_label = _H.wxs(label)
+    local _ws_shortHelpString = _H.wxs(shortHelpString)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddToolByLabelBundle(self._ptr, tool_id, _ws_label, _H.ptr(bitmap), _ws_shortHelpString, kind))
+    _H.wxs_free(_ws_label)
+    _H.wxs_free(_ws_shortHelpString)
+    return _result
+end
+
+function M:AddToolBundle(tool_id, label, bitmap, disabledBitmap, kind, shortHelpString, longHelpString, clientData)
+    local _ws_label = _H.wxs(label)
+    local _ws_shortHelpString = _H.wxs(shortHelpString)
+    local _ws_longHelpString = _H.wxs(longHelpString)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddToolBundle(self._ptr, tool_id, _ws_label, _H.ptr(bitmap), _H.ptr(disabledBitmap), kind, _ws_shortHelpString, _ws_longHelpString, _H.ptr(clientData)))
+    _H.wxs_free(_ws_label)
+    _H.wxs_free(_ws_shortHelpString)
+    _H.wxs_free(_ws_longHelpString)
+    return _result
+end
+
+function M:AddToolByBitmapBundle(tool_id, bitmap, disabledBitmap, toggle, clientData, shortHelpString, longHelpString)
+    local _ws_shortHelpString = _H.wxs(shortHelpString)
+    local _ws_longHelpString = _H.wxs(longHelpString)
+    local _result = _H.wrap("wxauitoolbaritem_gen", C.wxAuiToolBar_AddToolByBitmapBundle(self._ptr, tool_id, _H.ptr(bitmap), _H.ptr(disabledBitmap), _H.from_bool(toggle), _H.ptr(clientData), _ws_shortHelpString, _ws_longHelpString))
+    _H.wxs_free(_ws_shortHelpString)
+    _H.wxs_free(_ws_longHelpString)
+    return _result
+end
+
+function M:SetToolBitmapBundle(tool_id, bitmap)
+    C.wxAuiToolBar_SetToolBitmapBundle(self._ptr, tool_id, _H.ptr(bitmap))
 end
 
 --- Delete the underlying C++ object.

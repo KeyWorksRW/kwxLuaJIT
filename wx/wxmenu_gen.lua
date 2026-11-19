@@ -27,6 +27,13 @@ function M.Create(title, style)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxMenu_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxMenu_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:GetMenuBar()
     return _H.wrap("wxmenubar_gen", C.wxMenu_GetMenuBar(self._ptr))
 end

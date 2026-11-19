@@ -19,7 +19,7 @@ end
 function M:Ptr() return self._ptr end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxSizeEvent_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxSizeEvent_GetSize(self._ptr), true)
 end
 
 return M

@@ -27,7 +27,7 @@ function M:FitThisSizeToPageMargins(imageSize, pageSetupData)
 end
 
 function M:GetLogicalPageMarginsRect(pageSetupData)
-    return _H.wrap("wxrect_gen", C.wxPrintout_GetLogicalPageMarginsRect(self._ptr, _H.ptr(pageSetupData)))
+    return _H.wrap("wxrect_gen", C.wxPrintout_GetLogicalPageMarginsRect(self._ptr, _H.ptr(pageSetupData)), true)
 end
 
 function M:MapScreenSizeToPage()

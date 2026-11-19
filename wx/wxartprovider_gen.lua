@@ -44,6 +44,17 @@ function M.GetBitmapBundle(id, client, width, height)
     return _result
 end
 
+function M.GetBitmapBundleDefault(id)
+    local _ws_id = _H.wxs(id)
+    local _result = _H.wrap("wxbitmapbundle_gen", C.wxArtProvider_GetBitmapBundleDefault(_ws_id), true)
+    _H.wxs_free(_ws_id)
+    return _result
+end
+
+function M.MakeClientId(id)
+    return _H.cstr_to_str(C.wxArtProvider_MakeClientId(id))
+end
+
 function M.GetIcon(id, client, width, height)
     local _ws_id = _H.wxs(id)
     local _ws_client = _H.wxs(client)

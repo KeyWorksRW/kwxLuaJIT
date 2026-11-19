@@ -26,7 +26,7 @@ function M.Create(parent)
 end
 
 function M:GetLeafObjectAtPosition(position)
-    return C.wxRichTextParagraphLayoutBox_GetLeafObjectAtPosition(self._ptr, position)
+    return _H.wrap("wxrichtextobject_gen", C.wxRichTextParagraphLayoutBox_GetLeafObjectAtPosition(self._ptr, position))
 end
 
 function M:Clear()

@@ -60,19 +60,19 @@ function M.RemoveCurrencySymbolOrCode(text, style)
 end
 
 function M.GetDecimalSeparator()
-    return _H.wxs_to_str(C.wxNumberFormatter_GetDecimalSeparator())
+    return _H.cstr_to_str(C.wxNumberFormatter_GetDecimalSeparator())
 end
 
 function M.GetThousandsSeparator()
-    return _H.wxs_to_str(C.wxNumberFormatter_GetThousandsSeparator())
+    return _H.cstr_to_str(C.wxNumberFormatter_GetThousandsSeparator())
 end
 
 function M.ToStringDouble(value, precision, style)
-    return _H.wxs_to_str(C.wxNumberFormatter_ToStringDouble(value, precision, style))
+    return _H.cstr_to_str(C.wxNumberFormatter_ToStringDouble(value, precision, style))
 end
 
 function M.ToStringLongLong(value, style)
-    return _H.wxs_to_str(C.wxNumberFormatter_ToStringLongLong(value, style))
+    return _H.cstr_to_str(C.wxNumberFormatter_ToStringLongLong(value, style))
 end
 
 return M

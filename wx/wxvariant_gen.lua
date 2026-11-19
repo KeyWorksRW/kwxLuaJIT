@@ -101,6 +101,28 @@ function M.CreateFromArrayString(value, name)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxVariant_CreateFromDataViewIconText
+function M.CreateFromDataViewIconText(text, icon, name)
+    local _ws_text = _H.wxs(text)
+    local _ws_name = _H.wxs(name)
+    local ptr = C.wxVariant_CreateFromDataViewIconText(_ws_text, _H.ptr(icon), _ws_name)
+    _H.wxs_free(_ws_text)
+    _H.wxs_free(_ws_name)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxVariant_CreateFromDataViewCheckIconText
+function M.CreateFromDataViewCheckIconText(text, icon, checkedState, name)
+    local _ws_text = _H.wxs(text)
+    local _ws_name = _H.wxs(name)
+    local ptr = C.wxVariant_CreateFromDataViewCheckIconText(_ws_text, _H.ptr(icon), checkedState, _ws_name)
+    _H.wxs_free(_ws_text)
+    _H.wxs_free(_ws_name)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Constructor: wxVariant_Create
 function M.Create()
     local ptr = C.wxVariant_Create()
@@ -110,6 +132,14 @@ end
 
 function M:GetReal()
     return C.wxVariant_GetReal(self._ptr)
+end
+
+function M:GetDataViewIconText(result)
+    return _H.to_bool(C.wxVariant_GetDataViewIconText(self._ptr, _H.ptr(result)))
+end
+
+function M:GetDataViewCheckIconText(result)
+    return _H.to_bool(C.wxVariant_GetDataViewCheckIconText(self._ptr, _H.ptr(result)))
 end
 
 function M:SetName(name)

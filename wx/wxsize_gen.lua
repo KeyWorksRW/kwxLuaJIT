@@ -37,7 +37,7 @@ function M:IsFullySpecified()
 end
 
 function M:Scale(xscale, yscale)
-    return _H.wrap("wxsize_gen", C.wxSize_Scale(self._ptr, xscale, yscale))
+    return _H.wrap("wxsize_gen", C.wxSize_Scale(self._ptr, xscale, yscale), true)
 end
 
 function M:GetHeight()

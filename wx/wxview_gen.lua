@@ -34,6 +34,22 @@ function M:SetOnOnUpdate(pFunction)
     C.wxView_SetOnOnUpdate(self._ptr, _H.ptr(pFunction))
 end
 
+function M:SetOnOnCreateWithData(pFunction, data)
+    C.wxView_SetOnOnCreateWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCreateResult(result)
+    C.wxView_SetOnCreateResult(self._ptr, _H.from_bool(result))
+end
+
+function M:SetOnOnCloseWithData(pFunction, data)
+    C.wxView_SetOnOnCloseWithData(self._ptr, _H.ptr(pFunction), _H.ptr(data))
+end
+
+function M:SetOnCloseResult(result)
+    C.wxView_SetOnCloseResult(self._ptr, _H.from_bool(result))
+end
+
 function M:Activate(activate)
     C.wxView_Activate(self._ptr, _H.from_bool(activate))
 end
@@ -52,6 +68,14 @@ end
 
 function M:SetFrame(frame)
     C.wxView_SetFrame(self._ptr, _H.ptr(frame))
+end
+
+function M:Close(deleteWindow)
+    return _H.to_bool(C.wxView_Close(self._ptr, _H.from_bool(deleteWindow)))
+end
+
+function M:CloseDefault()
+    return _H.to_bool(C.wxView_CloseDefault(self._ptr))
 end
 
 return M

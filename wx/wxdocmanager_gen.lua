@@ -18,6 +18,32 @@ end
 --- Get the underlying C pointer.
 function M:Ptr() return self._ptr end
 
+--- Constructor: wxDocManager_Create
+function M.Create(flags, initialize)
+    local ptr = C.wxDocManager_Create(flags, _H.from_bool(initialize))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxDocManager_CreateDefault
+function M.CreateDefault()
+    local ptr = C.wxDocManager_CreateDefault()
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+function M:AddDocument(doc)
+    C.wxDocManager_AddDocument(self._ptr, _H.ptr(doc))
+end
+
+function M:AssociateTemplate(docTemplate)
+    C.wxDocManager_AssociateTemplate(self._ptr, _H.ptr(docTemplate))
+end
+
+function M:Clear(force)
+    return _H.to_bool(C.wxDocManager_Clear(self._ptr, _H.from_bool(force)))
+end
+
 function M:CloseDocuments(force)
     return _H.to_bool(C.wxDocManager_CloseDocuments(self._ptr, _H.from_bool(force)))
 end
@@ -33,6 +59,10 @@ function M:CreateNewDocument()
     return _H.wrap("wxdocument_gen", C.wxDocManager_CreateNewDocument(self._ptr))
 end
 
+function M:DisassociateTemplate(docTemplate)
+    C.wxDocManager_DisassociateTemplate(self._ptr, _H.ptr(docTemplate))
+end
+
 function M:FileHistoryLoad(config)
     C.wxDocManager_FileHistoryLoad(self._ptr, _H.ptr(config))
 end
@@ -45,12 +75,52 @@ function M:FileHistoryUseMenu(menu)
     C.wxDocManager_FileHistoryUseMenu(self._ptr, _H.ptr(menu))
 end
 
+function M:GetCurrentDocument()
+    return _H.wrap("wxdocument_gen", C.wxDocManager_GetCurrentDocument(self._ptr))
+end
+
+function M:GetCurrentView()
+    return _H.wrap("wxview_gen", C.wxDocManager_GetCurrentView(self._ptr))
+end
+
+function M:GetDocumentCount()
+    return C.wxDocManager_GetDocumentCount(self._ptr)
+end
+
+function M:GetDocumentAt(pos)
+    return _H.wrap("wxdocument_gen", C.wxDocManager_GetDocumentAt(self._ptr, pos))
+end
+
 function M.GetDocumentManager()
-    return C.wxDocManager_GetDocumentManager()
+    return _H.wrap("wxdocmanager_gen", C.wxDocManager_GetDocumentManager())
+end
+
+function M:GetMaxDocsOpen()
+    return C.wxDocManager_GetMaxDocsOpen(self._ptr)
+end
+
+function M:GetTemplateAt(pos)
+    return _H.wrap("wxdoctemplate_gen", C.wxDocManager_GetTemplateAt(self._ptr, pos))
+end
+
+function M:GetTemplateCount()
+    return C.wxDocManager_GetTemplateCount(self._ptr)
+end
+
+function M:RemoveDocument(doc)
+    C.wxDocManager_RemoveDocument(self._ptr, _H.ptr(doc))
 end
 
 function M:SetMaxDocsOpen(n)
     C.wxDocManager_SetMaxDocsOpen(self._ptr, n)
+end
+
+--- Delete the underlying C++ object.
+function M:Delete()
+    if self._ptr ~= nil and not self._borrowed then
+        C.wxDocManager_Delete(self._ptr)
+        self._ptr = nil
+    end
 end
 
 return M

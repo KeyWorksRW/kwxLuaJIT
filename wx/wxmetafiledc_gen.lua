@@ -27,8 +27,17 @@ function M.Create(filePath)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxMetafileDC_CreateWithExtent
+function M.CreateWithExtent(filePath, xext, yext, xorg, yorg)
+    local _ws_filePath = _H.wxs(filePath)
+    local ptr = C.wxMetafileDC_CreateWithExtent(_ws_filePath, xext, yext, xorg, yorg)
+    _H.wxs_free(_ws_filePath)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:Close()
-    return C.wxMetafileDC_Close(self._ptr)
+    return _H.wrap("wxmetafile_gen", C.wxMetafileDC_Close(self._ptr), true)
 end
 
 --- Delete the underlying C++ object.

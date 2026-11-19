@@ -35,23 +35,23 @@ function M:GetAncestorRibbonBar()
 end
 
 function M:GetBestSizeForParentSize(width, height)
-    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetBestSizeForParentSize(self._ptr, width, height))
+    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetBestSizeForParentSize(self._ptr, width, height), true)
 end
 
 function M:GetNextLargerSize(direction)
-    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextLargerSize(self._ptr, direction))
+    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextLargerSize(self._ptr, direction), true)
 end
 
 function M:GetNextLargerSize_Relative(direction, width, height)
-    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextLargerSize_Relative(self._ptr, direction, width, height))
+    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextLargerSize_Relative(self._ptr, direction, width, height), true)
 end
 
 function M:GetNextSmallerSize(direction)
-    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextSmallerSize(self._ptr, direction))
+    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextSmallerSize(self._ptr, direction), true)
 end
 
 function M:GetNextSmallerSize_Relative(direction, width, height)
-    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextSmallerSize_Relative(self._ptr, direction, width, height))
+    return _H.wrap("wxsize_gen", C.wxRibbonControl_GetNextSmallerSize_Relative(self._ptr, direction, width, height), true)
 end
 
 function M:IsSizingContinuous()

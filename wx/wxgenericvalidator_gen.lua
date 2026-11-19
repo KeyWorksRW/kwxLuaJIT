@@ -34,9 +34,56 @@ end
 
 --- Constructor: wxGenericValidator_CreateString
 function M.CreateString(value)
-    local _ws_value = _H.wxs(value)
-    local ptr = C.wxGenericValidator_CreateString(_ws_value)
-    _H.wxs_free(_ws_value)
+    local ptr = C.wxGenericValidator_CreateString(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateArrayInt
+function M.CreateArrayInt(value)
+    local ptr = C.wxGenericValidator_CreateArrayInt(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateDateTime
+function M.CreateDateTime(value)
+    local ptr = C.wxGenericValidator_CreateDateTime(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateFileName
+function M.CreateFileName(value)
+    local ptr = C.wxGenericValidator_CreateFileName(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateFloat
+function M.CreateFloat(value)
+    local ptr = C.wxGenericValidator_CreateFloat(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateDouble
+function M.CreateDouble(value)
+    local ptr = C.wxGenericValidator_CreateDouble(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateColour
+function M.CreateColour(value)
+    local ptr = C.wxGenericValidator_CreateColour(_H.ptr(value))
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
+--- Constructor: wxGenericValidator_CreateCheckBoxState
+function M.CreateCheckBoxState(value)
+    local ptr = C.wxGenericValidator_CreateCheckBoxState(_H.ptr(value))
     if ptr == nil then return nil end
     return setmetatable({ _ptr = ptr }, MT)
 end

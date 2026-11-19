@@ -42,7 +42,7 @@ function M:GetRequestedLength()
 end
 
 function M:GetSize()
-    return _H.wrap("wxsize_gen", C.wxQueryLayoutInfoEvent_GetSize(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxQueryLayoutInfoEvent_GetSize(self._ptr), true)
 end
 
 function M:SetAlignment(align)

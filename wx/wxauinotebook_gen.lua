@@ -246,4 +246,38 @@ function M:LoadLayout(name, deserializer)
     _H.wxs_free(_ws_name)
 end
 
+function M:AddPageWithBundle(page, caption, select, bitmap)
+    local _ws_caption = _H.wxs(caption)
+    local _result = _H.to_bool(C.wxAuiNotebook_AddPageWithBundle(self._ptr, _H.ptr(page), _ws_caption, _H.from_bool(select), _H.ptr(bitmap)))
+    _H.wxs_free(_ws_caption)
+    return _result
+end
+
+function M:InsertPageWithBundle(page_idx, page, caption, select, bitmap)
+    local _ws_caption = _H.wxs(caption)
+    local _result = _H.to_bool(C.wxAuiNotebook_InsertPageWithBundle(self._ptr, page_idx, _H.ptr(page), _ws_caption, _H.from_bool(select), _H.ptr(bitmap)))
+    _H.wxs_free(_ws_caption)
+    return _result
+end
+
+function M:SetPageBitmapBundle(page, bitmap)
+    return _H.to_bool(C.wxAuiNotebook_SetPageBitmapBundle(self._ptr, page, _H.ptr(bitmap)))
+end
+
+function M:CalculateNewSplitSize()
+    return _H.wrap("wxsize_gen", C.wxAuiNotebook_CalculateNewSplitSize(self._ptr), true)
+end
+
+function M:GetTabCtrlFromPoint(x, y)
+    return _H.wrap("wxauitabctrl_gen", C.wxAuiNotebook_GetTabCtrlFromPoint(self._ptr, x, y))
+end
+
+function M:FindTabCtrl(page)
+    return _H.wrap("wxauitabctrl_gen", C.wxAuiNotebook_FindTabCtrl(self._ptr, _H.ptr(page)))
+end
+
+function M:FindTabIndex(page)
+    return C.wxAuiNotebook_FindTabIndex(self._ptr, _H.ptr(page))
+end
+
 return M

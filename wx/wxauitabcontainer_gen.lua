@@ -85,11 +85,11 @@ function M:GetPageCount()
 end
 
 function M:GetPage(idx)
-    return _H.wrap("wxauinotebookpage_gen", C.wxAuiTabContainer_GetPage(self._ptr, idx))
+    return _H.wrap("wxauinotebookpage_gen", C.wxAuiTabContainer_GetPage(self._ptr, idx), true)
 end
 
 function M:GetPages()
-    return _H.wrap("wxauinotebookpagearray_gen", C.wxAuiTabContainer_GetPages(self._ptr))
+    return _H.wrap("wxauinotebookpagearray_gen", C.wxAuiTabContainer_GetPages(self._ptr), true)
 end
 
 function M:SetNormalFont(normalFont)

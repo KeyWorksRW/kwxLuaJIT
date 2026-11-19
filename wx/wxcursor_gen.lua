@@ -41,6 +41,13 @@ function M.CreateLoad(name, type, width, height)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: Cursor_CreateFromXPMString
+function M.CreateFromXPMString(xpm)
+    local ptr = C.Cursor_CreateFromXPMString(xpm)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 --- Delete the underlying C++ object.
 function M:Delete()
     if self._ptr ~= nil and not self._borrowed then

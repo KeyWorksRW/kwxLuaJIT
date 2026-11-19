@@ -41,6 +41,13 @@ function M.CreateFromXPMData(xpm)
     return setmetatable({ _ptr = ptr }, MT)
 end
 
+--- Constructor: wxIcon_CreateFromXPMString
+function M.CreateFromXPMString(xpm)
+    local ptr = C.wxIcon_CreateFromXPMString(xpm)
+    if ptr == nil then return nil end
+    return setmetatable({ _ptr = ptr }, MT)
+end
+
 function M:Assign(other)
     C.wxIcon_Assign(self._ptr, _H.ptr(other))
 end

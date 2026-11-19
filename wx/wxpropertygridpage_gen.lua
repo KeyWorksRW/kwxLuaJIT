@@ -29,7 +29,7 @@ function M.Create()
 end
 
 function M:FitColumns()
-    return _H.wrap("wxsize_gen", C.wxPropertyGridPage_FitColumns(self._ptr))
+    return _H.wrap("wxsize_gen", C.wxPropertyGridPage_FitColumns(self._ptr), true)
 end
 
 function M:GetStatePtr()
